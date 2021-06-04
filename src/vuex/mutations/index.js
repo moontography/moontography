@@ -7,6 +7,10 @@ export default {
     state.globalError = error;
   },
 
+  SET_GLOBAL_LOADING(state, isLoading) {
+    state.globalLoading = isLoading;
+  },
+
   SET_WEB3_IS_CONNECTED(state, isConnected) {
     state.web3.isConnected = isConnected;
   },
