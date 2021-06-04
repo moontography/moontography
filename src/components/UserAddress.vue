@@ -1,14 +1,11 @@
 <template lang="pug">
-div
-  div.d-flex.align-items-center(v-if="userAddress")
-    | {{ shortAddy }}
-    a.ml-auto(@click.stop="disconnect")
-      i.m-0.now-ui-icons.ui-1_simple-remove
-  n-button.m-0(
-    v-else
-    type="danger"
-    :round="true"
-    @click="reconnect") Connect to your Wallet
+span
+  loading-global
+    div.d-flex.align-items-center.ml-4(v-if="userAddress")
+      | {{ shortAddy }}
+      a.ml-auto(@click.stop="disconnect")
+        i.m-0.now-ui-icons.ui-1_simple-remove
+    button.btn.btn-danger.btn-round(v-else, @click="reconnect") Connect to your Wallet
 </template>
 
 <script>

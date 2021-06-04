@@ -33,8 +33,7 @@
           </fg-input>
         </div>
       </form> -->
-
-      <a href="https://github.com/moontography">
+      <a href="https://github.com/moontography" target="_blank">
         <i class="fa fa-2x fa-github"></i>
       </a>
       <!-- <ul class="navbar-nav">

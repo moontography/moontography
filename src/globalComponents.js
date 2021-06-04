@@ -3,6 +3,7 @@ import DropDown from "./components/Dropdown.vue";
 import Card from "./components/Cards/Card.vue";
 import UserAddress from "./components/UserAddress.vue";
 import Button from "./components/Button.vue";
+import LoadingGlobal from "./components/LoadingGlobal.vue";
 import {
   ElInput,
   ElInputNumber,
@@ -20,6 +21,7 @@ const GlobalComponents = {
     app.component("drop-down", DropDown);
     app.component("card", Card);
     app.component("n-button", Button);
+    app.component("loading-global", LoadingGlobal);
     app.component(ElInput.name, ElInput);
     app.component(ElInputNumber.name, ElInputNumber);
     app.component("fg-input", FgInput);

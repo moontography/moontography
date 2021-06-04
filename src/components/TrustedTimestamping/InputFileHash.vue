@@ -4,8 +4,9 @@ div.d-flex.justify-content-center
     :id="`hash-file-${uid}`"
     type="file"
     @change="hashFile")
-  button.btn.btn-primary(@click="triggerFile")
-    | #[i.now-ui-icons.arrows-1_share-66] Upload File to Hash
+  loading-global
+    button.btn.btn-primary(@click="triggerFile")
+      | #[i.now-ui-icons.arrows-1_share-66] Upload File to Hash
 </template>
 
 <script>

@@ -4,6 +4,8 @@ export default {
   trustedTimestamping,
 
   globalError: null,
+  globalLoading: false,
+
   activeNetwork: localStorage.activeNetwork || "eth",
 
   web3: {
