@@ -4,12 +4,12 @@ div.d-flex.justify-content-center
     :id="`hash-file-${uid}`"
     type="file"
     @change="hashFile")
-  loading-global
-    button.btn.btn-primary(@click="triggerFile")
-      | #[i.now-ui-icons.arrows-1_share-66] Upload File to Hash
+  button.btn.btn-primary(v-loading="globalLoading", :disabled="globalLoading", @click="triggerFile")
+    | #[i.now-ui-icons.arrows-1_share-66] Upload File to Hash
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { v1 } from "uuid";
 import FileUtils from "../../factories/FileUtils";
 
@@ -20,6 +20,12 @@ export default {
     return {
       uid: null,
     };
+  },
+
+  computed: {
+    ...mapState({
+      globalLoading: (state) => state.globalLoading,
+    }),
   },
 
   methods: {

@@ -1,11 +1,10 @@
 <template lang="pug">
 span
-  loading-global(v-if="userAddress")
-    i.now-ui-icons.ui-1_simple-remove(@click.stop="disconnect")
-    span.pl-1
-      | {{ shortAddy }}
-  loading-global(v-else)
-    button.btn.btn-round.m-0(@click="reconnect") Connect to your Wallet
+  span.pl-1(v-if="userAddress")
+    | {{ shortAddy }}
+    button.btn-sm.close.m-0(v-loading="globalLoading", :disabled="globalLoading" @click="disconnect")
+      i.now-ui-icons.ui-1_simple-remove
+  button.btn.btn-round.m-0(v-else, v-loading="globalLoading", :disabled="globalLoading", @click="reconnect") Connect to your Wallet
 </template>
 
 <script>
@@ -16,6 +15,7 @@ export default {
 
   computed: {
     ...mapState({
+      globalLoading: (state) => state.globalLoading,
       userAddress: (state) => state.web3.address,
     }),
 

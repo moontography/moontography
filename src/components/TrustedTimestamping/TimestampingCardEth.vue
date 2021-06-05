@@ -21,11 +21,11 @@ div
                   div.alert.alert-info.mb-1
                     small {{ fileHashString }}
 
-        loading-global
-          button.btn.btn-success(
-            :disabled="!activeNetwork"
-            @click="sendTrustedTimestampTxn")
-              div Store File Hash on Blockchain
+        button.btn.btn-success(
+          v-loading="globalLoading", 
+          :disabled="globalLoading || !activeNetwork"
+          @click="sendTrustedTimestampTxn")
+            div Store File Hash on Blockchain
 
       div.text-center(v-else)
         div.mb-1 Select the file you want to hash on the blockchain:
@@ -55,6 +55,7 @@ export default {
 
   computed: {
     ...mapState({
+      globalLoading: (state) => state.globalLoading,
       activeNetwork: (_, getters) => getters.activeNetwork,
       isApproved: (state) => state.web3.isApproved,
     }),
