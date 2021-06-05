@@ -1,6 +1,6 @@
 <template lang="pug">
 div.user.user_menu
-  div.photo.mt-2
+  div.icon
     i.d-flex.justify-content-center.now-ui-icons.business_briefcase-24
   div.info.text-center
     a.py-0(
@@ -20,9 +20,3 @@ export default {
   },
 };
 </script>
-<style>
-.user__menu ul.user-menu__nav {
-  margin-top: 0;
-  padding-top: 20px;
-}
-</style>

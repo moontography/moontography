@@ -16,12 +16,16 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./vuex/store";
 
-import Toast from "vue-toastification";
+import Toast, { useToast, PluginOptions, POSITION } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
 import DashboardPlugin from "./dashboard-plugin";
 
-const options = { containerClassName: "ct-notification" };
+const options: PluginOptions = {
+  position: POSITION.TOP_RIGHT,
+  timeout: 5000,
+  containerClassName: "ct-notification",
+};
 
 const appInstance = createApp(App);
 appInstance.use(router);
@@ -29,3 +33,4 @@ appInstance.use(store);
 appInstance.use(Toast, options);
 appInstance.use(DashboardPlugin);
 appInstance.mount("#app");
+appInstance.config.globalProperties.$toast = useToast();

@@ -35,8 +35,9 @@ export default {
           size: file.size,
           hash: await FileUtils.sha256(file),
         });
+        this.$toast.success("Successfully hashed file");
       } catch (err) {
-        this.$emit("error", err);
+        this.$toast.error(`Failed to hash file - ${err}`);
       }
     },
   },

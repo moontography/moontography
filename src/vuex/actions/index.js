@@ -2,6 +2,8 @@ import BigNumber from "bignumber.js";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import MTGY from "../../factories/web3/MTGY";
 import TrustedTimestamping from "../../factories/web3/TrustedTimestamping";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 export default {
   async init({ commit, dispatch, getters, state }, reset = false) {
@@ -26,7 +28,7 @@ export default {
       commit("SET_WEB3_CHAIN_ID", await web3.eth.getChainId());
       if (!getters.activeNetwork) {
         throw new Error(
-          `The selected network not supported. Please connect to a supported network, ${state.eth.networks
+          `The selected network is not supported. Please connect to a supported network, ${state.eth.networks
             .map((n) => n.name)
             .join(", ")}`
         );
@@ -38,7 +40,7 @@ export default {
       await dispatch("ethCheckApprovalStatusForTokenContract");
       await dispatch("getHashes");
     } catch (err) {
-      console.error(`Error`, err);
+      toast(err.message || err);
       commit("SET_GLOBAL_ERROR", err);
     }
   },
@@ -89,6 +91,7 @@ export default {
         .send({ from: userAddy });
       commit("SET_WEB3_IS_APPROVED", true);
     } catch (err) {
+      toast(err.message || err);
       commit("SET_WEB3_IS_APPROVED", false);
       commit("SET_GLOBAL_ERROR", err);
     }
@@ -119,5 +122,9 @@ export default {
     const ttCont = TrustedTimestamping(web3, trustedTimestampingAddress);
     const hashes = await ttCont.methods.getHashesFromAddress(userAddy).call();
     commit("SET_TRUSTED_TIMESTAMPING_HASHES", hashes);
+  },
+
+  async setGlobalLoading({ commit }, isLoading) {
+    commit("SET_GLOBAL_LOADING", isLoading);
   },
 };

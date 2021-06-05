@@ -10,26 +10,26 @@ div
         table.no-border.mx-auto
           tbody
             tr
-              td.mb-2
-                strong {{ file.name }}
+              td
+                div.d-flex.justify-content-center.align-items-center
+                  strong {{ file.name }}
+                  button.button.btn-sm.close.ml-1(@click="resetFile")
+                    i.now-ui-icons.ui-1_simple-remove
             tr
               td
                 div.d-flex.justify-content-center
-                  div.alert.alert-success.mb-1
+                  div.alert.alert-info.mb-1
                     small {{ fileHashString }}
-        button.btn.btn-primary.btn-sm(@click="resetFile") Upload Another File
+
+        loading-global
+          button.btn.btn-success(
+            :disabled="!activeNetwork"
+            @click="sendTrustedTimestampTxn")
+              div Store File Hash on Blockchain
+
       div.text-center(v-else)
         div.mb-1 Select the file you want to hash on the blockchain:
         input-file-hash(@change="hashFile")
-  div.row.flex-center
-    div.col.d-flex.justify-content-center
-      div.alert.alert-primary(v-if="isLoading")
-        | Creating transaction now, sit tight for a couple seconds...
-      button.btn.btn-success(
-        v-else-if="file.hash"
-        :disabled="!activeNetwork"
-        @click="sendTrustedTimestampTxn")
-          div Store File Hash on Blockchain
 </template>
 
 <script>
@@ -50,7 +50,6 @@ export default {
       file: getEmptyFile(),
       txn: null,
       getXlmThatWillBeSent: null,
-      isLoading: false,
     };
   },
 
@@ -77,21 +76,32 @@ export default {
 
     async sendTrustedTimestampTxn() {
       try {
+        // Start loading
+        this.$store.dispatch("setGlobalLoading", true);
+
         await this.$store.dispatch("ethCheckApprovalStatusForTokenContract");
         if (!this.isApproved) {
           await this.$store.dispatch("ethApproveTokenContract");
         }
 
-        // TODO; start loading
         await this.$store.dispatch("sendTrustedTimestampTxn", {
           hash: this.fileHashString,
           fileName: this.file.name,
           fileSize: this.file.size,
         });
-        // TODO; reload hashes
-        // TODO; stop loading
+
+        // TODO: reload hashes
+
+        // Stop loading
+        this.$store.dispatch("setGlobalLoading", false);
+
+        this.$toast.error("Successfully sent to blockchain!");
       } catch (err) {
-        false;
+        console.log(err);
+        this.$store.dispatch("setGlobalLoading", false);
+        this.$toast.error(
+          `Failed to store hash on blockchain - ${err.message}`
+        );
       }
     },
   },

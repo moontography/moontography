@@ -379,6 +379,25 @@
       background-color: $opacity-5;
     }
 
+    .icon {
+      width: 45px;
+      height: 45px;
+      padding: 8px 6px;
+      overflow: hidden;
+      float: left;
+      z-index: 5;
+      margin-right: 5px;
+      margin-left: 15px;
+      border-radius: 50%;
+      box-shadow: $box-shadow-raised;
+      background-color: $white-color;
+      @extend .animation-transition-general;
+
+      i {
+        color: $primary-color;
+      }
+    }
+
     .photo {
       width: 34px;
       height: 34px;
