@@ -95,13 +95,9 @@ export default {
         // Stop loading
         this.$store.dispatch("setGlobalLoading", false);
 
-        this.$toast.error("Successfully sent to blockchain!");
+        this.$toast.success("Successfully sent to blockchain!");
       } catch (err) {
-        console.log(err);
         this.$store.dispatch("setGlobalLoading", false);
-        this.$toast.error(
-          `Failed to store hash on blockchain - ${err.message}`
-        );
       }
     },
   },

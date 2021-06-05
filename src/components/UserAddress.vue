@@ -1,11 +1,11 @@
 <template lang="pug">
 span
-  loading-global
-    div.d-flex.align-items-center.pl-2(v-if="userAddress")
+  loading-global(v-if="userAddress")
+    i.now-ui-icons.ui-1_simple-remove(@click.stop="disconnect")
+    span.pl-1
       | {{ shortAddy }}
-      a.ml-auto(@click.stop="disconnect")
-        i.m-0.now-ui-icons.ui-1_simple-remove
-    button.btn.btn-danger.btn-round.my-1(v-else, @click="reconnect") Connect to your Wallet
+  loading-global(v-else)
+    button.btn.btn-round.m-0(@click="reconnect") Connect to your Wallet
 </template>
 
 <script>
@@ -37,3 +37,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+button {
+  padding: 9px 18px;
+}
+</style>

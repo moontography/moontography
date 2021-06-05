@@ -1,6 +1,6 @@
 <template lang="pug">
 span(v-loading="globalLoading")
-  slot
+  slot(:disabled="globalLoading")
 </template>
 <script>
 import { mapState } from "vuex";

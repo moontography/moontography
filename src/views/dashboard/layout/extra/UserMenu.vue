@@ -1,13 +1,10 @@
 <template lang="pug">
 div.user.user_menu
-  div.icon
-    i.d-flex.justify-content-center.now-ui-icons.business_briefcase-24
-  div.info.text-center
-    a.py-0(
-      role="button"
-      aria-controls="userMenu"
-      aria-expanded="false")
-      user-address
+  li
+    a.active.router-link-exact-active.nav-link
+      i.now-ui-icons.business_briefcase-24
+      p
+        user-address
 </template>
 <script>
 export default {

@@ -40,7 +40,7 @@ export default {
       await dispatch("ethCheckApprovalStatusForTokenContract");
       await dispatch("getHashes");
     } catch (err) {
-      toast(err.message || err);
+      toast.error(err.message || err);
       commit("SET_GLOBAL_ERROR", err);
     }
   },
@@ -91,7 +91,7 @@ export default {
         .send({ from: userAddy });
       commit("SET_WEB3_IS_APPROVED", true);
     } catch (err) {
-      toast(err.message || err);
+      toast.error(err.message || err);
       commit("SET_WEB3_IS_APPROVED", false);
       commit("SET_GLOBAL_ERROR", err);
     }
