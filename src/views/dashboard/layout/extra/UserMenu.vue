@@ -1,7 +1,7 @@
 <template lang="pug">
 div.user.user_menu
   li
-    a.active.router-link-exact-active.nav-link
+    a
       i.now-ui-icons.business_briefcase-24
       p
         user-address
