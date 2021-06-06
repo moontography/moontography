@@ -33,9 +33,15 @@
           </fg-input>
         </div>
       </form> -->
-      <a href="https://github.com/moontography" target="_blank">
-        <i class="fa fa-2x fa-github"></i>
-      </a>
+      <li class="d-flex align-items-center">
+        <a class="mr-2" href="https://github.com/moontography" target="_blank">
+          <i class="fa fa-2x fa-github"></i>
+        </a>
+        <span>
+          1 MTGY = ${{ mtgyPriceUsd }}
+          USD
+        </span>
+      </li>
       <!-- <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" href="#pablo">
@@ -69,6 +75,8 @@
   </navbar>
 </template>
 <script>
+import BigNumber from "bignumber.js";
+import { mapState } from "vuex";
 import { Navbar, NavbarToggleButton } from "@/components";
 
 export default {
@@ -77,6 +85,10 @@ export default {
     NavbarToggleButton,
   },
   computed: {
+    ...mapState({
+      mtgyPriceUsd: (state) => new BigNumber(state.mtgyPriceUsd).toFixed(6),
+    }),
+
     routeName() {
       const { name } = this.$route;
       return this.capitalizeFirstLetter(name);

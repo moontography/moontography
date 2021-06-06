@@ -3,7 +3,7 @@
     <div class="header text-center">
       <h2 class="title">Decentralized Tax Reporting (DTAX)</h2>
       <p class="category">
-        Provide tax documentation for all trasacions from a given wallet
+        Provide tax documentation for all transactions from a given wallet
         address.
       </p>
     </div>
