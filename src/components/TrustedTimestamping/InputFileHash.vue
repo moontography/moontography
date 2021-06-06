@@ -5,7 +5,7 @@ div.d-flex.justify-content-center
     type="file"
     @change="hashFile")
   button.btn.btn-primary(v-loading="globalLoading", :disabled="globalLoading", @click="triggerFile")
-    | #[i.now-ui-icons.arrows-1_share-66] Upload File to Hash
+    | #[i.now-ui-icons.arrows-1_share-66] Upload File to Calculate its Signature
 </template>
 
 <script>
@@ -36,12 +36,15 @@ export default {
     async hashFile(evt) {
       try {
         const file = evt.target.files[0];
+        const fileHash = await FileUtils.sha256(file);
         this.$emit("change", {
           name: file.name,
           size: file.size,
-          hash: await FileUtils.sha256(file),
+          hash: fileHash,
         });
-        this.$toast.success("Successfully hashed file");
+        this.$toast.success(
+          `Successfully generated the SHA 256 hash/data signature of the file: 0x${fileHash}`
+        );
       } catch (err) {
         this.$toast.error(`Failed to hash file - ${err}`);
       }

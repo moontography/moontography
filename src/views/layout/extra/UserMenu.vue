@@ -1,8 +1,8 @@
 <template lang="pug">
-div.user.user_menu
+div.user.mt-0.pb-2
   li
-    a
-      i.now-ui-icons.business_briefcase-24
+    a.no-hover
+      i.now-ui-icons.business_bank
       p
         user-address
 </template>

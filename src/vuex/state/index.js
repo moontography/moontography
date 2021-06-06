@@ -7,6 +7,7 @@ export default {
   globalLoading: false,
 
   activeNetwork: localStorage.activeNetwork || "eth",
+  mtgyPriceUsd: "0",
 
   web3: {
     instance: null,
@@ -197,22 +198,24 @@ export default {
       //     balance: ""
       //   }
       // },
-      // {
-      //   name: "Binance Smart Chain",
-      //   short_name: "bsc",
-      //   chain: "smartchain",
-      //   network: "mainnet",
-      //   chain_id: 56,
-      //   network_id: 56,
-      //   rpc_url: "https://bsc-dataseed1.defibit.io/",
-      //   native_currency: {
-      //     symbol: "BNB",
-      //     name: "BNB",
-      //     decimals: "18",
-      //     contractAddress: "",
-      //     balance: ""
-      //   }
-      // }
+      {
+        name: "Binance Smart Chain",
+        short_name: "bsc",
+        chain: "smartchain",
+        network: "mainnet",
+        chain_id: 56,
+        network_id: 56,
+        rpc_url: "https://bsc-dataseed1.defibit.io/",
+        native_currency: {
+          symbol: "BNB",
+          name: "BNB",
+          decimals: "18",
+          contractAddress: "",
+          balance: "",
+        },
+        logo: `img/bsc.png`,
+        mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+      },
     ],
   },
 

@@ -29,14 +29,42 @@ navbar#navigation(:show-navbar="showNavbar")
   
     ul.navbar-nav
       li.nav-item
-        a.nav-link(href="https://moontography.com" target="_blank")
-          i.fa.fa-2x.fa-globe
+        a.nav-link(
+          href="https://moontography.com"
+          target="_blank"
+          rel="noopener noreferrer")
+            i.fa.fa-2x.fa-globe
       li.nav-item
-        a.nav-link(href="https://t.me/moontographyproject" target="_blank")
-          i.fa.fa-2x.fa-telegram
+        a.nav-link(
+          href="https://t.me/moontographyproject"
+          target="_blank"
+          rel="noopener noreferrer")
+            i.fa.fa-2x.fa-telegram
       li.nav-item
-        a.nav-link(href="https://github.com/moontography" target="_blank")
-          i.fa.fa-2x.fa-github
+        a.nav-link(
+          href="https://github.com/moontography"
+          target="_blank"
+          rel="noopener noreferrer")
+            i.fa.fa-2x.fa-github
+      li.nav-item
+        a.nav-link(
+          href="https://exchange.pancakeswap.finance/#/swap?inputCurrency=0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
+          target="_blank"
+          rel="noopener noreferrer")
+            img.gray(
+              style="max-height: 20px"
+              src="img/pancakeswap-logo.png")
+      li.nav-item
+        a.nav-link(
+          href="https://www.dextools.io/app/pancakeswap/pair-explorer/0xaabafd64feb2ec235b209a95d4dc9b08e225379c"
+          target="_blank"
+          rel="noopener noreferrer")
+            img.gray(
+              style="max-height: 20px"
+              src="img/dextools.png")
+      li.nav-item
+        a.nav-link.no-hover
+          | 1 MTGY = ${{ mtgyPriceUsd }} USD
 
     //-   li.nav-item
     //-     a.nav-link(href="#pablo")
@@ -62,6 +90,8 @@ navbar#navigation(:show-navbar="showNavbar")
       
 </template>
 <script>
+import BigNumber from "bignumber.js";
+import { mapState } from "vuex";
 import { Navbar, NavbarToggleButton } from "@/components";
 
 export default {
@@ -70,6 +100,10 @@ export default {
     NavbarToggleButton,
   },
   computed: {
+    ...mapState({
+      mtgyPriceUsd: (state) => new BigNumber(state.mtgyPriceUsd).toFixed(6),
+    }),
+
     routeName() {
       const { name } = this.$route;
       return this.capitalizeFirstLetter(name);
@@ -103,4 +137,14 @@ export default {
   },
 };
 </script>
-<style></style>
+<style lang="scss">
+a {
+  &.nav-link.no-hover:hover {
+    background: inherit !important;
+  }
+}
+
+img.gray {
+  filter: grayscale(100%);
+}
+</style>

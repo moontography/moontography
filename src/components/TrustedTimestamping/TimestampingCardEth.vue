@@ -4,8 +4,8 @@ div
     div.col.col-fill
       div.form-group.d-flex.justify-content-center.mb-2
         img.img-fluid(
-          style="max-width: 25%"
-          src="img/bsc.png")
+          style="max-width: 20%"
+          :src="activeNetworkLogo")
       div.text-center(v-if="file.hash")
         table.no-border.mx-auto
           tbody
@@ -21,14 +21,14 @@ div
                   div.alert.alert-info.mb-1
                     small {{ fileHashString }}
 
-        button.btn.btn-success(
+        button.btn.btn-primary(
           v-loading="globalLoading", 
           :disabled="globalLoading || !activeNetwork"
           @click="sendTrustedTimestampTxn")
-            div Store File Hash on Blockchain
+            div Submit File Signature to Blockchain
 
       div.text-center(v-else)
-        div.mb-1 Select the file you want to hash on the blockchain:
+        div.mb-1 Select the file you want to store its signature on the blockchain:
         input-file-hash(@change="hashFile")
 </template>
 
@@ -55,6 +55,7 @@ export default {
 
   computed: {
     ...mapState({
+      activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
       globalLoading: (state) => state.globalLoading,
       activeNetwork: (_, getters) => getters.activeNetwork,
       isApproved: (state) => state.web3.isApproved,

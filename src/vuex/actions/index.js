@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import DexUtils from "../../factories/DexUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import MTGY from "../../factories/web3/MTGY";
 import TrustedTimestamping from "../../factories/web3/TrustedTimestamping";
@@ -9,11 +10,11 @@ export default {
   async init({ commit, dispatch, getters, state }, reset = false) {
     try {
       commit("SET_GLOBAL_ERROR", null);
+      dispatch("getMtgyPriceUsd");
       if (state.web3 && state.web3.isConnected && !reset) return;
       if (state.activeNetwork === "xlm") return;
 
-      const web3Mod = Web3Modal();
-      const web3 = await web3Mod.connect();
+      const { web3 } = await Web3Modal.connect();
       commit("SET_WEB3_INSTANCE", web3);
 
       const isConnected = true;
@@ -24,6 +25,16 @@ export default {
           new Error(`User not connected. Please connect to your wallet.`)
         );
       }
+
+      const resetConnection = async () => {
+        dispatch("disconnect");
+        await dispatch("init", true);
+      };
+      Web3Modal.bindProviderEvents({
+        accountsChanged: resetConnection,
+        chainChanged: resetConnection,
+        disconnect: () => dispatch("disconnect"),
+      });
 
       commit("SET_WEB3_CHAIN_ID", await web3.eth.getChainId());
       if (!getters.activeNetwork) {
@@ -104,8 +115,7 @@ export default {
     const userAddy = state.web3.address;
     const trustedTimestampingAddress =
       getters.activeNetwork.trustedTimestamping;
-    const web3Mod = Web3Modal();
-    const web3 = await web3Mod.connect();
+    const { web3 } = await Web3Modal.connect();
     const ttCont = TrustedTimestamping(web3, trustedTimestampingAddress);
     await ttCont.methods
       .storeHash(hash, fileName, fileSize)
@@ -126,5 +136,12 @@ export default {
 
   async setGlobalLoading({ commit }, isLoading) {
     commit("SET_GLOBAL_LOADING", isLoading);
+  },
+
+  async getMtgyPriceUsd({ commit }) {
+    const price = await DexUtils.getTokenPrice(
+      "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
+    );
+    commit("SET_MTGY_PRICE_USD", price);
   },
 };
