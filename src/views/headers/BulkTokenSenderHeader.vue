@@ -1,19 +1,13 @@
-<template>
-  <div class="panel-header">
-    <div class="header text-center">
-      <h2 class="title">Bulk Token Sender</h2>
-      <p class="category">
-        Bulk send tokens from any contract address to a CSV list of wallet
-        addresses.
-      </p>
-    </div>
-  </div>
+<template lang="pug">
+div.panel-header
+  div.header.text-center
+    h2.title Bulk Token Sender
+    p.category
+      | Bulk send tokens from any contract address to a CSV list of wallet addresses.
 </template>
 
 <script>
-export default {
-  name: "sweet-alert-header",
-};
+export default {};
 </script>
 
 <style scoped>

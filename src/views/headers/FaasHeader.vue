@@ -1,16 +1,13 @@
-<template>
-  <div class="panel-header">
-    <div class="header text-center">
-      <h2 class="title">Farming as a Service</h2>
-      <p class="category">Provide farming for any contract address.</p>
-    </div>
-  </div>
+<template lang="pug">
+div.panel-header
+  div.header.text-center
+    h2.title Farming as a Service
+    p.category
+      | Provide farming for any contract address.
 </template>
 
 <script>
-export default {
-  name: "sweet-alert-header",
-};
+export default {};
 </script>
 
 <style scoped>

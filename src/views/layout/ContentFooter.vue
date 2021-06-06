@@ -1,19 +1,12 @@
-<template>
-  <footer class="footer">
-    <div class="container-fluid d-flex flex-wrap justify-content-between">
-      <nav>
-        <ul class="footer-menu text-uppercase">
-          <li>
-            {{ $route.name }}
-          </li>
-        </ul>
-      </nav>
-      <div class="copyright">
-        &copy; {{ year }},
-        <a href="https://moontography.com/">Moontography</a>
-      </div>
-    </div>
-  </footer>
+<template lang="pug">
+footer.footer
+  div.container-fluid.d-flex.flex-wrap.justify-content-between
+    nav
+      ul.footer-menu.text-uppercase
+        li {{ $route.name }}
+    div.copyright
+      | &copy; {{ year }},
+      a(href="https://moontography.com/" target="_blank") Moontography
 </template>
 <script>
 export default {
@@ -24,4 +17,3 @@ export default {
   },
 };
 </script>
-<style></style>
