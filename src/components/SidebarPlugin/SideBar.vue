@@ -74,7 +74,7 @@ export default {
     },
     logo: {
       type: String,
-      default: "img/logo-white.png",
+      default: "img/logo-white-nn.png",
     },
     sidebarLinks: {
       type: Array,

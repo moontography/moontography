@@ -5,7 +5,7 @@ div
       div.form-group.d-flex.justify-content-center.mb-2
         img.img-fluid(
           style="max-width: 25%"
-          src="img/logo.png")
+          src="img/logo-nn.png")
       div.text-center
         h1 Coming Soon!
         slot
