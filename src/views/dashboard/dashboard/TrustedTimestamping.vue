@@ -4,7 +4,6 @@
     .col-md-6.mx-auto
       card
         .text-center
-          //- p.card-text Basic example
           component(:is="blockchainHashComponent")
 </template>
 <script>
@@ -23,7 +22,6 @@ export default {
   computed: {
     ...mapState({
       activeNetwork: (state) => state.activeNetwork,
-      globalError: (state) => state.globalError,
     }),
 
     blockchainHashComponent() {

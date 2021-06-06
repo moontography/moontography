@@ -156,9 +156,9 @@
         :class="{ content: !$route.meta.hideContent }"
         @click="toggleSidebar"
       >
-        <div v-if="globalError" class="my-4 alert alert-danger">
+        <!-- <div v-if="globalError" class="my-4 alert alert-danger">
           <span>{{ globalError.message }}</span>
-        </div>
+        </div> -->
         <router-view></router-view>
       </div>
       <content-footer v-if="!$route.meta.hideFooter"></content-footer>

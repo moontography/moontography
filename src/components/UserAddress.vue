@@ -1,13 +1,17 @@
 <template lang="pug">
-div
-  div.d-flex.align-items-center(v-if="userAddress")
+span
+  span.pl-1.user-address-trunc(v-if="userAddress")
+    | #[img(style ="max-height: 20px" :src="activeNetworkLogo")]
     | {{ shortAddy }}
-    a.ml-auto(@click.stop="disconnect")
-      i.m-0.now-ui-icons.ui-1_simple-remove
-  n-button.m-0(
+    button.btn-sm.close.m-0(
+      v-loading="globalLoading"
+      :disabled="globalLoading"
+      @click="disconnect")
+        i.now-ui-icons.ui-1_simple-remove
+  button.btn.btn-round.btn-danger.m-0(
     v-else
-    type="danger"
-    :round="true"
+    v-loading="globalLoading"
+    :disabled="globalLoading"
     @click="reconnect") Connect to your Wallet
 </template>
 
@@ -19,12 +23,14 @@ export default {
 
   computed: {
     ...mapState({
+      globalLoading: (state) => state.globalLoading,
+      activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
       userAddress: (state) => state.web3.address,
     }),
 
     shortAddy() {
       const f3 = this.userAddress.slice(0, 6);
-      const l3 = this.userAddress.slice(-7, -1);
+      const l3 = this.userAddress.slice(-6);
       return `${f3}...${l3}`;
     },
   },
@@ -38,5 +44,18 @@ export default {
       await this.$store.dispatch("init", true);
     },
   },
+
+  async mounted() {
+    await this.$store.dispatch("init", true);
+  },
 };
 </script>
+<style scoped>
+button {
+  padding: 9px 18px;
+}
+
+.user-address-trunc {
+  text-transform: initial;
+}
+</style>

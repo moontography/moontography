@@ -16,7 +16,7 @@
               img.no-border(
                 alt="Vue logo"
                 style="max-width: 200px; margin: 0px auto;"
-                src="../assets/logo.png")
+                src="../assets/logo-nn.png")
           div.row.flex-center
             div.col
               h2.text-center(style="margin: 0.5rem 0rem 1rem 0rem;") Blockchain Trusted Timestamping

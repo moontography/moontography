@@ -4,32 +4,32 @@ div
     div.col.col-fill
       div.form-group.d-flex.justify-content-center.mb-2
         img.img-fluid(
-          style="max-width: 25%"
-          src="img/bsc.png")
+          style="max-width: 20%"
+          :src="activeNetworkLogo")
       div.text-center(v-if="file.hash")
         table.no-border.mx-auto
           tbody
             tr
-              td.mb-2
-                strong {{ file.name }}
+              td
+                div.d-flex.justify-content-center.align-items-center
+                  strong {{ file.name }}
+                  button.button.btn-sm.close.ml-1(@click="resetFile")
+                    i.now-ui-icons.ui-1_simple-remove
             tr
               td
                 div.d-flex.justify-content-center
-                  div.alert.alert-success.mb-1
+                  div.alert.alert-info.mb-1
                     small {{ fileHashString }}
-        button.btn.btn-primary.btn-sm(@click="resetFile") Upload Another File
+
+        button.btn.btn-primary(
+          v-loading="globalLoading", 
+          :disabled="globalLoading || !activeNetwork"
+          @click="sendTrustedTimestampTxn")
+            div Submit File Signature to Blockchain
+
       div.text-center(v-else)
-        div.mb-1 Select the file you want to hash on the blockchain:
+        div.mb-1 Select the file you want to store its signature on the blockchain:
         input-file-hash(@change="hashFile")
-  div.row.flex-center
-    div.col.d-flex.justify-content-center
-      div.alert.alert-primary(v-if="isLoading")
-        | Creating transaction now, sit tight for a couple seconds...
-      button.btn.btn-success(
-        v-else-if="file.hash"
-        :disabled="!activeNetwork"
-        @click="sendTrustedTimestampTxn")
-          div Store File Hash on Blockchain
 </template>
 
 <script>
@@ -50,12 +50,13 @@ export default {
       file: getEmptyFile(),
       txn: null,
       getXlmThatWillBeSent: null,
-      isLoading: false,
     };
   },
 
   computed: {
     ...mapState({
+      activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
+      globalLoading: (state) => state.globalLoading,
       activeNetwork: (_, getters) => getters.activeNetwork,
       isApproved: (state) => state.web3.isApproved,
     }),
@@ -77,21 +78,28 @@ export default {
 
     async sendTrustedTimestampTxn() {
       try {
+        // Start loading
+        this.$store.dispatch("setGlobalLoading", true);
+
         await this.$store.dispatch("ethCheckApprovalStatusForTokenContract");
         if (!this.isApproved) {
           await this.$store.dispatch("ethApproveTokenContract");
         }
 
-        // TODO; start loading
         await this.$store.dispatch("sendTrustedTimestampTxn", {
           hash: this.fileHashString,
           fileName: this.file.name,
           fileSize: this.file.size,
         });
-        // TODO; reload hashes
-        // TODO; stop loading
+
+        // TODO: reload hashes
+
+        // Stop loading
+        this.$store.dispatch("setGlobalLoading", false);
+
+        this.$toast.success("Successfully sent to blockchain!");
       } catch (err) {
-        false;
+        this.$store.dispatch("setGlobalLoading", false);
       }
     },
   },

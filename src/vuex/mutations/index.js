@@ -7,6 +7,14 @@ export default {
     state.globalError = error;
   },
 
+  SET_GLOBAL_LOADING(state, isLoading) {
+    state.globalLoading = isLoading;
+  },
+
+  SET_MTGY_PRICE_USD(state, price) {
+    state.mtgyPriceUsd = price;
+  },
+
   SET_WEB3_IS_CONNECTED(state, isConnected) {
     state.web3.isConnected = isConnected;
   },

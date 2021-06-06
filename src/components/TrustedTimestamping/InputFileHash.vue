@@ -4,11 +4,12 @@ div.d-flex.justify-content-center
     :id="`hash-file-${uid}`"
     type="file"
     @change="hashFile")
-  button.btn.btn-primary(@click="triggerFile")
+  button.btn.btn-primary(v-loading="globalLoading", :disabled="globalLoading", @click="triggerFile")
     | #[i.now-ui-icons.arrows-1_share-66] Upload File to Hash
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { v1 } from "uuid";
 import FileUtils from "../../factories/FileUtils";
 
@@ -21,6 +22,12 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState({
+      globalLoading: (state) => state.globalLoading,
+    }),
+  },
+
   methods: {
     triggerFile() {
       document.getElementById(`hash-file-${this.uid}`).click();
@@ -29,13 +36,17 @@ export default {
     async hashFile(evt) {
       try {
         const file = evt.target.files[0];
+        const fileHash = await FileUtils.sha256(file);
         this.$emit("change", {
           name: file.name,
           size: file.size,
-          hash: await FileUtils.sha256(file),
+          hash: fileHash,
         });
+        this.$toast.success(
+          `Successfully generated the SHA 256 hash/data signature of the file: 0x${fileHash}`
+        );
       } catch (err) {
-        this.$emit("error", err);
+        this.$toast.error(`Failed to hash file - ${err}`);
       }
     },
   },
