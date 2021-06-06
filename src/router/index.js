@@ -1,18 +1,18 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import DashboardLayout from "../views/dashboard/layout/DashboardLayout.vue";
+import DashboardLayout from "../views/layout/DashboardLayout.vue";
 
 // Page Headers
-// import DashboardHeader from "../views/dashboard/dashboard/DashboardHeader.vue";
-import DefaultHeader from "../views/dashboard/headers/DefaultHeader";
-import TrustedTimestampingHeader from "../views/dashboard/headers/TrustedTimestampingHeader";
-import FaasHeader from "../views/dashboard/headers/FaasHeader";
-import BulkTokenSenderHeader from "../views/dashboard/headers/BulkTokenSenderHeader";
-import DtaxHeader from "../views/dashboard/headers/DtaxHeader";
+// import DashboardHeader from "../views/DashboardHeader.vue";
+// import DefaultHeader from "../views/headers/DefaultHeader";
+import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
+import FaasHeader from "../views/headers/FaasHeader";
+import BulkTokenSenderHeader from "../views/headers/BulkTokenSenderHeader";
+import DtaxHeader from "../views/headers/DtaxHeader";
 
 // Dashboard pages
-import TrustedTimestamping from "../views/dashboard/dashboard/TrustedTimestamping.vue";
-import ComingSoon from "../views/dashboard/dashboard/ComingSoon.vue";
+import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
+import ComingSoon from "../views/components/ComingSoon.vue";
 
 const routes = [
   {
