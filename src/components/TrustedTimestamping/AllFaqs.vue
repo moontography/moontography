@@ -1,7 +1,8 @@
 <template lang="pug">
 div
-  div(v-for="faq in faqs")
+  div(v-for="(faq, index) in faqs")
     faq.mb-3(
+      :index="index"
       :question="faq.question"
       :answer-html="faq.answerHtml")
 </template>

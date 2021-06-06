@@ -215,4 +215,8 @@ export default {
       // }
     ],
   },
+
+  xlm: {
+    usdToSend: "5",
+  },
 };

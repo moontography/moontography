@@ -4,8 +4,8 @@ div
     a.text-dark(
       style="cursor: pointer"
       data-toggle="collapse"
-      :data-target="`#collapsible-${_uid}`") {{ question }}
-  div.collapse(:id="`collapsible-${_uid}`")
+      :data-target="`#collapsible-${index}-${_uid}`") {{ question }}
+  div.collapse(:id="`collapsible-${index}-${_uid}`")
     div.card
       div.card-body
         div(v-html="answerHtml")
@@ -15,6 +15,7 @@ div
 export default {
   name: "TTFaq",
   props: {
+    index: { type: Number },
     question: { type: String },
     answerHtml: { type: String },
   },

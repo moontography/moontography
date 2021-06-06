@@ -6,14 +6,27 @@ div.panel-header
       | Upload files of any size to capture its SHA 256 hash/signature and store
       | it in the blockchain to validate later the source of truth has not been
       | tampered with.
+    p.category.link(data-toggle="modal", data-target="#faq-modal")
+      | #[i.mr-1.fa.fa-question-circle] Learn More
+faq-modal#faq-modal
 </template>
 
 <script>
-export default {};
+import FaqModal from "@/components/TrustedTimestamping/FaqModal";
+
+export default {
+  components: {
+    FaqModal,
+  },
+};
 </script>
 
 <style scoped>
 .category {
   text-transform: inherit;
+}
+
+.link {
+  cursor: pointer;
 }
 </style>
