@@ -28,7 +28,7 @@ div
                     small {{ fileHashString }}
         button.btn.btn-primary.btn-sm(@click="resetFile") Upload Another File
       div.text-center(v-else)
-        div.mb-1 Select the file you want to hash on the blockchain:
+        div.mb-1 Select the file you want to store its signature on the blockchain:
         input-file-hash(@change="hashFile")
   div.row.flex-center
     div.col.col-fill

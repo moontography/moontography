@@ -27,7 +27,7 @@
     </div>
 
     <div class="sidebar-wrapper">
-      <ul class="nav">
+      <ul class="mt-2 nav">
         <slot name="links">
           <sidebar-item
             v-for="(link, index) in sidebarLinks"

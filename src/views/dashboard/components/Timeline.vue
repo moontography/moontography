@@ -43,7 +43,7 @@ div.row.d-flex.justify-content-center
 
         template(v-slot:content)
           div
-            p Provide tax documentation for all trasacions from a given wallet address.
+            p Provide tax documentation for all transactions from a given wallet address.
           
         template(v-slot:footer)
           h6
