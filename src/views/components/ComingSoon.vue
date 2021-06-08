@@ -1,11 +1,10 @@
 <template lang="pug">
-.places-sweet-alerts
-  .row
-    .col-md-6.mx-auto
-      card
-        .text-center
-          coming-soon-card
-            timeline
+.row
+  .col-md-6.mx-auto
+    card
+      .text-center
+        coming-soon-card
+          timeline
 </template>
 <script>
 import { mapState } from "vuex";

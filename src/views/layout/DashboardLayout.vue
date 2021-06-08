@@ -1,169 +1,157 @@
-<template>
-  <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
-    <side-bar :background-color="'primary'">
-      <template v-slot:links>
-        <user-menu></user-menu>
-        <sidebar-item
-          :link="{
-            name: 'Trusted Timestamping',
-            icon: 'now-ui-icons design_app',
-            path: '/timestamping',
-          }"
-        >
-        </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: 'Farming as a Service',
-            icon: 'now-ui-icons sport_trophy',
-            path: '/faas',
-          }"
-        >
-        </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: 'Bulk Token Sender',
-            icon: 'now-ui-icons objects_spaceship',
-            path: '/bts',
-          }"
-        >
-        </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: 'Decentralized Tax Reporting',
-            icon: 'now-ui-icons business_money-coins',
-            path: '/dtax',
-          }"
-        >
-        </sidebar-item>
-        <!-- <sidebar-item
-          :link="{ name: 'Pages', icon: 'now-ui-icons design_image' }"
-        >
-          <sidebar-item
-            :link="{ name: 'Pricing', path: '/pricing' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Timeline', path: '/pages/timeline' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Login', path: '/login' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Register', path: '/register' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Lock Screen', path: '/lock' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'User Profile', path: '/pages/user' }"
-          ></sidebar-item>
-        </sidebar-item>
-        <sidebar-item
-          :link="{ name: 'Components', icon: 'now-ui-icons education_atom' }"
-        >
-          <sidebar-item
-            :link="{ name: 'Buttons', path: '/components/buttons' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Grid System', path: '/components/grid-system' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Panels', path: '/components/panels' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Sweet Alert', path: '/components/sweet-alert' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Notifications', path: '/components/notifications' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Icons', path: '/components/icons' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Typography', path: '/components/typography' }"
-          ></sidebar-item>
-        </sidebar-item>
-        <sidebar-item
-          :link="{ name: 'Forms', icon: 'now-ui-icons files_single-copy-04' }"
-        >
-          <sidebar-item
-            :link="{ name: 'Regular Forms', path: '/forms/regular' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Extended Forms', path: '/forms/extended' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Validation Forms', path: '/forms/validation' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Wizard', path: '/forms/wizard' }"
-          ></sidebar-item>
-        </sidebar-item>
+<template lang="pug">
+div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
+  side-bar(:background-color="'primary'")
+    template(v-slot:links)
+      user-menu
+      sidebar-item(
+        :link=`{
+          name: 'Trusted Timestamping',
+          icon: 'now-ui-icons design_app',
+          path: '/timestamping',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Farming as a Service',
+          icon: 'now-ui-icons sport_trophy',
+          path: '/faas',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Bulk Token Sender',
+          icon: 'now-ui-icons objects_spaceship',
+          path: '/bts',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Decentralized Tax Reporting',
+          icon: 'now-ui-icons business_money-coins',
+          path: '/dtax',
+        }`
+      )
 
-        <sidebar-item
-          :link="{ name: 'Tables', icon: 'now-ui-icons design_bullet-list-67' }"
-        >
-          <sidebar-item
-            :link="{ name: 'Regular Tables', path: '/table-list/regular' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Extended Tables', path: '/table-list/extended' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Paginated Tables', path: '/table-list/paginated' }"
-          ></sidebar-item>
-        </sidebar-item>
-        <sidebar-item
-          :link="{ name: 'Maps', icon: 'now-ui-icons location_pin' }"
-        >
-          <sidebar-item
-            :link="{ name: 'Google Maps', path: '/maps/google' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Full Screen Maps', path: '/maps/full-screen' }"
-          ></sidebar-item>
-          <sidebar-item
-            :link="{ name: 'Vector Maps', path: '/maps/vector-map' }"
-          ></sidebar-item>
-        </sidebar-item>
-        <sidebar-item
-          :link="{
-            name: 'Widgets',
-            icon: 'now-ui-icons objects_diamond',
-            path: '/widgets',
-          }"
-        ></sidebar-item>
-        <sidebar-item
-          :link="{
-            name: 'Charts',
-            icon: 'now-ui-icons business_chart-pie-36',
-            path: '/charts',
-          }"
-        ></sidebar-item>
-        <sidebar-item
-          :link="{
-            name: 'Calendar',
-            icon: 'now-ui-icons media-1_album',
-            path: '/calendar',
-          }"
-        ></sidebar-item> -->
-      </template>
-    </side-bar>
-    <div class="main-panel">
-      <top-navbar></top-navbar>
-      <router-view name="header"></router-view>
+      //- sidebar-item(
+      //-   :link="{ name: 'Pages', icon: 'now-ui-icons design_image' }"
+      //- )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Pricing', path: '/pricing' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Timeline', path: '/pages/timeline' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Login', path: '/login' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Register', path: '/register' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Lock Screen', path: '/lock' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'User Profile', path: '/pages/user' }"
+      //-   )
+      //- sidebar-item(
+      //-   :link="{ name: 'Components', icon: 'now-ui-icons education_atom' }"
+      //- )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Buttons', path: '/components/buttons' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Grid System', path: '/components/grid-system' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Panels', path: '/components/panels' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Sweet Alert', path: '/components/sweet-alert' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Notifications', path: '/components/notifications' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Icons', path: '/components/icons' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Typography', path: '/components/typography' }"
+      //-   )
+      //- sidebar-item(
+      //-   :link="{ name: 'Forms', icon: 'now-ui-icons files_single-copy-04' }"
+      //- )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Regular Forms', path: '/forms/regular' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Extended Forms', path: '/forms/extended' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Validation Forms', path: '/forms/validation' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Wizard', path: '/forms/wizard' }"
+      //-   )
 
-      <div
-        :class="{ content: !$route.meta.hideContent }"
-        @click="toggleSidebar"
-      >
-        <!-- <div v-if="globalError" class="my-4 alert alert-danger">
-          <span>{{ globalError.message }}</span>
-        </div> -->
-        <router-view></router-view>
-      </div>
-      <content-footer v-if="!$route.meta.hideFooter"></content-footer>
-    </div>
-  </div>
+      //- sidebar-item(
+      //-   :link="{ name: 'Tables', icon: 'now-ui-icons design_bullet-list-67' }"
+      //- )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Regular Tables', path: '/table-list/regular' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Extended Tables', path: '/table-list/extended' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Paginated Tables', path: '/table-list/paginated' }"
+      //-   )
+      //- sidebar-item(
+      //-   :link="{ name: 'Maps', icon: 'now-ui-icons location_pin' }"
+      //- )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Google Maps', path: '/maps/google' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Full Screen Maps', path: '/maps/full-screen' }"
+      //-   )
+      //-   sidebar-item(
+      //-     :link="{ name: 'Vector Maps', path: '/maps/vector-map' }"
+      //-   )
+      //- sidebar-item(
+      //-   :link=`{
+      //-     name: 'Widgets',
+      //-     icon: 'now-ui-icons objects_diamond',
+      //-     path: '/widgets',
+      //-   }`
+      //- )
+      //- sidebar-item(
+      //-   :link=`{
+      //-     name: 'Charts',
+      //-     icon: 'now-ui-icons business_chart-pie-36',
+      //-     path: '/charts',
+      //-   }`
+      //- )
+      //- sidebar-item(
+      //-   :link=`{
+      //-     name: 'Calendar',
+      //-     icon: 'now-ui-icons media-1_album',
+      //-     path: '/calendar',
+      //-   }`
+      //- )
+
+  div.main-panel
+    top-navbar
+    router-view(name="header")
+
+    div(
+      :class="{ content: !$route.meta.hideContent }"
+      @click="toggleSidebar"
+    )
+      //- div.my-4.alert.alert-danger(v-if="globalError")
+      //-   span {{ globalError.message }}
+      router-view
+
+    content-footer(v-if="!$route.meta.hideFooter")
 </template>
 <script>
 /* eslint-disable no-new */

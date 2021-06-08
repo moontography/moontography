@@ -5,7 +5,7 @@ div.d-flex.justify-content-center
     type="file"
     @change="hashFile")
   button.btn.btn-primary(v-loading="globalLoading", :disabled="globalLoading", @click="triggerFile")
-    | #[i.now-ui-icons.arrows-1_share-66] Upload File to Hash
+    | #[i.now-ui-icons.arrows-1_share-66] Upload File to Calculate its Signature
 </template>
 
 <script>
