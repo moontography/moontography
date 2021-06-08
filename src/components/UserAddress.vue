@@ -44,10 +44,6 @@ export default {
       await this.$store.dispatch("init", true);
     },
   },
-
-  async mounted() {
-    await this.$store.dispatch("init", true);
-  },
 };
 </script>
 <style scoped>

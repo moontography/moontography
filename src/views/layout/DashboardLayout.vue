@@ -146,8 +146,8 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
     div(
       :class="{ content: !$route.meta.hideContent }"
       @click="toggleSidebar")
-        //- div.my-4.alert.alert-danger(v-if="globalError")
-        //-   span {{ globalError.message }}
+        div.my-4.alert.alert-danger(v-if="globalError")
+          span {{ globalError.message }}
         router-view
 
     content-footer(v-if="!$route.meta.hideFooter")
