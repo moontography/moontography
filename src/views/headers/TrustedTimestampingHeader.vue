@@ -7,7 +7,7 @@ div.panel-header
       | it in the blockchain to validate later the source of truth has not been
       | tampered with.
     span.category.link(data-toggle="modal", data-target="#faq-modal")
-      | #[i.mr-1.fa.fa-question-circle] Learn More
+      | #[router-link(to="") #[i.mr-1.fa.fa-question-circle] Learn More]
 faq-modal#faq-modal
 </template>
 

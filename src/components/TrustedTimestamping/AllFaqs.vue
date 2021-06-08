@@ -83,7 +83,7 @@ export default {
           answerHtml: `
             <p>
               As long as your computer is secure, then yes.
-              There are no servers associated with blockchain-trusted-timestamping and we use <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">local storage</a>
+              There are no servers associated with blockchain-trusted-timestamping and we use <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage" target="_blank">local storage</a>
               to store your private key so you don't have to enter it every time you upload a file.
               For the non technical, this just means the key is stored on your computer file system,
               and is not stored anywhere on the internet.
