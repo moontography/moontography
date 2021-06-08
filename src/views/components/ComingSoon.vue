@@ -10,7 +10,7 @@
 <script>
 import { mapState } from "vuex";
 import Timeline from "../components/Timeline";
-import ComingSoonCard from "../../../components/ComingSoonCard";
+import ComingSoonCard from "@/components/Cards/ComingSoonCard";
 
 export default {
   data() {

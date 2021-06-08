@@ -8,8 +8,8 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import TimestampingCardEth from "../../../components/TrustedTimestamping/TimestampingCardEth";
-import TimestampingCardXlm from "../../../components/TrustedTimestamping/TimestampingCardXlm";
+import TimestampingCardEth from "@/components/TrustedTimestamping/TimestampingCardEth";
+import TimestampingCardXlm from "@/components/TrustedTimestamping/TimestampingCardXlm";
 
 export default {
   data() {

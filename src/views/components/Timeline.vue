@@ -50,8 +50,8 @@ div.row.d-flex.justify-content-center
             i.ti-time Coming Soon
 </template>
 <script>
-import TimeLine from "../../../components/Timeline/Timeline";
-import TimeLineItem from "../../../components/Timeline/TimelineItem";
+import TimeLine from "@/components/Timeline/Timeline";
+import TimeLineItem from "@/components/Timeline/TimelineItem";
 
 export default {
   components: {
