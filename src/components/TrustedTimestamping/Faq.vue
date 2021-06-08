@@ -4,8 +4,8 @@ div
     a.text-dark(
       style="cursor: pointer"
       data-toggle="collapse"
-      :data-target="`#collapsible-${index}-${_uid}`") {{ question }}
-  div.collapse(:id="`collapsible-${index}-${_uid}`")
+      :data-target="`#collapsible-${index}`") {{ question }}
+  div.collapse(:id="`collapsible-${index}`")
     div.card
       div.card-body
         div(v-html="answerHtml")
