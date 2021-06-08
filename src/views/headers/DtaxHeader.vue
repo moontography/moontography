@@ -1,19 +1,13 @@
-<template>
-  <div class="panel-header">
-    <div class="header text-center">
-      <h2 class="title">Decentralized Tax Reporting (DTAX)</h2>
-      <p class="category">
-        Provide tax documentation for all transactions from a given wallet
-        address.
-      </p>
-    </div>
-  </div>
+<template lang="pug">
+div.panel-header
+  div.header.text-center
+    h2.title Decentralized Tax Reporting (DTAX)
+    p.category
+      | Provide tax documentation for all transactions from a given wallet address.
 </template>
 
 <script>
-export default {
-  name: "sweet-alert-header",
-};
+export default {};
 </script>
 
 <style scoped>
