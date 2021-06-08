@@ -9,11 +9,5 @@ div.user.mt-0.pb-2
 <script>
 export default {
   name: "user-menu",
-  props: {
-    image: {
-      type: String,
-      default: "img/default-avatar.png",
-    },
-  },
 };
 </script>

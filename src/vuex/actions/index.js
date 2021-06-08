@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 import DexUtils from "../../factories/DexUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import MTGY from "../../factories/web3/MTGY";
-import TrustedTimestamping from "../../factories/web3/TrustedTimestamping";
+import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
 import { useToast } from "vue-toastification";
 const toast = useToast();
 
@@ -78,7 +78,7 @@ export default {
     const trustedTimestampingAddress =
       getters.activeNetwork.trustedTimestamping;
     const contract = MTGY(web3, mtgyAddress);
-    const ttCont = TrustedTimestamping(web3, trustedTimestampingAddress);
+    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
     const [timestampAllowance, currentCost] = await Promise.all([
       contract.methods.allowance(userAddy, trustedTimestampingAddress).call(),
       ttCont.methods.cost().call(),
@@ -116,7 +116,7 @@ export default {
     const trustedTimestampingAddress =
       getters.activeNetwork.trustedTimestamping;
     const { web3 } = await Web3Modal.connect();
-    const ttCont = TrustedTimestamping(web3, trustedTimestampingAddress);
+    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
     await ttCont.methods
       .storeHash(hash, fileName, fileSize)
       .send({ from: userAddy });
@@ -129,7 +129,7 @@ export default {
     const userAddy = state.web3.address;
     const trustedTimestampingAddress =
       getters.activeNetwork.trustedTimestamping;
-    const ttCont = TrustedTimestamping(web3, trustedTimestampingAddress);
+    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
     const hashes = await ttCont.methods.getHashesFromAddress(userAddy).call();
     commit("SET_TRUSTED_TIMESTAMPING_HASHES", hashes);
   },
