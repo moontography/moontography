@@ -32,7 +32,7 @@
             | that make it attractive for certain use cases. 
             | These properties enable and empower transparent and secure financial systems in addition
             | to several creative use cases that are not particularly main stream today.
-            | By understanding and utilizing things like #[a(href="https://en.wikipedia.org/wiki/SHA-2") SHA-2 hashing]
+            | By understanding and utilizing things like #[a(href="https://en.wikipedia.org/wiki/SHA-2", target="_blank") SHA-2 hashing]
             | and transparency and immutability within the blockchain, it's possible to store 
             | digital signatures of information/data in order to
             | at a later time come back and validate with certainty that this
