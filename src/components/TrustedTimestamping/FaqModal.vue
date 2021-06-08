@@ -14,9 +14,9 @@
           div.row.flex-center
             div.col.d-flex.justify-content-center
               img.no-border(
-                alt="Vue logo"
+                alt="Moontography"
                 style="max-width: 200px; margin: 0px auto;"
-                src="../assets/logo-nn.png")
+                src="img/logo-nn.png")
           div.row.flex-center
             div.col
               h2.text-center(style="margin: 0.5rem 0rem 1rem 0rem;") Blockchain Trusted Timestamping
@@ -24,7 +24,7 @@
             div.col
               h4.m-0.text-center What is this?
           p
-            | Store digital signatures of your files on the Stellar blockchain to be validated
+            | Store digital signatures of your files on the blockchain to be validated
             | at a later time for tamper proofing or other use cases.
           p
             | Blockchain was developed with some core
@@ -46,7 +46,7 @@
             | confirm there has been no tampering of that file since then.
           div.row
             div.col-12
-              h3 FAQs
+              h3.text-center FAQ's
             all-faqs.col-12
 </template>
 

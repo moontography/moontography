@@ -1,7 +1,8 @@
 <template lang="pug">
 div
-  div(v-for="faq in faqs")
+  div(v-for="(faq, index) in faqs")
     faq.mb-3(
+      :index="index"
       :question="faq.question"
       :answer-html="faq.answerHtml")
 </template>
@@ -31,14 +32,13 @@ export default {
                 <li>
                   Add the file you want to store its signature on the blockchain. The process of
                   calculating its digital signature is done 100% on your computer and never leaves. If you
-                  don't believe me, check your network tab, I promise I'm just trying to utilize the stellar
+                  don't believe me, check your network tab, I promise I'm just trying to utilize the
                   blockchain in a cool way, not steal your stuff.
                 </li>
                 <li>
                   Add the private key of an account on the blockchain that will be
                   used to create a transaction with the file data signature located in the memo
-                  of the transaction. This account should have at least $${this.usdToSend}USD worth of XLM
-                  in it in order to execute the transaction.
+                  of the transaction.
                 </li>
                 <li>
                   Process the transaction to the blockchain. The file signature is now perpetually
@@ -55,11 +55,9 @@ export default {
               There is no cost if you want to put in a little effort
               to host blockchain-trusted-timestamping app yourself. You are welcome to fork and run locally or
               host it yourself online and use with your own public key target account and the
-              only cost would be the associated transaction fees on the stellar network (which are VERY small).
-              If you want to use this app hosted here (without hosting yourself) 
-              we ask for $${this.usdToSend} (USD) per file hash stored on the blockchain. Therefore, the private key
-              you enter to execute the transaction on the blockchain with the file hash in the memo
-              should have $${this.usdToSend} USD worth of XLM in it in order for the transaction to execute.
+              only cost would be the associated transaction fees on the blockchain.
+              If you want to use this app hosted here (without hosting yourself) you will spend MTGY in order
+              to store the digital signatures of your files on chain.
             </p>
           `,
         },
@@ -98,7 +96,7 @@ export default {
               I don't blame you since I don't even trust myself half of the time. If
               you want to use this tool as a standalone utility feel free to fork it and
               enter your own public or private keys on your own machines in the tool. I'm not a hacker
-              or a malicious person, just a dad of a 7 month old and 2 cats and a fan of the stellar blockchain :)
+              or a malicious person, just a dad of a 7 month old and 2 cats and a fan of blockchain :)
             </p>
           `,
         },
