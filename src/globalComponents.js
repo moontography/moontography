@@ -16,6 +16,8 @@ import {
   ElTooltip,
   ElPopover,
   ElLoading,
+  ElTable,
+  ElTableColumn,
 } from "element-plus";
 
 /**
@@ -29,6 +31,8 @@ const GlobalComponents = {
     app.component("n-button", Button);
     app.component(ElInput.name, ElInput);
     app.component(ElInputNumber.name, ElInputNumber);
+    app.component(ElTable.name, ElTable);
+    app.component(ElTableColumn.name, ElTableColumn);
     app.component("fg-input", FgInput);
     app.component("loading-panel", LoadingPanel);
     app.component("tabs", Tabs);

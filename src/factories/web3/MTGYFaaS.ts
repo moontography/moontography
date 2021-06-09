@@ -151,6 +151,44 @@ const mtgyFaasAbi: AbiItem[] = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenAddress",
+        type: "address",
+      },
+    ],
+    name: "getTokensForStaking",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_userAddress",
+        type: "address",
+      },
+    ],
+    name: "getUserStakingContracts",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "mtgyServiceCost",
     outputs: [
@@ -203,19 +241,6 @@ const mtgyFaasAbi: AbiItem[] = [
       },
     ],
     name: "removeContractFromUser",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_faasTokenAddy",
-        type: "address",
-      },
-    ],
-    name: "removeTokenContract",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
