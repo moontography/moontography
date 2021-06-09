@@ -6,7 +6,10 @@ footer.footer
         li {{ $route.name }}
     div.copyright
       | &copy; {{ year }},
-      a(href="https://moontography.com/" target="_blank") Moontography
+      a.ml-1(
+        href="https://moontography.com/"
+        target="_blank"
+        rel="noopener noreferrer") Moontography
 </template>
 <script>
 export default {

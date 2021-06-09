@@ -22,6 +22,7 @@ import Switch from "./Switch";
 import Table from "./Table";
 import TabPane from "./Tabs/TabPane";
 import Tabs from "./Tabs/Tabs";
+import TokenInput from "./TokenInput";
 import VeeInput from "./Inputs/VeeInput";
 
 export {
@@ -49,5 +50,6 @@ export {
   Table,
   TabPane,
   Tabs,
+  TokenInput,
   VeeInput,
 };

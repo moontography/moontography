@@ -1,47 +1,14 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
-export default function TrustedTimestamping(web3: Web3, contractAddy: string) {
+export default function MTGYTrustedTimestamping(
+  web3: Web3,
+  contractAddy: string
+) {
   return new web3.eth.Contract(timestampingContractAbi, contractAddy);
 }
 
 const timestampingContractAbi: AbiItem[] = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "newCost",
-        type: "uint256",
-      },
-    ],
-    name: "changeCost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "dataHash",
-        type: "bytes32",
-      },
-      {
-        internalType: "string",
-        name: "fileName",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "fileSizeBytes",
-        type: "uint256",
-      },
-    ],
-    name: "storeHash",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
   {
     inputs: [
       {
@@ -76,6 +43,19 @@ const timestampingContractAbi: AbiItem[] = [
     ],
     name: "StoreHash",
     type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "newCost",
+        type: "uint256",
+      },
+    ],
+    name: "changeCost",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
@@ -126,7 +106,7 @@ const timestampingContractAbi: AbiItem[] = [
             type: "uint256",
           },
         ],
-        internalType: "struct TrustedTimestamping.Address[]",
+        internalType: "struct MTGYTrustedTimestamping.Address[]",
         name: "",
         type: "tuple[]",
       },
@@ -167,7 +147,7 @@ const timestampingContractAbi: AbiItem[] = [
             type: "uint256",
           },
         ],
-        internalType: "struct TrustedTimestamping.DataHash[]",
+        internalType: "struct MTGYTrustedTimestamping.DataHash[]",
         name: "",
         type: "tuple[]",
       },
@@ -186,6 +166,29 @@ const timestampingContractAbi: AbiItem[] = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "dataHash",
+        type: "bytes32",
+      },
+      {
+        internalType: "string",
+        name: "fileName",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "fileSizeBytes",
+        type: "uint256",
+      },
+    ],
+    name: "storeHash",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

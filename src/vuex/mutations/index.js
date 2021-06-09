@@ -11,16 +11,28 @@ export default {
     state.globalLoading = isLoading;
   },
 
+  SET_INIT_LOADING(state, isLoading) {
+    state.initLoading = isLoading;
+  },
+
+  SET_SELECTED_ADDRESS(state, address) {
+    state.selectedAddressInfo.address = address;
+  },
+
+  SET_SELECTED_ADDRESS_INFO(state, info) {
+    const keys = Object.keys(info);
+    state.selectedAddressInfo = {
+      ...state.selectedAddressInfo,
+      ...keys.reduce((o, key) => ({ ...o, [key]: info[key] }), {}),
+    };
+  },
+
   SET_MTGY_PRICE_USD(state, price) {
     state.mtgyPriceUsd = price;
   },
 
   SET_WEB3_IS_CONNECTED(state, isConnected) {
     state.web3.isConnected = isConnected;
-  },
-
-  SET_WEB3_IS_APPROVED(state, isApproved) {
-    state.web3.isApproved = isApproved;
   },
 
   SET_WEB3_CHAIN_ID(state, chainId) {

@@ -58,7 +58,6 @@ export default {
       activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
       globalLoading: (state) => state.globalLoading,
       activeNetwork: (_, getters) => getters.activeNetwork,
-      isApproved: (state) => state.web3.isApproved,
     }),
 
     fileHashString() {
@@ -78,13 +77,7 @@ export default {
 
     async sendTrustedTimestampTxn() {
       try {
-        // Start loading
-        this.$store.dispatch("setGlobalLoading", true);
-
-        await this.$store.dispatch("ethCheckApprovalStatusForTokenContract");
-        if (!this.isApproved) {
-          await this.$store.dispatch("ethApproveTokenContract");
-        }
+        this.$store.commit("SET_GLOBAL_LOADING", true);
 
         await this.$store.dispatch("sendTrustedTimestampTxn", {
           hash: this.fileHashString,
@@ -92,14 +85,13 @@ export default {
           fileSize: this.file.size,
         });
 
-        // TODO: reload hashes
-
-        // Stop loading
-        this.$store.dispatch("setGlobalLoading", false);
-
-        this.$toast.success("Successfully sent to blockchain!");
+        await this.$store.dispatch("getTimestampingHashes");
+        this.$toast.success("Successfully stored signature on blockchain!");
       } catch (err) {
-        this.$store.dispatch("setGlobalLoading", false);
+        console.error(err);
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
       }
     },
   },

@@ -11,6 +11,9 @@ import BulkTokenSenderHeader from "../views/headers/BulkTokenSenderHeader";
 import DtaxHeader from "../views/headers/DtaxHeader";
 
 // Dashboard pages
+import FaasLayout from "../views/layout/FaasLayout.vue";
+import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
+import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
 import ComingSoon from "../views/components/ComingSoon.vue";
 
@@ -29,7 +32,6 @@ const routes = [
       {
         path: "timestamping",
         name: "Blockchain Trusted Timestamping",
-        // components: { default: Dashboard, header: DashboardHeader },
         components: {
           default: TrustedTimestamping,
           header: TrustedTimestampingHeader,
@@ -38,7 +40,31 @@ const routes = [
       {
         path: "faas",
         name: "Farming as a Service",
-        components: { default: ComingSoon, header: FaasHeader },
+        components: { default: FaasLayout, header: FaasHeader },
+        children: [
+          {
+            path: "owner",
+            name: "Farming as a Service",
+            component: FaasOwner,
+          },
+          {
+            path: "owner/:tokenAddress",
+            name: "Farming as a Service",
+            component: FaasOwner,
+            props: true,
+          },
+          {
+            path: ":tokenAddress",
+            name: "Farming as a Service",
+            component: FaasStaker,
+            props: true,
+          },
+          {
+            path: "",
+            name: "Farming as a Service",
+            component: FaasStaker,
+          },
+        ],
       },
       {
         path: "bts",
