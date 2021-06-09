@@ -11,7 +11,7 @@ import BulkTokenSenderHeader from "../views/headers/BulkTokenSenderHeader";
 import DtaxHeader from "../views/headers/DtaxHeader";
 
 // Dashboard pages
-import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
+import TrustedTimestamping from "../views/dashboards/TrustedTimestamping/TrustedTimestamping.vue";
 import ComingSoon from "../views/components/ComingSoon.vue";
 
 const routes = [

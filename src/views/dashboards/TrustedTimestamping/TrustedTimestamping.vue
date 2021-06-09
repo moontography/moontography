@@ -1,14 +1,21 @@
 <template lang="pug">
 .row
-  .col-md-6.mx-auto
+  .col-md-8.mx-auto
     card
       .text-center
         component(:is="blockchainHashComponent")
+
+.row
+  .col-md-8.mx-auto
+    card
+      .text-center
+        timestamping-paginated-table
 </template>
 <script>
 import { mapState } from "vuex";
 import TimestampingCardEth from "@/components/TrustedTimestamping/TimestampingCardEth";
 import TimestampingCardXlm from "@/components/TrustedTimestamping/TimestampingCardXlm";
+import TimestampingPaginatedTable from "@/components/TrustedTimestamping/TimestampingPaginatedTable";
 
 export default {
   data() {
@@ -17,6 +24,7 @@ export default {
   components: {
     TimestampingCardEth,
     TimestampingCardXlm,
+    TimestampingPaginatedTable,
   },
   computed: {
     ...mapState({
