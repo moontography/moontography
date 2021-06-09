@@ -6,10 +6,8 @@
         component(:is="blockchainHashComponent")
 
 .row
-  .col-md-8.mx-auto
-    card
-      .text-center
-        timestamping-paginated-table
+  .col-md-12.mx-auto
+    timestamping-paginated-table
 </template>
 <script>
 import { mapState } from "vuex";

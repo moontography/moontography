@@ -49,7 +49,7 @@ export default {
       const [accountAddy] = await web3.eth.getAccounts();
       commit("SET_WEB3_USER_ADDRESS", accountAddy);
 
-      await dispatch("getHashes");
+      await dispatch("getTimestampingHashes");
     } catch (err) {
       toast.error(err.message || err);
       commit("SET_GLOBAL_ERROR", err);
@@ -117,7 +117,7 @@ export default {
     const mtgyAddy = getters.activeNetwork.contracts.mtgy;
     const trustedTimestampingAddress =
       getters.activeNetwork.contracts.trustedTimestamping;
-    const { web3 } = await Web3Modal.connect();
+    const web3 = state.web3.instance;
     const mtgyCont = MTGY(web3, mtgyAddy);
     const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
 
@@ -133,13 +133,13 @@ export default {
         .send({ from: userAddy });
     }
 
-    // Store the hash if we haven't bombed out yet
+    // store the hash if we haven't bombed out yet
     await ttCont.methods
       .storeHash(hash, fileName, fileSize)
       .send({ from: userAddy });
   },
 
-  async getHashes({ commit, state, getters }) {
+  async getTimestampingHashes({ commit, state, getters }) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const trustedTimestampingAddress =

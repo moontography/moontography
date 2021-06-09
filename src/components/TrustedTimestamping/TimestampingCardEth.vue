@@ -77,7 +77,6 @@ export default {
 
     async sendTrustedTimestampTxn() {
       try {
-        // Start loading
         this.$store.commit("SET_GLOBAL_LOADING", true);
 
         await this.$store.dispatch("sendTrustedTimestampTxn", {
@@ -86,11 +85,11 @@ export default {
           fileSize: this.file.size,
         });
 
-        // TODO: reload user hashes
-
+        await this.$store.dispatch("getTimestampingHashes");
         this.$toast.success("Successfully stored signature on blockchain!");
       } catch (err) {
-        this.$store.commit("SET_GLOBAL_ERROR", err);
+        console.error(err);
+        this.$toast.error(err.message);
       } finally {
         this.$store.commit("SET_GLOBAL_LOADING", false);
       }

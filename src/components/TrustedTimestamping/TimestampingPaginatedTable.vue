@@ -3,7 +3,7 @@ div.row
   div.col-12
     card(card-body-classes="table-full-width" no-footer-line)
       template(v-slot:header)
-        h4.card-title Timestamped Files
+        h4.card-title All Trusted Timestamps
 
       div
         div.col-12.d-flex.justify-content-center.justify-content-sm-between.flex-wrap  
@@ -17,29 +17,28 @@ div.row
                 style="width: 200px"
                 placeholder="Search records"
                 v-model="searchQuery"
-                aria-controls="datatables"
-              )
+                aria-controls="datatables")
   
-        el-table(stripe style="width: 100%" :data="queriedData")
+        div.card-body(v-if="queriedData.length === 0")
+          i No file signatures added to the blockchain yet!
+        el-table(v-else stripe :data="queriedData")
           el-table-column(
             v-for="column in tableColumns"
             :key="column.label"
             :min-width="column.minWidth"
             :prop="column.prop"
-            :label="column.label"
-          )
+            :label="column.label")
           
-          el-table-column(fixed="right" label="Actions")
-            template(v-slot:default="props")
-              div.d-flex.justify-content-center.table-actions
-                n-button(
-                  @click="handleCopy(props.$index, props.row)"
-                  type="info"
-                  size="sm"
-                  round
-                  icon
-                )
-                  i.fa.fa-copy
+          //- el-table-column(fixed="right" label="Actions")
+          //-   template(v-slot:default="props")
+          //-     div.d-flex.justify-content-center.table-actions
+          //-       n-button(
+          //-         @click="handleCopy(props.$index, props.row)"
+          //-         type="info"
+          //-         size="sm"
+          //-         round
+          //-         icon)
+          //-           i.fa.fa-copy
         
       template(v-slot:footer)
         div.col-12.d-flex.align-items-center.justify-content-center
@@ -49,35 +48,24 @@ div.row
           div.ml-auto.d-flex.align-items-center
             el-select.select-primary.mb-3.w-50(
               v-model="pagination.perPage"
-              placeholder="Per page"
-            )
-              el-option.select-default(
-                v-for="item in pagination.perPageOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              )
+              placeholder="Per page")
+                el-option.select-default(
+                  v-for="item in pagination.perPageOptions"
+                  :key="item"
+                  :label="item"
+                  :value="item")
               
             n-pagination.pagination-no-border(
               v-model="pagination.currentPage"
               :per-page="pagination.perPage"
-              :total="total"
-            )
+              :total="total")
 </template>
 <script>
+import BigNumber from "bignumber.js";
+import dayjs from "dayjs";
 import { mapState } from "vuex";
-import { ElTable, ElTableColumn, ElSelect, ElOption } from "element-plus";
-import { Pagination as NPagination } from "@/components";
 
 export default {
-  components: {
-    NPagination,
-    [ElSelect.name]: ElSelect,
-    [ElOption.name]: ElOption,
-    [ElTable.name]: ElTable,
-    [ElTableColumn.name]: ElTableColumn,
-  },
-
   data() {
     return {
       pagination: {
@@ -87,21 +75,26 @@ export default {
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["name", "hash"],
+      propsToSearch: ["fileName"],
       tableColumns: [
         {
-          prop: "name",
-          label: "Name",
-          minWidth: 250,
+          prop: "fileName",
+          label: "File Name",
+          minWidth: 200,
         },
         {
-          prop: "hash",
-          label: "Hash",
-          minWidth: 250,
+          prop: "fileSizeBytes",
+          label: "File Size (bytes)",
+          minWidth: 200,
         },
         {
-          prop: "timestamp",
-          label: "Timestamp",
+          prop: "dataHash",
+          label: "File Signature",
+          minWidth: 200,
+        },
+        {
+          prop: "time",
+          label: "Timestamp Stored on Blockchain",
           minWidth: 200,
         },
       ],
@@ -116,7 +109,19 @@ export default {
     }),
 
     pagedData() {
-      return (this.hashes || []).slice(this.from, this.to);
+      return (this.hashes || [])
+        .slice(this.from, this.to)
+        .map((hash) => ({
+          ...hash,
+          time: `${dayjs(
+            new BigNumber(hash.time).times(1e3).toNumber()
+          ).toISOString()} UTC`,
+        }))
+        .sort((h1, h2) => {
+          const n1 = (h1.fileName || "").toLowerCase();
+          const n2 = (h2.fileName || "").toLowerCase();
+          return n1 < n2 ? -1 : 1;
+        });
     },
 
     /***

@@ -1,3 +1,4 @@
+import { Pagination as NPagination } from "./components";
 import UserAddress from "./components/UserAddress.vue";
 import {
   Button,
@@ -13,6 +14,8 @@ import {
 import {
   ElInput,
   ElInputNumber,
+  ElOption,
+  ElSelect,
   ElTooltip,
   ElPopover,
   ElLoading,
@@ -31,8 +34,11 @@ const GlobalComponents = {
     app.component("n-button", Button);
     app.component(ElInput.name, ElInput);
     app.component(ElInputNumber.name, ElInputNumber);
+    app.component(ElOption.name, ElOption);
+    app.component(ElSelect.name, ElSelect);
     app.component(ElTable.name, ElTable);
     app.component(ElTableColumn.name, ElTableColumn);
+    app.component("n-pagination", NPagination);
     app.component("fg-input", FgInput);
     app.component("loading-panel", LoadingPanel);
     app.component("tabs", Tabs);
