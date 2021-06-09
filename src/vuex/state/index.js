@@ -5,6 +5,7 @@ export default {
 
   globalError: null,
   globalLoading: false,
+  initLoading: true,
 
   activeNetwork: localStorage.activeNetwork || "eth",
   mtgyPriceUsd: "0",
@@ -12,10 +13,17 @@ export default {
   web3: {
     instance: null,
     isConnected: false,
-    isApproved: false,
     chainId: null,
     address: "",
     mainCurrencyBalance: "",
+  },
+
+  selectedAddressInfo: {
+    address: "",
+    name: "",
+    symbol: "",
+    decimals: "",
+    userBalance: "",
   },
 
   eth: {
@@ -67,8 +75,12 @@ export default {
           contractAddress: "",
           balance: "",
         },
-        mtgy: "0xeBA91Da72cE361A56b370D98ad00979dAf96CD26",
-        trustedTimestamping: "0xa9Bd6E845E391497c957B4AA03bF20e4D52691B1",
+        contracts: {
+          mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
+          mtgySpend: "0xa1436eC99ed15350868Efa9d410241f35430A1A7",
+          trustedTimestamping: "0x7F02c8aE5f72798912538576988D2D3716CF97D1",
+          faas: "0x301c6255b0A0B98a4Ae5D1Bd22693b55f6378063",
+        },
       },
       // {
       //   name: "Ethereum Görli",
@@ -214,7 +226,12 @@ export default {
           balance: "",
         },
         logo: `img/bsc.png`,
-        mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+        contracts: {
+          mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+          mtgySpend: "",
+          trustedTimestamping: "",
+          faas: "",
+        },
       },
     ],
   },
