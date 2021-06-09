@@ -78,8 +78,8 @@ export default {
         contracts: {
           mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
           mtgySpend: "0xa1436eC99ed15350868Efa9d410241f35430A1A7",
-          trustedTimestamping: "0x7B03aAf39FD71FeDD3f1592fbBEC762222017EC0",
-          faas: "0x301c6255b0A0B98a4Ae5D1Bd22693b55f6378063",
+          trustedTimestamping: "0x0CF69B58812DF3AfE425a41B830948fffe69aaE4",
+          faas: "0xc43e35C3199dCB19026776cE12e4C6Cd2BeEdFB0",
         },
       },
       // {
