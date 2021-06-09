@@ -3,7 +3,7 @@ div.row
   div.col-12
     card(card-body-classes="table-full-width" no-footer-line)
       template(v-slot:header)
-        h4.card-title All Trusted Timestamps
+        h4.card-title.pl-3 All Trusted Timestamps
 
       div
         div.col-12.d-flex.justify-content-center.justify-content-sm-between.flex-wrap  
@@ -19,7 +19,7 @@ div.row
                 v-model="searchQuery"
                 aria-controls="datatables")
   
-        div.card-body(v-if="queriedData.length === 0")
+        div.card-body.text-center(v-if="queriedData.length === 0")
           i No file signatures added to the blockchain yet!
         el-table(v-else stripe :data="queriedData")
           el-table-column(
@@ -75,7 +75,7 @@ export default {
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["fileName"],
+      propsToSearch: ["fileName", "dataHash"],
       tableColumns: [
         {
           prop: "fileName",
@@ -85,12 +85,12 @@ export default {
         {
           prop: "fileSizeBytes",
           label: "File Size (bytes)",
-          minWidth: 200,
+          minWidth: 150,
         },
         {
           prop: "dataHash",
           label: "File Signature",
-          minWidth: 200,
+          minWidth: 250,
         },
         {
           prop: "time",
@@ -99,7 +99,6 @@ export default {
         },
       ],
       searchedData: [],
-      fuseSearch: null,
     };
   },
 
@@ -108,9 +107,8 @@ export default {
       hashes: (state) => state.trustedTimestamping.hashes || [],
     }),
 
-    pagedData() {
-      return (this.hashes || [])
-        .slice(this.from, this.to)
+    formattedData() {
+      return this.hashes
         .map((hash) => ({
           ...hash,
           time: `${dayjs(
@@ -124,6 +122,10 @@ export default {
         });
     },
 
+    pagedData() {
+      return this.formattedData.slice(this.from, this.to);
+    },
+
     /***
      * Searches through table data and returns a paginated array.
      * Note that this should not be used for table with a lot of data as it might be slow!
@@ -134,11 +136,14 @@ export default {
       if (!this.searchQuery) {
         return this.pagedData;
       }
-      let result = this.hashes.filter((row) => {
+      let result = this.formattedData.filter((row) => {
         let isIncluded = false;
         for (let key of this.propsToSearch) {
           let rowValue = row[key].toString();
-          if (rowValue.includes && rowValue.includes(this.searchQuery)) {
+          if (
+            rowValue.toLowerCase &&
+            rowValue.toLowerCase().includes(this.searchQuery.toLowerCase())
+          ) {
             isIncluded = true;
           }
         }
@@ -163,7 +168,7 @@ export default {
     total() {
       return this.searchedData.length > 0
         ? this.searchedData.length
-        : this.hashes.length;
+        : this.formattedData.length;
     },
   },
 
