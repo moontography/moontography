@@ -42,6 +42,12 @@ navbar#navigation(:show-navbar="showNavbar")
             i.fa.fa-2x.fa-telegram
       li.nav-item
         a.nav-link(
+          href="https://blog.moontography.com"
+          target="_blank"
+          rel="noopener noreferrer")
+            i.fa.fa-2x.fa-medium
+      li.nav-item
+        a.nav-link(
           href="https://github.com/moontography"
           target="_blank"
           rel="noopener noreferrer")

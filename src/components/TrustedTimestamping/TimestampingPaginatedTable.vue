@@ -3,7 +3,7 @@ div.row
   div.col-12
     card(card-body-classes="table-full-width" no-footer-line)
       template(v-slot:header)
-        h4.card-title.pl-3 All Trusted Timestamps
+        h4.card-title.pl-3 Your Files
 
       div
         div.col-12.d-flex.justify-content-center.justify-content-sm-between.flex-wrap  

@@ -1,6 +1,6 @@
 <template lang="pug">
 .row
-  .col-md-4.mx-auto
+  .col-md-6.mx-auto
     card
       .text-center
         component(:is="blockchainHashComponent")

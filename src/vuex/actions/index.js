@@ -156,7 +156,18 @@ export default {
     commit("SET_MTGY_PRICE_USD", price);
   },
 
-  async setUserInfoForToken({ commit, state }, tokenAddy) {
+  async setUserInfoForToken({ commit, dispatch }, tokenAddy) {
+    const info = await dispatch("getErc20TokenInfo", tokenAddy);
+
+    commit("SET_SELECTED_ADDRESS_INFO", {
+      ...info,
+      userBalance: new BigNumber(info.userBalance)
+        .div(new BigNumber(10).pow(info.decimals))
+        .toString(),
+    });
+  },
+
+  async getErc20TokenInfo({ state }, tokenAddy) {
     const userAddy = state.web3.address;
     const contract = ERC20(state.web3.instance, tokenAddy);
     const [name, symbol, decimals, userBalance] = await Promise.all([
@@ -165,14 +176,11 @@ export default {
       contract.methods.decimals().call(),
       contract.methods.balanceOf(userAddy).call(),
     ]);
-
-    commit("SET_SELECTED_ADDRESS_INFO", {
+    return {
       name,
       symbol,
       decimals,
-      userBalance: new BigNumber(userBalance)
-        .div(new BigNumber(10).pow(decimals))
-        .toString(),
-    });
+      userBalance,
+    };
   },
 };
