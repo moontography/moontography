@@ -19,19 +19,18 @@ import ComingSoon from "../views/components/ComingSoon.vue";
 
 const routes = [
   {
-    path: "/",
-    redirect: "/timestamping",
-    name: "Home",
+    path: "",
+    redirect: { name: "home" },
   },
   {
     path: "/",
+    name: "home",
+    redirect: { name: "timestamping" },
     component: DashboardLayout,
-    redirect: "/timestamping",
-    name: "Blockchain Trusted Timestamping",
     children: [
       {
         path: "timestamping",
-        name: "Blockchain Trusted Timestamping",
+        name: "timestamping",
         components: {
           default: TrustedTimestamping,
           header: TrustedTimestampingHeader,
@@ -39,29 +38,29 @@ const routes = [
       },
       {
         path: "faas",
-        name: "Farming as a Service",
+        name: "faas",
         components: { default: FaasLayout, header: FaasHeader },
         children: [
           {
             path: "owner",
-            name: "Farming as a Service",
+            name: "faasOwner",
             component: FaasOwner,
           },
           {
             path: "owner/:tokenAddress",
-            name: "Farming as a Service",
+            name: "faasOwnerToken",
             component: FaasOwner,
             props: true,
           },
           {
             path: ":tokenAddress",
-            name: "Farming as a Service",
+            name: "faasStakerToken",
             component: FaasStaker,
             props: true,
           },
           {
             path: "",
-            name: "Farming as a Service",
+            name: "faasStaker",
             component: FaasStaker,
           },
         ],
