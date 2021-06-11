@@ -32,13 +32,6 @@ div.row
           //- el-table-column(fixed="right" label="Actions")
           //-   template(v-slot:default="props")
           //-     div.d-flex.justify-content-center.table-actions
-          //-       n-button(
-          //-         @click="handleCopy(props.$index, props.row)"
-          //-         type="info"
-          //-         size="sm"
-          //-         round
-          //-         icon)
-          //-           i.fa.fa-copy
           
         template(v-slot:footer)
           div.d-flex.align-items-center.justify-content-center
@@ -172,7 +165,9 @@ export default {
   },
 
   methods: {
-    handleCopy(index, row) {},
+    // handleCompare(index, row) {
+    //   this.$emit("compare", row.dataHash);
+    // },
   },
 };
 </script>

@@ -27,7 +27,6 @@ div
                           | The file name was #[strong {{ hashedFileAlreadyUploadedInfo.fileName }}] and file size is
                           | #[strong {{ hashedFileAlreadyUploadedInfo.fileSizeBytes }}]
 
-
         button.mt-4.btn.btn-primary(
           v-loading="globalLoading", 
           :disabled="globalLoading || !activeNetwork"

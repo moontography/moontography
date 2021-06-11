@@ -46,10 +46,10 @@ export default {
           hash: fileHash,
         });
         this.$toast.success(
-          `Successfully generated the SHA 256 hash/data signature of the file: 0x${fileHash}`
+          `Successfully generated the SHA 256 hash/data signature of the file.` //: 0x${fileHash}
         );
       } catch (err) {
-        this.$toast.error(`Failed to hash file - ${err}`);
+        this.$toast.error(`Failed to hash file - ${err}.`);
       }
     },
   },
