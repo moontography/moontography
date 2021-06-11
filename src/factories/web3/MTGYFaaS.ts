@@ -61,6 +61,25 @@ const mtgyFaasAbi: AbiItem[] = [
         type: "uint256",
       },
     ],
+    name: "allFarmingContracts",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     name: "allUsersStaking",
     outputs: [
       {
@@ -151,6 +170,19 @@ const mtgyFaasAbi: AbiItem[] = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getAllFarmingContracts",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -196,32 +228,6 @@ const mtgyFaasAbi: AbiItem[] = [
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "mtgySpendContract",
-    outputs: [
-      {
-        internalType: "contract MTGYSpend",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "mtgyToken",
-    outputs: [
-      {
-        internalType: "contract MTGY",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",

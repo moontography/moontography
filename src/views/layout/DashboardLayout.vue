@@ -12,7 +12,7 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Farming as a Service',
+          name: 'Farm Your Tokens (FaaS)',
           icon: 'now-ui-icons sport_trophy',
           path: '/faas',
         }`
@@ -148,7 +148,8 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       @click="toggleSidebar")
         div.my-4.alert.alert-danger(v-if="globalError")
           span {{ globalError.message }}
-        router-view
+        loading-panel(v-if="isInitLoading")
+        router-view(v-else)
 
     content-footer(v-if="!$route.meta.hideFooter")
 </template>
@@ -184,6 +185,7 @@ export default {
     UserMenu,
   },
   computed: mapState({
+    isInitLoading: (state) => state.initLoading,
     globalError: (state) => state.globalError,
   }),
   methods: {

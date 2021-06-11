@@ -1,6 +1,6 @@
 <template>
   <div
-    class="form-group"
+    class="form-group m-0"
     :class="[
       { 'input-group': hasIcon },
       { 'has-danger': error },
