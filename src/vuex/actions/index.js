@@ -48,14 +48,19 @@ export default {
 
       const [accountAddy] = await web3.eth.getAccounts();
       commit("SET_WEB3_USER_ADDRESS", accountAddy);
-
-      await dispatch("getTimestampingHashes");
     } catch (err) {
       toast.error(err.message || err);
       commit("SET_GLOBAL_ERROR", err);
     } finally {
       commit("SET_INIT_LOADING", false);
     }
+  },
+
+  async trustedTimestampingInit({ dispatch }) {
+    await Promise.all([
+      dispatch("getTimestampingHashes"),
+      dispatch("getTimestampingCost"),
+    ]);
   },
 
   disconnect({ commit }) {
@@ -81,7 +86,7 @@ export default {
   //   const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
   //   const [timestampAllowance, currentCost] = await Promise.all([
   //     contract.methods.allowance(userAddy, trustedTimestampingAddress).call(),
-  //     ttCont.methods.cost().call(),
+  //     ttCont.methods.mtgyServiceCost().call(),
   //   ]);
   //   const isApprovedAlready = new BigNumber(timestampAllowance).gte(
   //     currentCost
@@ -125,7 +130,7 @@ export default {
     // spend on the timestamping service
     const [currentApprovalAmount, currentTtCost] = await Promise.all([
       mtgyCont.methods.allowance(userAddy, trustedTimestampingAddress).call(),
-      ttCont.methods.cost().call(),
+      ttCont.methods.mtgyServiceCost().call(),
     ]);
     if (new BigNumber(currentApprovalAmount).lt(currentTtCost)) {
       await mtgyCont.methods
@@ -147,6 +152,18 @@ export default {
     const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
     const hashes = await ttCont.methods.getHashesFromAddress(userAddy).call();
     commit("SET_TRUSTED_TIMESTAMPING_HASHES", hashes);
+  },
+
+  async getTimestampingCost({ commit, getters, state }) {
+    const web3 = state.web3.instance;
+    const trustedTimestampingAddress =
+      getters.activeNetwork.contracts.trustedTimestamping;
+    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
+    const cost = await ttCont.methods.mtgyServiceCost().call();
+    commit(
+      "SET_TRUSTED_TIMESTAMPING_COST",
+      new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
+    );
   },
 
   async getMtgyPriceUsd({ commit }) {

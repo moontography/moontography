@@ -22,7 +22,7 @@
       <slot></slot>
     </div>
     <hr v-if="$slots.footer && !noFooterLine" />
-    <div class="card-footer" v-if="$slots.footer">
+    <div class="card-footer" :class="footerClasses" v-if="$slots.footer">
       <slot name="footer"></slot>
     </div>
   </div>
@@ -39,6 +39,7 @@ export default {
     plain: Boolean,
     cardBodyClasses: [String, Object, Array],
     headerClasses: [String, Object, Array],
+    footerClasses: [String, Object, Array],
   },
 };
 </script>

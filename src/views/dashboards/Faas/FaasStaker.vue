@@ -11,8 +11,8 @@
               | Find a Token to Farm and Earn
           template(v-slot:raw-content="")
             div
-              token-input(@input="lookUpTokenStakingContracts")
-            div.card-body.table-full-width.pb-0.border-top(v-if="showStakingTokens")
+              token-input
+            div.card-body.table-full-width.pb-0.border-top
               staking-tokens-list
       div.col-lg-4
         card
@@ -48,7 +48,6 @@ export default {
     return {
       activeTab: "Profile",
       localError: null,
-      showStakingTokens: false,
       userStakingContracts: [],
     };
   },
@@ -67,16 +66,6 @@ export default {
   },
 
   methods: {
-    async lookUpTokenStakingContracts() {
-      this.showStakingTokens = true;
-      // const contract = MTGYFaaS(this.web3, this.faasAddy);
-      // const tokenAddresses = await contract.methods
-      //   .getTokensForStaking(tokenAddy)
-      //   .call();
-      // console.log("TOKEN STAKING ADDRESSES", tokenAddresses);
-      // // TODO get a list of all faas tokens for this token and show to the user
-    },
-
     async getUserStakingContracts() {
       const contract = MTGYFaaS(this.web3, this.faasAddy);
       const tokensUserIsTaking = await contract.methods

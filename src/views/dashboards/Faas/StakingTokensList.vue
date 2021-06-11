@@ -5,18 +5,20 @@ div
   div.px-4(v-else-if="!web3")
     div.alert.alert-danger
       | Please connect to your wallet.
-  div.px-4(v-else-if="!isAddyValid")
-    div.alert.alert-danger
-      | Enter a valid address to search for farms.
+  //- div.px-4(v-else-if="!isAddyValid")
+  //-   div.alert.alert-danger
+  //-     | Enter a valid address to search for farms.
   div.px-4(v-else-if="!tokenStakingContracts || tokenStakingContracts.length === 0")
     div.alert.alert-warning
       | No staking contracts available for this token yet.
   el-table(
     v-else
     :data='tokenStakingContracts')
-      el-table-column(min-width='150' label='Farming Token' property='farmingTokenName')
-      el-table-column(min-width='150' label='Your Balance' property='farmingTokenBalance')
-      //- el-table-column(min-width='150' label='Token Symbol' property='stakingTokenSymbol')
+      el-table-column(min-width='150' label='Symbol' property='currentTokenSymbol')
+      el-table-column(min-width='150' label='Token' property='currentTokenName')
+      //- el-table-column(min-width='150' label='Farming Token' property='farmingTokenName')
+      el-table-column(min-width='150' label='Your Token Balance' property='currentTokenBalance')
+      el-table-column(min-width='150' label='Your Staked Balance' property='farmingTokenBalance')
 </template>
 
 <script>
@@ -59,11 +61,19 @@ export default {
   methods: {
     async lookUpTokenStakingContracts() {
       try {
+        let tokenAddresses;
         this.isLoadingLocal = true;
         const contract = MTGYFaaS(this.web3, this.faasAddy);
-        const tokenAddresses = await contract.methods
-          .getTokensForStaking(this.selectedTokenAddress)
-          .call();
+        if (this.isAddyValid && this.selectedTokenAddress) {
+          tokenAddresses = await contract.methods
+            .getTokensForStaking(this.selectedTokenAddress)
+            .call();
+        } else {
+          tokenAddresses = await contract.methods
+            .getAllFarmingContracts()
+            .call();
+        }
+
         this.tokenStakingContracts = await Promise.all(
           tokenAddresses.map(async (farmingTokenAddy) => {
             const tokenCont = MTGYFaaSToken(this.web3, farmingTokenAddy);
@@ -83,8 +93,11 @@ export default {
               farmingTokenBalance: new BigNumber(farmingInfo.userBalance)
                 .div(new BigNumber(10).pow(farmingInfo.decimals))
                 .toString(),
-              stakingTokenName: name,
-              stakingTokenSymbol: symbol,
+              currentTokenName: name,
+              currentTokenSymbol: symbol,
+              currentTokenBalance: new BigNumber(userBalance)
+                .div(new BigNumber(10).pow(decimals))
+                .toString(),
             };
           })
         );
@@ -97,7 +110,7 @@ export default {
   },
 
   async mounted() {
-    if (this.isAddyValid) await this.lookUpTokenStakingContracts();
+    await this.lookUpTokenStakingContracts();
   },
 };
 </script>

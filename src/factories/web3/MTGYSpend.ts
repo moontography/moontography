@@ -7,7 +7,13 @@ export default function MTGYSpend(web3: Web3, contractAddy: string) {
 
 const mtgySpendAbi: AbiItem[] = [
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "_mtgyTokenAddy",
+        type: "address",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "constructor",
   },
@@ -47,7 +53,7 @@ const mtgySpendAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "newDevWallet",
+        name: "_newDevWallet",
         type: "address",
       },
     ],
@@ -60,7 +66,7 @@ const mtgySpendAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "tokenAddy",
+        name: "_tokenAddy",
         type: "address",
       },
     ],
@@ -73,7 +79,7 @@ const mtgySpendAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "newRewardsWallet",
+        name: "_newRewardsWallet",
         type: "address",
       },
     ],
@@ -138,7 +144,7 @@ const mtgySpendAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "uint256",
-        name: "productCostTokens",
+        name: "_productCostTokens",
         type: "uint256",
       },
     ],
@@ -151,6 +157,19 @@ const mtgySpendAbi: AbiItem[] = [
       },
     ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalSpent",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];

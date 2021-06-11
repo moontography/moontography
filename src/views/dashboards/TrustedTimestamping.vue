@@ -3,7 +3,10 @@
   .col-md-6.mx-auto
     card
       .text-center
-        component(:is="blockchainHashComponent")
+        loading-panel(v-if="isLoading")
+        component(
+          v-else
+          :is="blockchainHashComponent")
 
 .row
   .col-md-12.mx-auto
@@ -17,7 +20,9 @@ import TimestampingPaginatedTable from "@/components/TrustedTimestamping/Timesta
 
 export default {
   data() {
-    return {};
+    return {
+      isLoading: true,
+    };
   },
   components: {
     TimestampingCardEth,
@@ -34,6 +39,16 @@ export default {
         ? "timestamping-card-xlm"
         : "timestamping-card-eth";
     },
+  },
+
+  async created() {
+    try {
+      await this.$store.dispatch("trustedTimestampingInit");
+    } catch (err) {
+      this.$toast.error(err.message);
+    } finally {
+      this.isLoading = false;
+    }
   },
 };
 </script>
