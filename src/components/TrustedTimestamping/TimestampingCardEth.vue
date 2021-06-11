@@ -86,6 +86,7 @@ export default {
         });
 
         await this.$store.dispatch("getTimestampingHashes");
+        this.resetFile();
         this.$toast.success("Successfully stored signature on blockchain!");
       } catch (err) {
         console.error(err);
