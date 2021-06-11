@@ -5,7 +5,7 @@ div.panel-header
     p.category
       div Provide farming for any contract address.
       div
-        | #[router-link(to="/faas/owner") Click Here] if you are a project owner who
+        | #[router-link(to="/faas/owner") #[i.fa.fa-exclamation-circle] Click Here] if you are a project owner who
         | wants to put up tokens for others to stake.
 </template>
 
