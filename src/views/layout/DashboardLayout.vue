@@ -5,6 +5,13 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       user-menu
       sidebar-item(
         :link=`{
+          name: 'Dashboard',
+          icon: 'now-ui-icons education_atom',
+          path: '/dashboard',
+        }`
+      )
+      sidebar-item(
+        :link=`{
           name: 'Trusted Timestamping',
           icon: 'now-ui-icons design_app',
           path: '/timestamping',
