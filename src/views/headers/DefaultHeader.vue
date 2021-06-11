@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.panel-header.panel-header-sm
+div.panel-header.panel-header-sm
 </template>
 
 <script>
