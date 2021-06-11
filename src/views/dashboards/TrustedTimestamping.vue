@@ -1,13 +1,15 @@
 <template lang="pug">
-.row
-  .col-md-4.mx-auto
-    card
-      .text-center
-        component(:is="blockchainHashComponent")
+div
+  loading-panel(v-if="isInitLoading")
+  div.row
+    .col-md-4.mx-auto
+      card
+        .text-center
+          component(:is="blockchainHashComponent")
 
-.row
-  .col-md-12.mx-auto
-    timestamping-paginated-table
+  div.row
+    .col-md-12.mx-auto
+      timestamping-paginated-table
 </template>
 <script>
 import { mapState } from "vuex";

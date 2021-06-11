@@ -7,19 +7,14 @@ div
           style="max-width: 20%"
           :src="activeNetworkLogo")
       div.text-center(v-if="file.hash")
-        table.no-border.mx-auto
-          tbody
-            tr
-              td
-                div.d-flex.justify-content-center.align-items-center
-                  strong {{ file.name }}
-                  button.button.btn-sm.close.ml-1(@click="resetFile")
-                    i.now-ui-icons.ui-1_simple-remove
-            tr
-              td
-                div.d-flex.justify-content-center
-                  div.alert.alert-info.mb-1
-                    small {{ fileHashString }}
+        div
+          div.d-flex.justify-content-center.align-items-center
+            strong {{ file.name }}
+            button.button.btn-sm.close.ml-1(@click="resetFile")
+              i.now-ui-icons.ui-1_simple-remove
+          div.d-flex.justify-content-center
+            div.alert.alert-info.mb-1.overflow-auto
+              small {{ fileHashString }}
 
         button.btn.btn-primary(
           v-loading="globalLoading", 
@@ -86,7 +81,6 @@ export default {
         });
 
         await this.$store.dispatch("getTimestampingHashes");
-        this.resetFile();
         this.$toast.success("Successfully stored signature on blockchain!");
       } catch (err) {
         console.error(err);

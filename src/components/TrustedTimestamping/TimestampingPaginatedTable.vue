@@ -39,7 +39,7 @@ div.row
       template(v-slot:footer)
         div.col-12.d-flex.align-items-center.justify-content-center
           div
-            p.card-category Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+            p.mr-2.card-category Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
 
           div.ml-auto.d-flex.align-items-center
             el-select.select-primary.mb-3.w-50(
