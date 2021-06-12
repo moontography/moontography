@@ -9,8 +9,11 @@
           template(v-slot:header='')
             h4.card-title
               | Find a Token to Farm and Earn
-          div
-            token-input(@input="lookUpTokenStakingContracts")
+          template(v-slot:raw-content="")
+            div
+              token-input
+            div.card-body.table-full-width.pb-0.border-top
+              staking-tokens-list
       div.col-lg-4
         card
           template(v-slot:header='')
@@ -26,37 +29,17 @@
                 //- el-table-column(min-width='150' label='City' property='city')
                 //- el-table-column(min-width='150' align='right' header-align='right' label='Salary' property='salary')
 
-          //- tabs(type='primary' v-model:value='activeTab')
-          //-   tab-pane(label='Profile')
-          //-     | Collaboratively administrate empowered markets via plug-and-play
-          //-     | networks. Dynamically procrastinate B2C users after installed base
-          //-     | benefits.
-          //-     br
-          //-     br
-          //-     |               Dramatically visualize customer directed convergence without
-          //-     |               revolutionary ROI.
-          //-   tab-pane(label='Settings')
-          //-     | Efficiently unleash cross-media information without cross-media
-          //-     | value. Quickly maximize timely deliverables for real-time schemas.
-          //-     br
-          //-     br
-          //-     | Dramatically maintain clicks-and-mortar solutions
-          //-     |               without functional solutions.
-          //-   tab-pane(label='Options')
-          //-     | Completely synergize resource taxing relationships via premier
-          //-     | niche markets. Professionally cultivate one-to-one customer
-          //-     | service with robust ideas.
-          //-     br
-          //-     br
-          //-     | Dynamically innovate resource-leveling customer
-          //-     |               service for state of the art customer service.
-
 </template>
 <script>
 import { mapState } from "vuex";
+import StakingTokensList from "./StakingTokensList.vue";
 import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
 
 export default {
+  components: {
+    StakingTokensList,
+  },
+
   props: {
     tokenAddress: { type: String, default: null },
   },
@@ -83,15 +66,6 @@ export default {
   },
 
   methods: {
-    async lookUpTokenStakingContracts(tokenAddy) {
-      const contract = MTGYFaaS(this.web3, this.faasAddy);
-      const tokenAddresses = await contract.methods
-        .getTokensForStaking(tokenAddy)
-        .call();
-      console.log("TOKEN STAKING ADDRESSES", tokenAddresses);
-      // TODO get a list of all faas tokens for this token and show to the user
-    },
-
     async getUserStakingContracts() {
       const contract = MTGYFaaS(this.web3, this.faasAddy);
       const tokensUserIsTaking = await contract.methods

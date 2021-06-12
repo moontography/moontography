@@ -3,14 +3,15 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import DashboardLayout from "../views/layout/DashboardLayout.vue";
 
 // Page Headers
-// import DashboardHeader from "../views/DashboardHeader.vue";
 // import DefaultHeader from "../views/headers/DefaultHeader";
+import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
 import FaasHeader from "../views/headers/FaasHeader";
 import BulkTokenSenderHeader from "../views/headers/BulkTokenSenderHeader";
 import DtaxHeader from "../views/headers/DtaxHeader";
 
 // Dashboard pages
+import Dashboard from "../views/dashboards/dashboard/Dashboard.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
@@ -19,19 +20,23 @@ import ComingSoon from "../views/components/ComingSoon.vue";
 
 const routes = [
   {
-    path: "/",
-    redirect: "/timestamping",
-    name: "Home",
+    path: "",
+    redirect: { name: "Home" },
   },
   {
     path: "/",
+    name: "Home",
+    redirect: { name: "Dashboard" },
     component: DashboardLayout,
-    redirect: "/timestamping",
-    name: "Blockchain Trusted Timestamping",
     children: [
       {
+        path: "dashboard",
+        name: "Dashboard",
+        components: { default: Dashboard, header: DashboardHeader },
+      },
+      {
         path: "timestamping",
-        name: "Blockchain Trusted Timestamping",
+        name: "Timestamping",
         components: {
           default: TrustedTimestamping,
           header: TrustedTimestampingHeader,
@@ -39,41 +44,41 @@ const routes = [
       },
       {
         path: "faas",
-        name: "Farming as a Service",
+        name: "Faas",
         components: { default: FaasLayout, header: FaasHeader },
         children: [
           {
             path: "owner",
-            name: "Farming as a Service",
+            name: "FaasOwner",
             component: FaasOwner,
           },
           {
             path: "owner/:tokenAddress",
-            name: "Farming as a Service",
+            name: "FaasOwnerToken",
             component: FaasOwner,
             props: true,
           },
           {
             path: ":tokenAddress",
-            name: "Farming as a Service",
+            name: "FaasStakerToken",
             component: FaasStaker,
             props: true,
           },
           {
             path: "",
-            name: "Farming as a Service",
+            name: "FaasStaker",
             component: FaasStaker,
           },
         ],
       },
       {
         path: "bts",
-        name: "Bulk Token Sender",
+        name: "BulkTokenSender",
         components: { default: ComingSoon, header: BulkTokenSenderHeader },
       },
       {
         path: "dtax",
-        name: "Decentralized Tax Reporting",
+        name: "Dtax",
         components: { default: ComingSoon, header: DtaxHeader },
       },
     ],

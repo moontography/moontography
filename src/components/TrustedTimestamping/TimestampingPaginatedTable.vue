@@ -1,24 +1,24 @@
 <template lang="pug">
 div.row
   div.col-12
-    card(card-body-classes="table-full-width" no-footer-line)
-      template(v-slot:header)
-        h4.card-title.pl-3 All Trusted Timestamps
-
-      div
-        div.col-12.d-flex.justify-content-center.justify-content-sm-between.flex-wrap  
-          div.ml-auto
-            fg-input
-              el-input(
-                type="search"
-                class="mb-3"
-                clearable
-                prefix-icon="el-icon-search"
-                style="width: 200px"
-                placeholder="Search records"
-                v-model="searchQuery"
-                aria-controls="datatables")
-  
+    card(
+      card-body-classes="table-full-width py-0"
+      footer-classes="py-0"
+      no-footer-line)
+        template(v-slot:header)
+          div.d-flex.align-items-center
+            h4.card-title.pl-3 Your File Signatures
+            div.ml-auto
+              div.mr-3.d-flex.justify-content-center.justify-content-sm-between.flex-wrap  
+                div.ml-auto
+                  fg-input
+                    el-input(
+                      type="search"
+                      prefix-icon="el-icon-search"
+                      style="width: 200px"
+                      placeholder="Search records"
+                      v-model="searchQuery"
+                      aria-controls="datatables")
         div.card-body.text-center(v-if="queriedData.length === 0")
           i No file signatures added to the blockchain yet!
         el-table(v-else stripe :data="queriedData")
@@ -32,29 +32,25 @@ div.row
           //- el-table-column(fixed="right" label="Actions")
           //-   template(v-slot:default="props")
           //-     div.d-flex.justify-content-center.table-actions
-          //-       button.btn.btn-info.rounded(@click="handleCopy(props.$index, props.row)")
-          //-         i.fa.fa-copy.mr-1 
-          //-         span Compare
-        
-      template(v-slot:footer)
-        div.col-12.d-flex.align-items-center.justify-content-center
-          div
-            p.mr-2.card-category Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+          
+        template(v-slot:footer)
+          div.d-flex.align-items-center.justify-content-center
+            div
+              p.card-category.m-0 Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+            div.ml-auto.d-flex.align-items-center
+              el-select.select-primary.w-50(
+                v-model="pagination.perPage"
+                placeholder="Per page")
+                  el-option.select-default(
+                    v-for="item in pagination.perPageOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item")
 
-          div.ml-auto.d-flex.align-items-center
-            el-select.select-primary.mb-3.w-50(
-              v-model="pagination.perPage"
-              placeholder="Per page")
-                el-option.select-default(
-                  v-for="item in pagination.perPageOptions"
-                  :key="item"
-                  :label="item"
-                  :value="item")
-              
-            n-pagination.pagination-no-border(
-              v-model="pagination.currentPage"
-              :per-page="pagination.perPage"
-              :total="total")
+              n-pagination.m-0.pagination-no-border(
+                v-model="pagination.currentPage"
+                :per-page="pagination.perPage"
+                :total="total")
 </template>
 <script>
 import BigNumber from "bignumber.js";
@@ -107,9 +103,9 @@ export default {
       return this.hashes
         .map((hash) => ({
           ...hash,
-          time: `${dayjs(
-            new BigNumber(hash.time).times(1e3).toNumber()
-          ).toISOString()} UTC`,
+          time: `${dayjs(new BigNumber(hash.time).times(1e3).toNumber()).format(
+            "YYYY-MM-DD HH:mm"
+          )}`,
         }))
         .sort((h1, h2) => {
           const n1 = (h1.fileName || "").toLowerCase();

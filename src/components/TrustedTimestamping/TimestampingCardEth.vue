@@ -4,8 +4,9 @@ div
     div.col.col-fill
       div.form-group.d-flex.justify-content-center.mb-2
         img.img-fluid(
-          style="max-width: 20%"
+          style="max-width: 100px"
           :src="activeNetworkLogo")
+        
       div.text-center(v-if="file.hash")
         div
           div.d-flex.justify-content-center.align-items-center
@@ -14,13 +15,23 @@ div
               i.now-ui-icons.ui-1_simple-remove
           div.d-flex.justify-content-center
             div.alert.alert-info.mb-1.overflow-auto
-              small {{ fileHashString }}
+              div.text-center
+                div {{ fileHashString }}
+                div.mt-4(v-if="hashedFileAlreadyUploadedInfo")
+                  small 
+                    | We recognize this file signature that you added back on #[strong {{ hashedFileAlreadyUploadedInfo.time }}]!
+                    | The file name was #[strong {{ hashedFileAlreadyUploadedInfo.fileName }}] and file size is
+                    | #[strong {{ hashedFileAlreadyUploadedInfo.fileSizeBytes }}] bytes.
 
-        button.btn.btn-primary(
+        button.mt-4.btn.btn-primary(
           v-loading="globalLoading", 
           :disabled="globalLoading || !activeNetwork"
           @click="sendTrustedTimestampTxn")
             div Submit File Signature to Blockchain
+        div.text-danger
+          small 
+            | You will spend #[strong {{ timestampingCost || 'N/A' }} MTGY]
+            | to send this file signature to the blockchain.
 
       div.text-center(v-else)
         div.mb-1 Select the file you want to store its signature on the blockchain:
@@ -28,6 +39,8 @@ div
 </template>
 
 <script>
+import BigNumber from "bignumber.js";
+import dayjs from "dayjs";
 import { mapState } from "vuex";
 import InputFileHash from "./InputFileHash";
 import Xlm from "../../factories/Xlm";
@@ -51,6 +64,8 @@ export default {
   computed: {
     ...mapState({
       activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
+      timestampingCost: (state) => state.trustedTimestamping.cost,
+      timestampingHashes: (state) => state.trustedTimestamping.hashes || [],
       globalLoading: (state) => state.globalLoading,
       activeNetwork: (_, getters) => getters.activeNetwork,
     }),
@@ -58,6 +73,24 @@ export default {
     fileHashString() {
       if (!this.file.hash) return null;
       return `0x${Xlm().getStellarHash(this.file.hash).value.toString("hex")}`;
+    },
+
+    hashedFileAlreadyUploadedInfo() {
+      if (!this.timestampingHashes || this.timestampingHashes.length === 0)
+        return;
+      if (!(this.file && this.file.hash)) return;
+
+      const existingHash = this.timestampingHashes.find(
+        (h) => h.dataHash.toLowerCase() === `0x${this.file.hash}`.toLowerCase()
+      );
+      if (!existingHash) return;
+
+      return {
+        ...existingHash,
+        time: `${dayjs(
+          new BigNumber(existingHash.time).times(1e3).toNumber()
+        ).format("YYYY-MM-DD HH:mm")}`,
+      };
     },
   },
 

@@ -8,7 +8,7 @@ div.d-flex.justify-content-center
     v-loading="globalLoading"
     :disabled="globalLoading"
     @click="triggerFile")
-      | #[i.now-ui-icons.arrows-1_share-66] Upload File to Calculate its Signature
+      | #[i.now-ui-icons.arrows-1_share-66] Add File to Calculate its Signature
 </template>
 
 <script>

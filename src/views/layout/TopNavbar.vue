@@ -30,24 +30,35 @@ navbar#navigation(:show-navbar="showNavbar")
     ul.navbar-nav
       li.nav-item
         a.nav-link(
+          title="Website"
           href="https://moontography.com"
           target="_blank"
           rel="noopener noreferrer")
             i.fa.fa-2x.fa-globe
       li.nav-item
         a.nav-link(
+          title="Telegram"
           href="https://t.me/moontographyproject"
           target="_blank"
           rel="noopener noreferrer")
             i.fa.fa-2x.fa-telegram
       li.nav-item
         a.nav-link(
+          title="Blog"
+          href="https://blog.moontography.com"
+          target="_blank"
+          rel="noopener noreferrer")
+            i.fa.fa-2x.fa-medium
+      li.nav-item
+        a.nav-link(
+          title="GitHub"
           href="https://github.com/moontography"
           target="_blank"
           rel="noopener noreferrer")
             i.fa.fa-2x.fa-github
       li.nav-item
         a.nav-link(
+          title="PancakeSwap"
           href="https://exchange.pancakeswap.finance/#/swap?inputCurrency=0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
           target="_blank"
           rel="noopener noreferrer")
@@ -56,6 +67,7 @@ navbar#navigation(:show-navbar="showNavbar")
               src="img/pancakeswap-logo.png")
       li.nav-item
         a.nav-link(
+          title="DEXTools"
           href="https://www.dextools.io/app/pancakeswap/pair-explorer/0xaabafd64feb2ec235b209a95d4dc9b08e225379c"
           target="_blank"
           rel="noopener noreferrer")
