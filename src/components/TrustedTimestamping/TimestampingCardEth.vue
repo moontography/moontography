@@ -25,7 +25,7 @@ div
                         small 
                           | We recognize this file signature that you added back on #[strong {{ hashedFileAlreadyUploadedInfo.time }}]!
                           | The file name was #[strong {{ hashedFileAlreadyUploadedInfo.fileName }}] and file size is
-                          | #[strong {{ hashedFileAlreadyUploadedInfo.fileSizeBytes }}]
+                          | #[strong {{ hashedFileAlreadyUploadedInfo.fileSizeBytes }}] bytes.
 
 
         button.mt-4.btn.btn-primary(
@@ -36,7 +36,7 @@ div
         div.text-danger
           small 
             | You will spend #[strong {{ timestampingCost || 'N/A' }} MTGY]
-            | send this file signature to the blockchain.
+            | to send this file signature to the blockchain.
 
       div.text-center(v-else)
         div.mb-1 Select the file you want to store its signature on the blockchain:
@@ -94,7 +94,7 @@ export default {
         ...existingHash,
         time: `${dayjs(
           new BigNumber(existingHash.time).times(1e3).toNumber()
-        ).format("YYYY-MM-DD hh:mm")}`,
+        ).format("YYYY-MM-DD HH:mm")}`,
       };
     },
   },

@@ -97,7 +97,7 @@ export default {
               currentTokenSymbol: symbol,
               currentTokenBalance: new BigNumber(userBalance)
                 .div(new BigNumber(10).pow(decimals))
-                .toString(),
+                .toFixed(3),
             };
           })
         );

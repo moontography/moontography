@@ -159,7 +159,7 @@ const timestampingContractAbi: AbiItem[] = [
         type: "bytes32",
       },
     ],
-    name: "getAddressesFromHash",
+    name: "getAddressesForHash",
     outputs: [
       {
         components: [
@@ -190,7 +190,7 @@ const timestampingContractAbi: AbiItem[] = [
         type: "address",
       },
     ],
-    name: "getHashesFromAddress",
+    name: "getHashesForAddress",
     outputs: [
       {
         components: [
@@ -270,6 +270,19 @@ const timestampingContractAbi: AbiItem[] = [
     name: "storeHash",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalNumberHashesStored",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];

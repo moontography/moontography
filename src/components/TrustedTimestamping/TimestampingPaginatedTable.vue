@@ -111,7 +111,7 @@ export default {
         .map((hash) => ({
           ...hash,
           time: `${dayjs(new BigNumber(hash.time).times(1e3).toNumber()).format(
-            "YYYY-MM-DD hh:mm"
+            "YYYY-MM-DD HH:mm"
           )}`,
         }))
         .sort((h1, h2) => {

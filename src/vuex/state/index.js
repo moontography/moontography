@@ -228,8 +228,8 @@ export default {
         logo: `img/bsc.png`,
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
-          mtgySpend: "",
-          trustedTimestamping: "",
+          mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
+          trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           faas: "",
         },
       },

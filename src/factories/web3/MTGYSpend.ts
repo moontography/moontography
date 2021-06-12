@@ -116,6 +116,31 @@ const mtgySpendAbi: AbiItem[] = [
   },
   {
     inputs: [],
+    name: "getSpentByTimestamp",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "tokens",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct MTGYSpend.SpentInfo[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "mtgyTokenAddy",
     outputs: [
       {
@@ -157,6 +182,30 @@ const mtgySpendAbi: AbiItem[] = [
       },
     ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "spentTimestamps",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "tokens",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
