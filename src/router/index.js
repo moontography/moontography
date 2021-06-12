@@ -83,7 +83,7 @@ const routes = [
       },
     ],
   },
-  { path: "/:pathMatch(.*)*", redirect: "/timestamping" },
+  { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
 
 const router = createRouter({
