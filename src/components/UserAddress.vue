@@ -30,7 +30,7 @@ export default {
 
     shortAddy() {
       const f3 = this.userAddress.slice(0, 6);
-      const l3 = this.userAddress.slice(-6);
+      const l3 = this.userAddress.slice(-4);
       return `${f3}...${l3}`;
     },
   },
