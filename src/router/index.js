@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import DashboardLayout from "../views/layout/DashboardLayout.vue";
 
 // Page Headers
-// import DefaultHeader from "../views/headers/DefaultHeader";
+import DefaultHeader from "../views/headers/DefaultHeader";
 import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
 import FaasHeader from "../views/headers/FaasHeader";
@@ -75,6 +75,16 @@ const routes = [
         path: "bts",
         name: "BulkTokenSender",
         components: { default: ComingSoon, header: BulkTokenSenderHeader },
+      },
+      {
+        path: "passwords",
+        name: "PasswordManager",
+        components: { default: ComingSoon, header: DefaultHeader },
+      },
+      {
+        path: "paas",
+        name: "PollingAsAService",
+        components: { default: ComingSoon, header: DefaultHeader },
       },
       {
         path: "dtax",
