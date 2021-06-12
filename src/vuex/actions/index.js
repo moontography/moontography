@@ -150,7 +150,7 @@ export default {
     const trustedTimestampingAddress =
       getters.activeNetwork.contracts.trustedTimestamping;
     const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-    const hashes = await ttCont.methods.getHashesFromAddress(userAddy).call();
+    const hashes = await ttCont.methods.getHashesForAddress(userAddy).call();
     commit("SET_TRUSTED_TIMESTAMPING_HASHES", hashes);
   },
 
