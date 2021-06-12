@@ -26,9 +26,23 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
+          name: 'Password Manager',
+          icon: 'now-ui-icons ui-1_lock-circle-open',
+          path: '/passwords',
+        }`
+      )
+      sidebar-item(
+        :link=`{
           name: 'Bulk Token Sender',
           icon: 'now-ui-icons objects_spaceship',
           path: '/bts',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Polling as a Service (PaaS)',
+          icon: 'now-ui-icons education_agenda-bookmark',
+          path: '/paas',
         }`
       )
       sidebar-item(

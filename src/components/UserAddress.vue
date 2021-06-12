@@ -4,7 +4,7 @@ div
     div.mr-1 #[img(style ="max-height: 20px" :src="activeNetworkLogo")]
     div {{ shortAddy }}
     div.ml-auto
-      button.btn-sm.close.m-0(
+      button.btn-sm.close.py-0.m-0(
         v-loading="globalLoading"
         :disabled="globalLoading"
         @click="disconnect")
