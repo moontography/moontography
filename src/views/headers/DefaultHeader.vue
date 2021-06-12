@@ -1,6 +1,7 @@
-<template>
-  <div class="panel-header panel-header-sm"></div>
+<template lang="pug">
+div.panel-header.panel-header-sm
 </template>
+
 <script>
 export default {};
 </script>

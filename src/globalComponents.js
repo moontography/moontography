@@ -1,14 +1,26 @@
-import FgInput from "./components/Inputs/FormGroupInput.vue";
-import DropDown from "./components/Dropdown.vue";
-import Card from "./components/Cards/Card.vue";
+import { Pagination as NPagination } from "./components";
 import UserAddress from "./components/UserAddress.vue";
-import Button from "./components/Button.vue";
+import {
+  Button,
+  Card,
+  Dropdown as DropDown,
+  FormGroupInput as FgInput,
+  LoadingPanel,
+  Tabs,
+  TabPane,
+  TokenInput,
+  VeeInput,
+} from "./components";
 import {
   ElInput,
   ElInputNumber,
+  ElOption,
+  ElSelect,
   ElTooltip,
   ElPopover,
   ElLoading,
+  ElTable,
+  ElTableColumn,
 } from "element-plus";
 
 /**
@@ -22,8 +34,18 @@ const GlobalComponents = {
     app.component("n-button", Button);
     app.component(ElInput.name, ElInput);
     app.component(ElInputNumber.name, ElInputNumber);
+    app.component(ElOption.name, ElOption);
+    app.component(ElSelect.name, ElSelect);
+    app.component(ElTable.name, ElTable);
+    app.component(ElTableColumn.name, ElTableColumn);
+    app.component("n-pagination", NPagination);
     app.component("fg-input", FgInput);
+    app.component("loading-panel", LoadingPanel);
+    app.component("tabs", Tabs);
+    app.component("tab-pane", TabPane);
+    app.component("token-input", TokenInput);
     app.component("user-address", UserAddress);
+    app.component("vee-input", VeeInput);
     app.use(ElTooltip);
     app.use(ElPopover);
     app.use(ElLoading);

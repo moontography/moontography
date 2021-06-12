@@ -592,9 +592,9 @@
 }
 
 .panel-header {
-  height: 260px;
+  height: auto;
   padding-top: 80px;
-  padding-bottom: 45px;
+  padding-bottom: 15px;
   background: #141e30; /* fallback for old browsers */
   background: -webkit-gradient(
     linear,

@@ -7,7 +7,7 @@ span
       v-loading="globalLoading"
       :disabled="globalLoading"
       @click="disconnect")
-        i.now-ui-icons.ui-1_simple-remove
+        i.pl-2.now-ui-icons.ui-1_simple-remove
   button.btn.btn-round.btn-danger.m-0(
     v-else
     v-loading="globalLoading"
@@ -43,10 +43,6 @@ export default {
     async reconnect() {
       await this.$store.dispatch("init", true);
     },
-  },
-
-  async mounted() {
-    await this.$store.dispatch("init", true);
   },
 };
 </script>
