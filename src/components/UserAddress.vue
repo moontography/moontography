@@ -7,7 +7,7 @@ span
       v-loading="globalLoading"
       :disabled="globalLoading"
       @click="disconnect")
-        i.now-ui-icons.ui-1_simple-remove
+        i.pl-2.now-ui-icons.ui-1_simple-remove
   button.btn.btn-round.btn-danger.m-0(
     v-else
     v-loading="globalLoading"

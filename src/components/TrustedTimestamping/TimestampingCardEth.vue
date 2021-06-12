@@ -6,27 +6,22 @@ div
         img.img-fluid(
           style="max-width: 100px"
           :src="activeNetworkLogo")
-      div.text-center.table-responsive(v-if="file.hash")
-        table.no-border.mx-auto
-          tbody
-            tr
-              td
-                div.d-flex.justify-content-center.align-items-center
-                  strong {{ file.name }}
-                  button.button.btn-sm.close.ml-1(@click="resetFile")
-                    i.text-danger.now-ui-icons.ui-1_simple-remove
-            tr
-              td
-                div.overflow-hidden
-                  div.alert.alert-info.mb-1
-                    div.text-center
-                      div {{ fileHashString }}
-                      div.mt-4(v-if="hashedFileAlreadyUploadedInfo")
-                        small 
-                          | We recognize this file signature that you added back on #[strong {{ hashedFileAlreadyUploadedInfo.time }}]!
-                          | The file name was #[strong {{ hashedFileAlreadyUploadedInfo.fileName }}] and file size is
-                          | #[strong {{ hashedFileAlreadyUploadedInfo.fileSizeBytes }}] bytes.
-
+        
+      div.text-center(v-if="file.hash")
+        div
+          div.d-flex.justify-content-center.align-items-center
+            strong {{ file.name }}
+            button.button.btn-sm.close.ml-1(@click="resetFile")
+              i.now-ui-icons.ui-1_simple-remove
+          div.d-flex.justify-content-center
+            div.alert.alert-info.mb-1.overflow-auto
+              div.text-center
+                div {{ fileHashString }}
+                div.mt-4(v-if="hashedFileAlreadyUploadedInfo")
+                  small 
+                    | We recognize this file signature that you added back on #[strong {{ hashedFileAlreadyUploadedInfo.time }}]!
+                    | The file name was #[strong {{ hashedFileAlreadyUploadedInfo.fileName }}] and file size is
+                    | #[strong {{ hashedFileAlreadyUploadedInfo.fileSizeBytes }}] bytes.
 
         button.mt-4.btn.btn-primary(
           v-loading="globalLoading", 
