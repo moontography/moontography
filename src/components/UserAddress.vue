@@ -1,13 +1,14 @@
 <template lang="pug">
-span
-  span.pl-1.user-address-trunc(v-if="userAddress")
-    | #[img(style ="max-height: 20px" :src="activeNetworkLogo")]
-    | {{ shortAddy }}
-    button.btn-sm.close.m-0(
-      v-loading="globalLoading"
-      :disabled="globalLoading"
-      @click="disconnect")
-        i.pl-2.now-ui-icons.ui-1_simple-remove
+div
+  div.d-flex.align-items-center.pl-1.user-address-trunc(v-if="userAddress")
+    div.mr-1 #[img(style ="max-height: 20px" :src="activeNetworkLogo")]
+    div {{ shortAddy }}
+    div.ml-auto
+      button.btn-sm.close.m-0(
+        v-loading="globalLoading"
+        :disabled="globalLoading"
+        @click="disconnect")
+          i.pl-2.now-ui-icons.ui-1_simple-remove
   button.btn.btn-round.btn-danger.m-0(
     v-else
     v-loading="globalLoading"
