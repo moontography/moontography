@@ -12,9 +12,9 @@ import DtaxHeader from "../views/headers/DtaxHeader";
 
 // Dashboard pages
 import Dashboard from "../views/dashboards/dashboard/Dashboard.vue";
-import FaasLayout from "../views/layout/FaasLayout.vue";
-import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
-import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
+// import FaasLayout from "../views/layout/FaasLayout.vue";
+// import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
+// import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
 import ComingSoon from "../views/components/ComingSoon.vue";
 
@@ -45,29 +45,29 @@ const routes = [
       {
         path: "faas",
         name: "Faas",
-        components: { default: FaasLayout, header: FaasHeader },
+        components: { default: ComingSoon, header: FaasHeader },
         children: [
           {
             path: "owner",
             name: "FaasOwner",
-            component: FaasOwner,
+            component: ComingSoon,
           },
           {
             path: "owner/:tokenAddress",
             name: "FaasOwnerToken",
-            component: FaasOwner,
+            component: ComingSoon,
             props: true,
           },
           {
             path: ":tokenAddress",
             name: "FaasStakerToken",
-            component: FaasStaker,
+            component: ComingSoon,
             props: true,
           },
           {
             path: "",
             name: "FaasStaker",
-            component: FaasStaker,
+            component: ComingSoon,
           },
         ],
       },
