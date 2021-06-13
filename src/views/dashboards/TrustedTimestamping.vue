@@ -9,7 +9,7 @@
           :is="blockchainHashComponent")
 
 .row
-  .col-md-12.mx-auto
+  .col-md-12.mx-auto(v-if="hashes && hashes.length > 0")
     timestamping-paginated-table
 </template>
 <script>
@@ -32,6 +32,7 @@ export default {
   computed: {
     ...mapState({
       activeNetwork: (state) => state.activeNetwork,
+      hashes: (state) => state.trustedTimestamping.hashes || [],
     }),
 
     blockchainHashComponent() {

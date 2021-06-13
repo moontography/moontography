@@ -89,7 +89,7 @@ export default {
         ...existingHash,
         time: `${dayjs(
           new BigNumber(existingHash.time).times(1e3).toNumber()
-        ).format("YYYY-MM-DD HH:mm")}`,
+        ).format("YYYY-MM-DD HH:mm:ss")}`,
       };
     },
   },

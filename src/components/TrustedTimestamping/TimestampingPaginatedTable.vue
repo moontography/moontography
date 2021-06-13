@@ -7,7 +7,7 @@ div.row
       no-footer-line)
         template(v-slot:header)
           div.d-flex.align-items-center
-            h4.card-title.pl-3 Your File Signatures
+            h4.card-title.pl-3 #[i.fa.fa-file.mr-2.text-primary] Your File Signatures
             div.ml-auto
               div.mr-3.d-flex.justify-content-center.justify-content-sm-between.flex-wrap  
                 div.ml-auto
@@ -72,7 +72,7 @@ export default {
         {
           prop: "fileName",
           label: "File Name",
-          minWidth: 200,
+          minWidth: 250,
         },
         {
           prop: "fileSizeBytes",
@@ -82,12 +82,12 @@ export default {
         {
           prop: "dataHash",
           label: "File Signature",
-          minWidth: 250,
+          minWidth: 350,
         },
         {
           prop: "time",
-          label: "Timestamp Stored on Blockchain",
-          minWidth: 200,
+          label: "Timestamp on Blockchain",
+          minWidth: 250,
         },
       ],
       searchedData: [],
@@ -104,7 +104,7 @@ export default {
         .map((hash) => ({
           ...hash,
           time: `${dayjs(new BigNumber(hash.time).times(1e3).toNumber()).format(
-            "YYYY-MM-DD HH:mm"
+            "YYYY-MM-DD HH:mm:ss"
           )}`,
         }))
         .sort((h1, h2) => {
