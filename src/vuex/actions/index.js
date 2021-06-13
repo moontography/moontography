@@ -51,6 +51,16 @@ export default {
 
       const [accountAddy] = await web3.eth.getAccounts();
       commit("SET_WEB3_USER_ADDRESS", accountAddy);
+      const { userBalance, decimals } = await dispatch(
+        "getErc20TokenInfo",
+        getters.activeNetwork.contracts.mtgy
+      );
+      commit(
+        "SET_WEB3_USER_MTGY_BALANCE",
+        new BigNumber(userBalance)
+          .div(new BigNumber(10).pow(decimals))
+          .toString()
+      );
     } catch (err) {
       toast.error(err.message || err);
       commit("SET_GLOBAL_ERROR", err);
