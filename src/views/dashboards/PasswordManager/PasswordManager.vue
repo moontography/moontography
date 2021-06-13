@@ -17,7 +17,7 @@
         div.mt-2(v-else-if="filteredAccounts && filteredAccounts.length > 0")
           router-link(v-for="account in filteredAccounts", :to="`/passwords/${account.id}`")
             card.clickable(:class="`${id == account.id ? 'active' : ''}`")
-              p #[i.now-ui-icons.users_circle-08.mr-2] {{ account.name }}
+              p #[b #[i.now-ui-icons.users_circle-08.mr-2] {{ account.name }}]
               p #[i.now-ui-icons.business_badge.mr-2] {{ account.email }}
               p #[i.now-ui-icons.travel_info.mr-2] {{ account.info }}
 
