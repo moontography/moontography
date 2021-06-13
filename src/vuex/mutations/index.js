@@ -32,7 +32,7 @@ export default {
   },
 
   SET_MTGY_TOKEN_INFO(state, info) {
-    state.mtgyInfo = info;
+    state.mtgyTokenInfo = info;
   },
 
   SET_MTGY_TOKEN_CHART(state, prices) {

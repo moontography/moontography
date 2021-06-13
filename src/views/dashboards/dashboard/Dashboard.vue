@@ -5,48 +5,30 @@ div
       .card.card-stats.card-raised
         .card-body
           .row
-            .col-md-2
-              .statistics
-                .info
-                  .icon.icon-info
-                    i.fa.fa-users 
-                  h3.info-title
-                    animated-number(:value='(tokenInfo.community_data.twitter_followers || 0) + (tokenInfo.community_data.reddit_subscribers || 0) + (tokenInfo.community_data.telegram_channel_user_count || 0)')
-                  h6.stats-title Community
             //- .col-md-2
             //-   .statistics
             //-     .info
             //-       .icon.icon-info
-            //-         i.now-ui-icons.users_single-02
+            //-         i.fa.fa-users 
             //-       h3.info-title
-            //-         animated-number(:value='420')
-            //-       h6.stats-title Holders
+            //-         animated-number(:value='communityTotal')
+            //-       h6.stats-title Community
             .col-md-2
               .statistics
                 .info
-                  .icon.icon-success
-                    i.now-ui-icons.business_money-coins
+                  .icon.icon-info
+                    i.now-ui-icons.users_single-02
                   h3.info-title
-                    small $
-                    animated-number(:value='tokenInfo.market_data.fully_diluted_valuation.usd')
-                  h6.stats-title Valuation
-            .col-md-2
-              .statistics
-                .info
-                  .icon.icon-warning
-                    i.now-ui-icons.business_chart-bar-32
-                  h3.info-title
-                    small $
-                    animated-number(:value='tokenInfo.market_data.total_volume.usd')
-                  h6.stats-title Total Volume
+                    animated-number(:value='0')
+                  h6.stats-title Holders
             .col-md-2
               .statistics
                 .info
                   .icon.icon-primary
                     i.now-ui-icons.business_bank
                   h3.info-title
-                    small $
-                    animated-number(:value='tokenInfo.market_data.circulating_supply')
+                    //- small $
+                    animated-number(:value='circSupply')
                   h6.stats-title Circulating Supply
             .col-md-2
               .statistics
@@ -55,8 +37,26 @@ div
                     i.now-ui-icons.education_hat
                   h3.info-title
                     small $
-                    animated-number(:value='tokenInfo.market_data.market_cap.usd')
+                    animated-number(:value='marketCap')
                   h6.stats-title Market Cap
+            .col-md-2
+              .statistics
+                .info
+                  .icon.icon-success
+                    i.now-ui-icons.business_money-coins
+                  h3.info-title
+                    small $
+                    animated-number(:value='fdMarketCap')
+                  h6.stats-title Fully Diluted MC
+            .col-md-2
+              .statistics
+                .info
+                  .icon.icon-warning
+                    i.now-ui-icons.business_chart-bar-32
+                  h3.info-title
+                    small $
+                    animated-number(:value='totalVolume')
+                  h6.stats-title Total Volume
             .col-md-2
               .statistics
                 .info
@@ -82,7 +82,7 @@ div
     .col-lg-3
       card
         .card-body.text-center
-          a(href="#/timestamping")
+          a(href="#/faas")
             .statistics
               .info
                 .icon.icon-success
@@ -94,7 +94,7 @@ div
     .col-lg-3
       card
         .card-body.text-center
-          a(href="#/timestamping")
+          a(href="#/")
             .statistics
               .info
                 .icon.icon-warning
@@ -106,7 +106,7 @@ div
     .col-lg-3
       card
         .card-body.text-center
-          a(href="#/timestamping")
+          a(href="#/")
             .statistics
               .info
                 .icon.icon-warning
@@ -127,8 +127,32 @@ export default {
 
   computed: {
     ...mapState({
-      tokenInfo: (state) => state.mtgyInfo,
+      tokenInfo: (state) => state.mtgyTokenInfo,
     }),
+
+    circSupply() {
+      return this.tokenInfo.market_data.circulating_supply;
+    },
+
+    marketCap() {
+      return this.tokenInfo.market_data.market_cap.usd;
+    },
+
+    fdMarketCap() {
+      return this.tokenInfo.market_data.fully_diluted_valuation.usd;
+    },
+
+    totalVolume() {
+      return this.tokenInfo.market_data.total_volume.usd;
+    },
+
+    communityTotal() {
+      return (
+        (this.tokenInfo.community_data.twitter_followers || 0) +
+        (this.tokenInfo.community_data.reddit_subscribers || 0) +
+        (this.tokenInfo.community_data.telegram_channel_user_count || 0)
+      );
+    },
   },
 };
 </script>
