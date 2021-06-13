@@ -7,9 +7,8 @@
   margin-bottom: 20px;
   box-shadow: $box-shadow;
 
-  .active {
-    color: $white-color;
-    background-color: $primary-color;
+  .active.clickable {
+    background-color: rgba($primary-color, 0.15);
   }
 
   .card-body {

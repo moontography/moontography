@@ -127,12 +127,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .card {
-  margin-bottom: 0 !important;
-  box-shadow: 0 1px 3px 1px rgba(39, 39, 39, 0.1) !important;
-
-  .active {
-    background-color: primary;
-  }
+  margin-bottom: 10px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 .clickable {
