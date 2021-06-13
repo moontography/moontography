@@ -2,12 +2,16 @@ import axios from "axios";
 import BigNumber from "bignumber.js";
 
 export default {
-  async getTokenPrice(tokenAddy: string) {
+  async getTokenPrice(
+    tokenAddy: string,
+    usdBuyToken = "BUSD",
+    network = "bsc"
+  ) {
     const {
       data: { price },
-    } = await axios.get(`https://bsc.api.0x.org/swap/v1/quote`, {
+    } = await axios.get(`https://${network}.api.0x.org/swap/v1/quote`, {
       params: {
-        buyToken: "BUSD",
+        buyToken: usdBuyToken,
         sellToken: tokenAddy,
         sellAmount: new BigNumber(10).pow(18).toString(),
         excludedSources:

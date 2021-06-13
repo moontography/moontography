@@ -47,6 +47,10 @@ export default {
     state.web3.address = addy;
   },
 
+  SET_WEB3_USER_MTGY_BALANCE(state, balance) {
+    state.web3.userMtgyBalance = balance;
+  },
+
   SET_WEB3_MAIN_BALANCE(state, balance) {
     state.web3.mainCurrencyBalance = balance;
   },

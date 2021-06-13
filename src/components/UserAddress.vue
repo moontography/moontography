@@ -1,8 +1,10 @@
 <template lang="pug">
 div
   div.d-flex.align-items-center.pl-1.user-address-trunc(v-if="userAddress")
-    div.mr-1 #[img(style ="max-height: 20px" :src="activeNetworkLogo")]
-    div {{ shortAddy }}
+    //- div.mr-2 #[img(style ="max-height: 20px" :src="activeNetworkLogo")]
+    div
+      div {{ shortAddy }}
+      div {{ userMtgyBalance }} MTGY
     div.ml-auto
       button.btn-sm.close.py-0.m-0(
         v-loading="globalLoading"
@@ -17,6 +19,7 @@ div
 </template>
 
 <script>
+import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 
 export default {
@@ -25,8 +28,10 @@ export default {
   computed: {
     ...mapState({
       globalLoading: (state) => state.globalLoading,
-      activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
+      // activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
       userAddress: (state) => state.web3.address,
+      userMtgyBalance: (state) =>
+        new BigNumber(state.web3.userMtgyBalance).toFixed(2),
     }),
 
     shortAddy() {

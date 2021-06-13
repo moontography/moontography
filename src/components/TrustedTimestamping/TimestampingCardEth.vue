@@ -2,8 +2,8 @@
 div
   div.row.flex-center.mb-2
     div.col.col-fill
-      div.form-group.d-flex.justify-content-center.mb-2
-        img.img-fluid(
+      div.form-group.mb-2
+        img.img-fluid.mx-auto(
           style="max-width: 100px"
           :src="activeNetworkLogo")
         
