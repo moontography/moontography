@@ -9,10 +9,18 @@ div
               .statistics
                 .info
                   .icon.icon-info
-                    i.now-ui-icons.users_single-02
+                    i.fa.fa-users 
                   h3.info-title
-                    animated-number(:value='420')
-                  h6.stats-title Holders
+                    animated-number(:value='(tokenInfo.community_data.twitter_followers || 0) + (tokenInfo.community_data.reddit_subscribers || 0) + (tokenInfo.community_data.telegram_channel_user_count || 0)')
+                  h6.stats-title Community
+            //- .col-md-2
+            //-   .statistics
+            //-     .info
+            //-       .icon.icon-info
+            //-         i.now-ui-icons.users_single-02
+            //-       h3.info-title
+            //-         animated-number(:value='420')
+            //-       h6.stats-title Holders
             .col-md-2
               .statistics
                 .info
@@ -20,9 +28,8 @@ div
                     i.now-ui-icons.business_money-coins
                   h3.info-title
                     small $
-                    animated-number(:value='5')
-                    | M
-                  h6.stats-title Total Liquidity
+                    animated-number(:value='tokenInfo.market_data.fully_diluted_valuation.usd')
+                  h6.stats-title Valuation
             .col-md-2
               .statistics
                 .info
@@ -30,18 +37,17 @@ div
                     i.now-ui-icons.business_chart-bar-32
                   h3.info-title
                     small $
-                    animated-number(:value='17')
-                    | K
-                  h6.stats-title Daily Volume
+                    animated-number(:value='tokenInfo.market_data.total_volume.usd')
+                  h6.stats-title Total Volume
             .col-md-2
               .statistics
                 .info
                   .icon.icon-primary
                     i.now-ui-icons.business_bank
                   h3.info-title
-                    animated-number(:value='1')
-                    | B
-                  h6.stats-title Total Supply
+                    small $
+                    animated-number(:value='tokenInfo.market_data.circulating_supply')
+                  h6.stats-title Circulating Supply
             .col-md-2
               .statistics
                 .info
@@ -49,8 +55,7 @@ div
                     i.now-ui-icons.education_hat
                   h3.info-title
                     small $
-                    animated-number(:value='10')
-                    | M
+                    animated-number(:value='tokenInfo.market_data.market_cap.usd')
                   h6.stats-title Market Cap
             .col-md-2
               .statistics
@@ -59,8 +64,7 @@ div
                     i.now-ui-icons.ui-1_lock-circle-open
                   h3.info-title
                     small $
-                    animated-number(:value='17')
-                    | K
+                    animated-number(:value='tokenInfo.market_data.total_value_locked')
                   h6.stats-title Total Value Locked
   .row    
     .col-lg-3
@@ -113,11 +117,18 @@ div
             
 </template>
 <script>
+import { mapState } from "vuex";
 import { AnimatedNumber } from "@/components";
 
 export default {
   components: {
     AnimatedNumber,
+  },
+
+  computed: {
+    ...mapState({
+      tokenInfo: (state) => state.mtgyInfo,
+    }),
   },
 };
 </script>
