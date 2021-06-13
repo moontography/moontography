@@ -31,7 +31,10 @@ export default {
       // activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
       userAddress: (state) => state.web3.address,
       userMtgyBalance: (state) =>
-        new BigNumber(state.web3.userMtgyBalance).toFixed(2),
+        new BigNumber(state.web3.userMtgyBalance).toFormat(
+          2,
+          BigNumber.ROUND_DOWN
+        ),
     }),
 
     shortAddy() {

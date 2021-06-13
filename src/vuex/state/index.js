@@ -9,6 +9,8 @@ export default {
 
   activeNetwork: localStorage.activeNetwork || "eth",
   mtgyPriceUsd: "0",
+  mtgyTokenInfo: {},
+  mtgyChart: [],
 
   web3: {
     instance: null,

@@ -31,6 +31,14 @@ export default {
     state.mtgyPriceUsd = price;
   },
 
+  SET_MTGY_TOKEN_INFO(state, info) {
+    state.mtgyTokenInfo = info;
+  },
+
+  SET_MTGY_TOKEN_CHART(state, prices) {
+    state.mtgyChart = prices;
+  },
+
   SET_WEB3_IS_CONNECTED(state, isConnected) {
     state.web3.isConnected = isConnected;
   },
