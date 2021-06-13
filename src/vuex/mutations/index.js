@@ -31,6 +31,14 @@ export default {
     state.mtgyPriceUsd = price;
   },
 
+  SET_MTGY_TOKEN_INFO(state, info) {
+    state.mtgyTokenInfo = info;
+  },
+
+  SET_MTGY_TOKEN_CHART(state, prices) {
+    state.mtgyChart = prices;
+  },
+
   SET_WEB3_IS_CONNECTED(state, isConnected) {
     state.web3.isConnected = isConnected;
   },
@@ -45,6 +53,10 @@ export default {
 
   SET_WEB3_USER_ADDRESS(state, addy) {
     state.web3.address = addy;
+  },
+
+  SET_WEB3_USER_MTGY_BALANCE(state, balance) {
+    state.web3.userMtgyBalance = balance;
   },
 
   SET_WEB3_MAIN_BALANCE(state, balance) {

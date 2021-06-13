@@ -5,6 +5,7 @@ import ERC20 from "../../factories/web3/ERC20";
 import MTGY from "../../factories/web3/MTGY";
 import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
 import { useToast } from "vue-toastification";
+import CGUtils from "@/factories/CGUtils";
 const toast = useToast();
 
 export default {
@@ -12,6 +13,8 @@ export default {
     try {
       commit("SET_GLOBAL_ERROR", null);
       dispatch("getMtgyPriceUsd");
+      dispatch("getMtgyTokenInfo");
+      dispatch("getMtgyTokenChart");
       if (state.web3 && state.web3.isConnected && !reset) return;
       if (state.activeNetwork === "xlm") return;
 
@@ -48,6 +51,16 @@ export default {
 
       const [accountAddy] = await web3.eth.getAccounts();
       commit("SET_WEB3_USER_ADDRESS", accountAddy);
+      const { userBalance, decimals } = await dispatch(
+        "getErc20TokenInfo",
+        getters.activeNetwork.contracts.mtgy
+      );
+      commit(
+        "SET_WEB3_USER_MTGY_BALANCE",
+        new BigNumber(userBalance)
+          .div(new BigNumber(10).pow(decimals))
+          .toString()
+      );
     } catch (err) {
       toast.error(err.message || err);
       commit("SET_GLOBAL_ERROR", err);
@@ -171,6 +184,16 @@ export default {
       "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
     );
     commit("SET_MTGY_PRICE_USD", price);
+  },
+
+  async getMtgyTokenInfo({ commit }) {
+    const info = await CGUtils.getTokenInfo("the-moontography-project");
+    commit("SET_MTGY_TOKEN_INFO", info);
+  },
+
+  async getMtgyTokenChart({ commit }) {
+    const prices = await CGUtils.getTokenChart("the-moontography-project");
+    commit("SET_MTGY_TOKEN_CHART", prices);
   },
 
   async setUserInfoForToken({ commit, dispatch }, tokenAddy) {

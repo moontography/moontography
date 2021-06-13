@@ -2,6 +2,7 @@
   <span>{{ animatedNumber }}</span>
 </template>
 <script>
+import BigNumber from "bignumber.js";
 import TWEEN from "@tweenjs/tween.js";
 
 export default {
@@ -33,7 +34,9 @@ export default {
         .easing(TWEEN.Easing.Quadratic.Out)
         .to({ tweeningNumber: newValue }, this.duration)
         .onUpdate(function (object) {
-          vm.animatedNumber = object.tweeningNumber.toFixed(0);
+          vm.animatedNumber = new BigNumber(
+            object.tweeningNumber || 0
+          ).toFormat(0);
         })
         .start();
 

@@ -19,14 +19,6 @@ navbar#navigation(:show-navbar="showNavbar")
   //-   span.navbar-toggler-bar.navbar-kebab
 
   template(v-slot:navbar-menu)
-  
-    //- form
-    //-   div.input-group.no-border
-    //-     fg-input(
-    //-       placeholder="Search..."
-    //-       addon-right-icon="now-ui-icons ui-1_zoom-bold"
-    //-     )
-  
     ul.navbar-nav
       li.nav-item
         a.nav-link(
@@ -56,50 +48,42 @@ navbar#navigation(:show-navbar="showNavbar")
           target="_blank"
           rel="noopener noreferrer")
             i.fa.fa-2x.fa-github
-      li.nav-item
-        a.nav-link(
+      drop-down(
+        tag="li"
+        position="right"
+        class="nav-item"
+        icon="now-ui-icons media-2_sound-wave"
+      ) 
+        a.dropdown-item(
           title="PancakeSwap"
           href="https://exchange.pancakeswap.finance/#/swap?inputCurrency=0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
           target="_blank"
           rel="noopener noreferrer")
-            img.gray(
+            img(
               style="max-height: 20px"
               src="img/pancakeswap-logo.png")
-      li.nav-item
-        a.nav-link(
+            span.ml-2 PancakeSwap
+        a.dropdown-item(
           title="DEXTools"
           href="https://www.dextools.io/app/pancakeswap/pair-explorer/0xaabafd64feb2ec235b209a95d4dc9b08e225379c"
           target="_blank"
           rel="noopener noreferrer")
-            img.gray(
+            img(
               style="max-height: 20px"
               src="img/dextools.png")
+            span.ml-2 DEXTools
+        a.dropdown-item(
+          title="CoinGecko"
+          href="https://www.coingecko.com/en/coins/the-moontography-project"
+          target="_blank"
+          rel="noopener noreferrer")
+            img(
+              style="max-height: 20px"
+              src="img/coingecko.png")
+            span.ml-2 CoinGecko
       li.nav-item
         a.nav-link.no-hover
           | 1 MTGY = ${{ mtgyPriceUsd }} USD
-
-    //-   li.nav-item
-    //-     a.nav-link(href="#pablo")
-    //-       i.now-ui-icons.media-2_sound-wave
-    //-       p
-    //-         span.d-lg-none.d-md-block Stats
-      
-    //-   drop-down(
-    //-     tag="li"
-    //-     position="right"
-    //-     class="nav-item"
-    //-     icon="now-ui-icons location_world"
-    //-   )
-    //-     a.dropdown-item(href="#") Action
-    //-     a.dropdown-item(href="#") Action
-    //-     a.dropdown-item(href="#") Action
-
-    //-   li.nav-item
-    //-     a.nav-link(href="#pablo")
-    //-       i.now-ui-icons.users_single-02
-    //-       p
-    //-         span.d-lg-none.d-md-block Stats
-      
 </template>
 <script>
 import BigNumber from "bignumber.js";

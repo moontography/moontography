@@ -1,7 +1,8 @@
 import Chart from "chart.js";
+import dayjs from "dayjs";
 
 export const headerChart = {
-  createChart(chartId) {
+  createChart(chartId, chartData) {
     let chartColor = "#FFFFFF";
     const ctx = document.getElementById(chartId).getContext("2d");
     let gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
@@ -14,20 +15,9 @@ export const headerChart = {
     const myChart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: this.labels || [
-          "JAN",
-          "FEB",
-          "MAR",
-          "APR",
-          "MAY",
-          "JUN",
-          "JUL",
-          "AUG",
-          "SEP",
-          "OCT",
-          "NOV",
-          "DEC",
-        ],
+        labels: chartData.map((d) => {
+          return dayjs(d[0]).format("MMM DD");
+        }),
         datasets: [
           {
             label: "Data",
@@ -43,20 +33,7 @@ export const headerChart = {
             pointRadius: 5,
             fill: true,
             borderWidth: 2,
-            data: this.data || [
-              50,
-              150,
-              100,
-              190,
-              130,
-              90,
-              150,
-              160,
-              120,
-              140,
-              190,
-              95,
-            ],
+            data: chartData.map((d) => d[1]),
           },
         ],
       },
