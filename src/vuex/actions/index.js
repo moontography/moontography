@@ -15,6 +15,15 @@ export default {
       dispatch("getMtgyPriceUsd");
       dispatch("getMtgyTokenInfo");
       dispatch("getMtgyTokenChart");
+
+      if (!window.web3) {
+        return commit(
+          "SET_GLOBAL_ERROR",
+          new Error(
+            `Make sure you using a web3 enabled browser like Metamask, TrustWallet etc.`
+          )
+        );
+      }
       if (state.web3 && state.web3.isConnected && !reset) return;
       if (state.activeNetwork === "xlm") return;
 

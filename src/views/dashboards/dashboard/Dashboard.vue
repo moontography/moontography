@@ -64,7 +64,7 @@ div
                     i.now-ui-icons.ui-1_lock-circle-open
                   h3.info-title
                     small $
-                    animated-number(:value='tokenInfo.market_data.total_value_locked')
+                    animated-number(:value='tvl')
                   h6.stats-title Total Value Locked
   .row    
     .col-lg-4
@@ -176,6 +176,10 @@ export default {
         (this.tokenInfo.community_data.reddit_subscribers || 0) +
         (this.tokenInfo.community_data.telegram_channel_user_count || 0)
       );
+    },
+
+    tvl() {
+      return this.tokenInfo.market_data.total_value_locked;
     },
   },
 };

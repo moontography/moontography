@@ -18,7 +18,7 @@ export default {
 
   watch: {
     chartData() {
-      headerChart.createChart(this.chartId, this.chartData);
+      this.populateChart();
     },
   },
 
@@ -28,8 +28,18 @@ export default {
     }),
   },
 
+  methods: {
+    populateChart() {
+      try {
+        headerChart.createChart(this.chartId, this.chartData);
+      } catch (err) {
+        true;
+      }
+    },
+  },
+
   mounted() {
-    headerChart.createChart(this.chartId, this.chartData);
+    this.populateChart();
   },
 };
 </script>

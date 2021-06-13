@@ -9,7 +9,14 @@ export default {
 
   activeNetwork: localStorage.activeNetwork || "eth",
   mtgyPriceUsd: "0",
-  mtgyTokenInfo: {},
+  mtgyTokenInfo: {
+    community_data: {},
+    market_data: {
+      market_cap: {},
+      fully_diluted_valuation: {},
+      total_volume: {},
+    },
+  },
   mtgyChart: [],
 
   web3: {
