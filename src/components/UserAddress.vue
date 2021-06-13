@@ -49,9 +49,9 @@ export default {
     },
 
     walletUsdValue() {
-      return new BigNumber(
-        parseFloat(this.mtgyPrice) * parseFloat(this.userMtgyBalance)
-      ).toFormat(2, BigNumber.ROUND_DOWN);
+      return new BigNumber(this.mtgyPrice)
+        .times(this.userMtgyBalance)
+        .toFormat(2, BigNumber.ROUND_DOWN);
     },
   },
 

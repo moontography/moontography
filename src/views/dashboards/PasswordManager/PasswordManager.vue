@@ -17,9 +17,12 @@
         div.mt-2(v-else-if="filteredAccounts && filteredAccounts.length > 0")
           router-link(v-for="account in filteredAccounts", :to="`/passwords/${account.id}`")
             card.clickable(:class="`${id == account.id ? 'active' : ''}`")
-              p #[b #[i.now-ui-icons.users_circle-08.mr-2] {{ account.name }}]
-              p #[i.now-ui-icons.business_badge.mr-2] {{ account.email }}
-              p #[i.now-ui-icons.travel_info.mr-2] {{ account.info }}
+              div.d-flex.align-items-center
+                i.now-ui-icons.users_circle-08.mr-2
+                h5.m-0
+                  b {{ account.name }}
+              div #[i.now-ui-icons.business_badge.mr-2] {{ account.email }}
+              div #[i.now-ui-icons.travel_info.mr-2] {{ account.info }}
 
         .text-center.mt-2(v-else)
           i No accounts found...
@@ -42,7 +45,8 @@
           b {{ activeAccount.email }}
           
           div.mt-4 #[i.fa.fa-lock.mr-1] Password: 
-          b.clickable(@click="toggleShowPassword(activeAccount.id)") {{ showPassword[activeAccount.id] ? `${activeAccount.password} (click to hide)` : '(click to show)' }}
+          b.clickable(@click="toggleShowPassword(activeAccount.id)")
+            | {{ showPassword[activeAccount.id] ? `${activeAccount.password} (click to hide)` : '(click to show)' }}
 
           div.mt-4 #[i.now-ui-icons.travel_info.mr-1] Additional Info: 
           b {{ activeAccount.info }}
