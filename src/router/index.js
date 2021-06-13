@@ -8,6 +8,7 @@ import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import DefaultHeader from "../views/headers/DefaultHeader";
 import DtaxHeader from "../views/headers/DtaxHeader";
 import FaasHeader from "../views/headers/FaasHeader";
+import PasswordManagerHeader from "../views/headers/PasswordManagerHeader";
 import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
 
 // Dashboard pages
@@ -16,7 +17,7 @@ import Dashboard from "../views/dashboards/dashboard/Dashboard.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
-import PasswordManager from "../views/dashboards/PasswordManager.vue";
+import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
 
 const routes = [
@@ -78,16 +79,10 @@ const routes = [
         components: { default: ComingSoon, header: BulkTokenSenderHeader },
       },
       {
-        path: "passwords",
+        path: "passwords/:id?",
         name: "Password Manager",
-        components: { default: PasswordManager, header: DefaultHeader },
-        children: [
-          {
-            path: ":id",
-            component: PasswordManager,
-            props: true,
-          },
-        ],
+        components: { default: PasswordManager, header: PasswordManagerHeader },
+        props: true,
       },
       {
         path: "paas",
