@@ -55,14 +55,32 @@ navbar#navigation(:show-navbar="showNavbar")
         icon="now-ui-icons media-2_sound-wave"
       ) 
         a.dropdown-item(
-          title="PancakeSwap"
-          href="https://exchange.pancakeswap.finance/#/swap?inputCurrency=0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
+          title="BscScan"
+          href="https://bscscan.com/token/0x025c9f1146d4d94f8f369b9d98104300a3c8ca23"
           target="_blank"
           rel="noopener noreferrer")
             img(
               style="max-height: 20px"
-              src="img/pancakeswap-logo.png")
-            span.ml-2 PancakeSwap
+              src="img/bscscan.png")
+            span.ml-2 BscScan
+        a.dropdown-item(
+          title="CoinGecko"
+          href="https://www.coingecko.com/en/coins/the-moontography-project"
+          target="_blank"
+          rel="noopener noreferrer")
+            img(
+              style="max-height: 20px"
+              src="img/coingecko.png")
+            span.ml-2 CoinGecko
+        a.dropdown-item(
+          title="CoinMarketCap"
+          href="https://coinmarketcap.com/"
+          target="_blank"
+          rel="noopener noreferrer")
+            img(
+              style="max-height: 20px"
+              src="img/coinmarketcap.png")
+            span.ml-2 CoinMarketCap
         a.dropdown-item(
           title="DEXTools"
           href="https://www.dextools.io/app/pancakeswap/pair-explorer/0xaabafd64feb2ec235b209a95d4dc9b08e225379c"
@@ -73,14 +91,14 @@ navbar#navigation(:show-navbar="showNavbar")
               src="img/dextools.png")
             span.ml-2 DEXTools
         a.dropdown-item(
-          title="CoinGecko"
-          href="https://www.coingecko.com/en/coins/the-moontography-project"
+          title="PancakeSwap"
+          href="https://exchange.pancakeswap.finance/#/swap?inputCurrency=0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
           target="_blank"
           rel="noopener noreferrer")
             img(
               style="max-height: 20px"
-              src="img/coingecko.png")
-            span.ml-2 CoinGecko
+              src="img/pancakeswap-logo.png")
+            span.ml-2 PancakeSwap
       li.nav-item
         a.nav-link.no-hover
           | 1 MTGY = ${{ mtgyPriceUsd }} USD
