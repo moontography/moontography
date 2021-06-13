@@ -15,6 +15,7 @@ export default {
     isConnected: false,
     chainId: null,
     address: "",
+    userMtgyBalance: "",
     mainCurrencyBalance: "",
   },
 
@@ -78,7 +79,7 @@ export default {
         contracts: {
           mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
           mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-          trustedTimestamping: "0x1ee29f342c652c857d421500685C4Ea34b136608",
+          trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
           faas: "0x7C16fF60378bfe3dE46827918F27d251cc7FBc67",
         },
       },
