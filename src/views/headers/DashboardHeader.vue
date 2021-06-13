@@ -1,6 +1,6 @@
 <template lang="pug">
-div.panel-header.panel-header-lg
-  canvas(:id="headerChartId")
+div.panel-header
+  //- canvas(:id="headerChartId")
 </template>
 
 <script>
@@ -14,7 +14,7 @@ export default {
     };
   },
   mounted() {
-    headerChart.createChart(this.headerChartId);
+    // headerChart.createChart(this.headerChartId);
   },
 };
 </script>

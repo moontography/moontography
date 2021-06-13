@@ -3,20 +3,21 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import DashboardLayout from "../views/layout/DashboardLayout.vue";
 
 // Page Headers
-import DefaultHeader from "../views/headers/DefaultHeader";
-import DashboardHeader from "../views/headers/DashboardHeader.vue";
-import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
-import FaasHeader from "../views/headers/FaasHeader";
 import BulkTokenSenderHeader from "../views/headers/BulkTokenSenderHeader";
+import DashboardHeader from "../views/headers/DashboardHeader.vue";
+import DefaultHeader from "../views/headers/DefaultHeader";
 import DtaxHeader from "../views/headers/DtaxHeader";
+import FaasHeader from "../views/headers/FaasHeader";
+import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
 
 // Dashboard pages
+import ComingSoon from "../views/components/ComingSoon.vue";
 import Dashboard from "../views/dashboards/dashboard/Dashboard.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
+import PasswordManager from "../views/dashboards/PasswordManager.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
-import ComingSoon from "../views/components/ComingSoon.vue";
 
 const routes = [
   {
@@ -49,41 +50,48 @@ const routes = [
         children: [
           {
             path: "owner",
-            name: "FaasOwner",
+            name: "Faas Owner",
             component: FaasOwner,
           },
           {
             path: "owner/:tokenAddress",
-            name: "FaasOwnerToken",
+            name: "Faas Owner Token",
             component: FaasOwner,
             props: true,
           },
           {
             path: ":tokenAddress",
-            name: "FaasStakerToken",
+            name: "Faas Staker Token",
             component: FaasStaker,
             props: true,
           },
           {
             path: "",
-            name: "FaasStaker",
+            name: "Faas Staker",
             component: FaasStaker,
           },
         ],
       },
       {
         path: "bts",
-        name: "BulkTokenSender",
+        name: "Bulk Token Sender",
         components: { default: ComingSoon, header: BulkTokenSenderHeader },
       },
       {
         path: "passwords",
-        name: "PasswordManager",
-        components: { default: ComingSoon, header: DefaultHeader },
+        name: "Password Manager",
+        components: { default: PasswordManager, header: DefaultHeader },
+        children: [
+          {
+            path: ":id",
+            component: PasswordManager,
+            props: true,
+          },
+        ],
       },
       {
         path: "paas",
-        name: "PollingAsAService",
+        name: "Polling as a Service",
         components: { default: ComingSoon, header: DefaultHeader },
       },
       {

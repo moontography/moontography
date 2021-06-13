@@ -63,7 +63,7 @@ div
                     | K
                   h6.stats-title Total Value Locked
   .row    
-    .col-lg-3
+    .col-lg-4
       card
         .card-body.text-center
           a(href="#/timestamping")
@@ -75,10 +75,10 @@ div
                   | Trusted Timestamping
                 h6.stats-title.text-success Live Now!
     
-    .col-lg-3
+    .col-lg-4
       card
         .card-body.text-center
-          a(href="#/timestamping")
+          a(href="#/faas")
             .statistics
               .info
                 .icon.icon-success
@@ -87,29 +87,53 @@ div
                   | Farming as a Service
                 h6.stats-title.text-success Live Now!
 
-    .col-lg-3
+    .col-lg-4
       card
         .card-body.text-center
-          a(href="#/timestamping")
+          a(href="#/passwords")
             .statistics
               .info
-                .icon.icon-warning
+                .icon.icon-success
                   i.now-ui-icons.objects_spaceship
                 h3.info-title
-                  | Bulk Token Sender
-                h6.stats-title.text-warning Coming Soon..
+                  | Password Manager
+                h6.stats-title.text-success Live Now!
     
-    .col-lg-3
+    .col-lg-4
       card
         .card-body.text-center
-          a(href="#/timestamping")
+          a(href="#/bts")
             .statistics
               .info
                 .icon.icon-warning
                   i.now-ui-icons.business_money-coins
                 h3.info-title
-                  | Decentralized Tax Reporting
+                  | Bulk Token Sender
                 h6.stats-title.text-warning Coming Soon..
+    
+    .col-lg-4
+      card
+        .card-body.text-center
+          a(href="#/paas")
+            .statistics
+              .info
+                .icon.icon-danger
+                  i.now-ui-icons.business_money-coins
+                h3.info-title
+                  | Polling as a Service
+                h6.stats-title.text-danger Coming Soon..
+
+    .col-lg-4
+      card
+        .card-body.text-center
+          a(href="#/dtax")
+            .statistics
+              .info
+                .icon.icon-info
+                  i.now-ui-icons.business_money-coins
+                h3.info-title
+                  | Decentralized Tax Reporting
+                h6.stats-title.text-info Coming Soon..
             
 </template>
 <script>
@@ -121,4 +145,8 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+a:hover {
+  text-decoration: none !important;
+}
+</style>
