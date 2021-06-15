@@ -91,6 +91,15 @@ navbar#navigation(:show-navbar="showNavbar")
               src="img/dextools.png")
             span.ml-2 DEXTools
         a.dropdown-item(
+          title="Live Coin Watch"
+          href="https://www.livecoinwatch.com/price/TheMoontographyProject-MTGY"
+          target="_blank"
+          rel="noopener noreferrer")
+            img(
+              style="max-height: 20px"
+              src="img/livecoinwatch.png")
+            span.ml-2 Live Coin Watch
+        a.dropdown-item(
           title="PancakeSwap"
           href="https://exchange.pancakeswap.finance/#/swap?inputCurrency=0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
           target="_blank"

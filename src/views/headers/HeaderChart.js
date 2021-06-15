@@ -20,7 +20,7 @@ export const headerChart = {
         }),
         datasets: [
           {
-            label: "Data",
+            label: "Price ($USD)",
             borderColor: chartColor,
             backgroundColor: gradientFill,
             pointBorderColor: chartColor,
@@ -54,6 +54,7 @@ export const headerChart = {
           bodyFontColor: "#666",
           bodySpacing: 4,
           xPadding: 12,
+          displayColors: false,
         },
         legend: {
           position: "bottom",
