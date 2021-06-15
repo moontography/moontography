@@ -91,7 +91,6 @@ export default {
         this.mutableAccount = {
           ...defaultAccount(),
           ...newAccount,
-          ...this.account,
         };
       },
       deep: true,
