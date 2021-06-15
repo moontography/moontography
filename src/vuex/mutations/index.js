@@ -1,6 +1,8 @@
 import trustedTimestamping from "./trustedTimestamping";
+import passwordManager from "./passwordManager";
 
 export default {
+  ...passwordManager,
   ...trustedTimestamping,
 
   SET_GLOBAL_ERROR(state, error) {
@@ -25,6 +27,10 @@ export default {
       ...state.selectedAddressInfo,
       ...keys.reduce((o, key) => ({ ...o, [key]: info[key] }), {}),
     };
+  },
+
+  SET_MTGY_CIRC_SUPPLY(state, supply) {
+    state.mtgyCircSupply = supply;
   },
 
   SET_MTGY_PRICE_USD(state, price) {

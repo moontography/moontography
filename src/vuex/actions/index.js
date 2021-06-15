@@ -1,20 +1,27 @@
+import passwordManager from "./passwordManager";
+import trustedTimestamping from "./trustedTimestamping";
+
 import BigNumber from "bignumber.js";
 import DexUtils from "../../factories/DexUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
-import MTGY from "../../factories/web3/MTGY";
-import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
 import { useToast } from "vue-toastification";
-import CGUtils from "@/factories/CGUtils";
+import MTGYDataUtils from "@/factories/MTGYDataUtils";
 const toast = useToast();
 
 export default {
+  ...passwordManager,
+  ...trustedTimestamping,
+
   async init({ commit, dispatch, getters, state }, reset = false) {
     try {
       commit("SET_GLOBAL_ERROR", null);
-      dispatch("getMtgyPriceUsd");
-      dispatch("getMtgyTokenInfo");
-      dispatch("getMtgyTokenChart");
+      await Promise.all([
+        dispatch("getMtgyPriceUsd"),
+        dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMtgyTokenInfo"),
+        dispatch("getMtgyTokenChart"),
+      ]);
 
       if (!window.web3) {
         return commit(
@@ -136,58 +143,6 @@ export default {
   //   }
   // },
 
-  async sendTrustedTimestampTxn(
-    { getters, state },
-    { hash, fileName, fileSize }
-  ) {
-    const userAddy = state.web3.address;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const trustedTimestampingAddress =
-      getters.activeNetwork.contracts.trustedTimestamping;
-    const web3 = state.web3.instance;
-    const mtgyCont = MTGY(web3, mtgyAddy);
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-
-    // make sure the current user has allowed the appropriate amount of MTGY to
-    // spend on the timestamping service
-    const [currentApprovalAmount, currentTtCost] = await Promise.all([
-      mtgyCont.methods.allowance(userAddy, trustedTimestampingAddress).call(),
-      ttCont.methods.mtgyServiceCost().call(),
-    ]);
-    if (new BigNumber(currentApprovalAmount).lt(currentTtCost)) {
-      await mtgyCont.methods
-        .approve(trustedTimestampingAddress, currentTtCost)
-        .send({ from: userAddy });
-    }
-
-    // store the hash if we haven't bombed out yet
-    await ttCont.methods
-      .storeHash(hash, fileName, fileSize)
-      .send({ from: userAddy });
-  },
-
-  async getTimestampingHashes({ commit, state, getters }) {
-    const web3 = state.web3.instance;
-    const userAddy = state.web3.address;
-    const trustedTimestampingAddress =
-      getters.activeNetwork.contracts.trustedTimestamping;
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-    const hashes = await ttCont.methods.getHashesForAddress(userAddy).call();
-    commit("SET_TRUSTED_TIMESTAMPING_HASHES", hashes);
-  },
-
-  async getTimestampingCost({ commit, getters, state }) {
-    const web3 = state.web3.instance;
-    const trustedTimestampingAddress =
-      getters.activeNetwork.contracts.trustedTimestamping;
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-    const cost = await ttCont.methods.mtgyServiceCost().call();
-    commit(
-      "SET_TRUSTED_TIMESTAMPING_COST",
-      new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
-    );
-  },
-
   async getMtgyPriceUsd({ commit }) {
     const price = await DexUtils.getTokenPrice(
       "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
@@ -195,13 +150,20 @@ export default {
     commit("SET_MTGY_PRICE_USD", price);
   },
 
+  async getMTGYCirculatingSupply({ commit }) {
+    const supply = await MTGYDataUtils.getCirculatingSupply();
+    commit("SET_MTGY_CIRC_SUPPLY", supply);
+  },
+
   async getMtgyTokenInfo({ commit }) {
-    const info = await CGUtils.getTokenInfo("the-moontography-project");
+    const info = await MTGYDataUtils.getTokenInfo("the-moontography-project");
     commit("SET_MTGY_TOKEN_INFO", info);
   },
 
   async getMtgyTokenChart({ commit }) {
-    const prices = await CGUtils.getTokenChart("the-moontography-project");
+    const prices = await MTGYDataUtils.getTokenChart(
+      "the-moontography-project"
+    );
     commit("SET_MTGY_TOKEN_CHART", prices);
   },
 

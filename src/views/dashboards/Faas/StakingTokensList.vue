@@ -11,14 +11,37 @@ div
   div.px-4(v-else-if="!tokenStakingContracts || tokenStakingContracts.length === 0")
     div.alert.alert-warning
       | No staking contracts available for this token yet.
-  el-table(
-    v-else
-    :data='tokenStakingContracts')
-      el-table-column(min-width='150' label='Symbol' property='currentTokenSymbol')
-      el-table-column(min-width='150' label='Token' property='currentTokenName')
-      //- el-table-column(min-width='150' label='Farming Token' property='farmingTokenName')
-      el-table-column(min-width='150' label='Your Token Balance' property='currentTokenBalance')
-      el-table-column(min-width='150' label='Your Staked Balance' property='farmingTokenBalance')
+  div.table-full-width.table-responsive.pb-0(v-else)
+    n-table.mb-0(
+      :columns="['Token', 'Balances', 'APR', 'Unharvested', '']"
+      :data='tokenStakingContracts')
+        template(v-slot:columns)
+        template(v-slot:default='row')
+          td
+            div
+              h6.m-0
+                strong {{ row.item.currentTokenName }}
+            div.text-secondary
+              small {{ row.item.currentTokenSymbol }}
+          td.text-left
+            div
+              h6.m-0
+                strong {{ row.item.farmingTokenBalance }} {{ row.item.currentTokenSymbol }} staked
+            div.text-secondary
+              small {{ row.item.currentTokenBalance }} remaining
+          td APRRR
+          td 0
+          td.td-actions.text-right
+            small buttons
+
+  //- el-table(
+  //-   v-else
+  //-   :data='tokenStakingContracts')
+  //-     el-table-column(min-width='150' label='Symbol' property='currentTokenSymbol')
+  //-     el-table-column(min-width='150' label='Token' property='currentTokenName')
+  //-     //- el-table-column(min-width='150' label='Farming Token' property='farmingTokenName')
+  //-     el-table-column(min-width='150' label='Your Token Balance' property='currentTokenBalance')
+  //-     el-table-column(min-width='150' label='Your Staked Balance' property='farmingTokenBalance')
 </template>
 
 <script>
@@ -92,12 +115,12 @@ export default {
               farmingTokenSymbol: farmingInfo.symbol,
               farmingTokenBalance: new BigNumber(farmingInfo.userBalance)
                 .div(new BigNumber(10).pow(farmingInfo.decimals))
-                .toString(),
+                .toFormat(0, BigNumber.ROUND_DOWN),
               currentTokenName: name,
               currentTokenSymbol: symbol,
               currentTokenBalance: new BigNumber(userBalance)
                 .div(new BigNumber(10).pow(decimals))
-                .toFixed(3),
+                .toFormat(0, BigNumber.ROUND_DOWN),
             };
           })
         );

@@ -12,7 +12,7 @@
           template(v-slot:raw-content="")
             div
               token-input
-            div.card-body.table-full-width.pb-0.border-top
+            div.card-body.table-full-width.py-0.border-top
               staking-tokens-list
       div.col-lg-4
         card

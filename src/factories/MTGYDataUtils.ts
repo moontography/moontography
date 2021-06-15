@@ -27,4 +27,14 @@ export default {
     );
     return prices;
   },
+
+  async getCirculatingSupply() {
+    const { data: circulatingSupply } = await axios.get(
+      `https://api.moontography.com/circulating`,
+      {
+        responseType: "text",
+      }
+    );
+    return circulatingSupply;
+  },
 };

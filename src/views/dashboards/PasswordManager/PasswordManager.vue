@@ -16,7 +16,7 @@
 
         div.mt-2(v-else-if="filteredAccounts && filteredAccounts.length > 0")
           router-link(v-for="account in filteredAccounts", :to="`/passwords/${account.id}`")
-            card.clickable(:class="`${id == account.id ? 'active' : ''}`")
+            card.clickable(:class="`${accountId == account.id ? 'active' : ''}`")
               div.d-flex.align-items-center
                 i.now-ui-icons.users_circle-08.mr-2
                 h5.m-0
@@ -25,40 +25,22 @@
               div #[i.now-ui-icons.travel_info.mr-2] {{ account.info }}
 
         .text-center.mt-2(v-else)
-          i No accounts found...
+          i No accounts added to the blockchain yet!
 
   .col-md-6(v-if="activeAccount")
-    card.p-2
-      .card-body
-        .text-center(v-if="isLoading")
-          loading-panel
-        
-        div(v-else)
-          div.d-flex.align-items-center
-            h3.m-0 #[i.now-ui-icons.users_circle-08.mr-2] {{ activeAccount.name }}
-            router-link.ml-auto(to="/passwords")
-              button.close.text-danger(type='button')
-                span(aria-hidden='true') &times;
-          hr.mb-4
-          
-          div #[i.now-ui-icons.business_badge.mr-1] Email:
-          b {{ activeAccount.email }}
-          
-          div.mt-4 #[i.fa.fa-lock.mr-1] Password: 
-          b.clickable(@click="toggleShowPassword(activeAccount.id)")
-            | {{ showPassword[activeAccount.id] ? `${activeAccount.password} (click to hide)` : '(click to show)' }}
-
-          div.mt-4 #[i.now-ui-icons.travel_info.mr-1] Additional Info: 
-          b {{ activeAccount.info }}
+    active-account-card(:account="activeAccount")
 
 password-account-modal#password-account-modal
 </template>
+
 <script>
 import { mapState } from "vuex";
-import PasswordAccountModal from "./PasswordAccountModal.vue";
+import ActiveAccountCard from "./ActiveAccountCard";
+import PasswordAccountModal from "./PasswordAccountModal";
 
 export default {
   components: {
+    ActiveAccountCard,
     PasswordAccountModal,
   },
 
@@ -66,34 +48,17 @@ export default {
     return {
       isLoading: true,
       accountSearch: "",
-      showPassword: {},
-
-      accounts: [
-        {
-          id: 1,
-          name: "Facebook",
-          email: "johndoe@gmail.com",
-          password: "supersecret",
-          info: "This is my facebook account",
-        },
-        {
-          id: 2,
-          name: "Instagram",
-          email: "johndoe@gmail.com",
-          password: "password",
-          info: "This is my instagram account",
-        },
-      ],
     };
   },
 
   props: {
-    id: { type: [Number, String], default: null },
+    accountId: { type: [Number, String], default: null },
   },
 
   computed: {
     ...mapState({
       globalLoading: (state) => state.globalLoading,
+      accounts: (state) => state.passwordManager.accounts || [],
     }),
 
     filteredAccounts() {
@@ -108,19 +73,14 @@ export default {
     },
 
     activeAccount() {
-      return this.accounts.find((a) => this.id == a.id) || false;
-    },
-  },
-
-  methods: {
-    toggleShowPassword(accountId) {
-      this.showPassword[accountId] = !this.showPassword[accountId];
+      return this.accounts.find((a) => this.accountId == a.id) || false;
     },
   },
 
   async created() {
     try {
-      console.log("init");
+      await this.$store.dispatch("getPasswordManagerEncryptionKey");
+      await this.$store.dispatch("getPasswordManagerAccounts");
     } catch (err) {
       this.$toast.error(err.message);
     } finally {

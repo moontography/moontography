@@ -1,13 +1,16 @@
+import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
 export default {
-  trustedTimestamping,
+  ...passwordManager,
+  ...trustedTimestamping,
 
   globalError: null,
   globalLoading: false,
   initLoading: true,
 
   activeNetwork: localStorage.activeNetwork || "eth",
+  mtgyCircSupply: "0",
   mtgyPriceUsd: "0",
   mtgyTokenInfo: {
     community_data: {},
@@ -88,6 +91,7 @@ export default {
         contracts: {
           mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
           mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
+          passwordManager: "0xcF5231f39b23C051Ab62b9F9FfF0D020F2A28765",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
           faas: "0x7C16fF60378bfe3dE46827918F27d251cc7FBc67",
         },
@@ -239,6 +243,7 @@ export default {
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
+          passwordManager: "",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           faas: "",
         },

@@ -5,7 +5,7 @@ div
       .card.card-stats.card-raised
         .card-body
           .row
-            //- .col-md-2
+            //- .col-md
             //-   .statistics
             //-     .info
             //-       .icon.icon-info
@@ -13,15 +13,15 @@ div
             //-       h3.info-title
             //-         animated-number(:value='communityTotal')
             //-       h6.stats-title Community
-            .col-md-2
-              .statistics
-                .info
-                  .icon.icon-info
-                    i.now-ui-icons.users_single-02
-                  h3.info-title
-                    animated-number(:value='0')
-                  h6.stats-title Holders
-            .col-md-2
+            //- .col-md
+            //-   .statistics
+            //-     .info
+            //-       .icon.icon-info
+            //-         i.now-ui-icons.users_single-02
+            //-       h3.info-title
+            //-         animated-number(:value='0')
+            //-       h6.stats-title Holders
+            .col-md
               .statistics
                 .info
                   .icon.icon-primary
@@ -30,7 +30,7 @@ div
                     //- small $
                     animated-number(:value='circSupply')
                   h6.stats-title Circulating Supply
-            .col-md-2
+            .col-md
               .statistics
                 .info
                   .icon.icon-info
@@ -39,7 +39,7 @@ div
                     small $
                     animated-number(:value='marketCap')
                   h6.stats-title Market Cap
-            .col-md-2
+            .col-md
               .statistics
                 .info
                   .icon.icon-success
@@ -48,7 +48,7 @@ div
                     small $
                     animated-number(:value='fdMarketCap')
                   h6.stats-title Fully Diluted MC
-            .col-md-2
+            .col-md
               .statistics
                 .info
                   .icon.icon-warning
@@ -56,8 +56,8 @@ div
                   h3.info-title
                     small $
                     animated-number(:value='totalVolume')
-                  h6.stats-title Total Volume
-            .col-md-2
+                  h6.stats-title Daily Volume
+            .col-md
               .statistics
                 .info
                   .icon.icon-danger
@@ -141,6 +141,7 @@ div
             
 </template>
 <script>
+import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 import { AnimatedNumber } from "@/components";
 
@@ -151,15 +152,17 @@ export default {
 
   computed: {
     ...mapState({
+      circSupply: (state) => state.mtgyCircSupply,
+      mtgyPriceUsd: (state) => state.mtgyPriceUsd,
       tokenInfo: (state) => state.mtgyTokenInfo,
     }),
 
-    circSupply() {
-      return this.tokenInfo.market_data.circulating_supply;
-    },
+    // circSupply() {
+    //   return this.tokenInfo.market_data.circulating_supply;
+    // },
 
     marketCap() {
-      return this.tokenInfo.market_data.market_cap.usd;
+      return new BigNumber(this.circSupply).times(this.mtgyPriceUsd).toFixed(2);
     },
 
     fdMarketCap() {

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="form-group m-0"
+    class="form-group"
     :class="[
       { 'input-group': hasIcon },
       { 'has-danger': error },
@@ -25,11 +25,12 @@
     </slot>
     <slot>
       <input
-        :value="value"
         v-bind="$attrs"
         class="form-control"
         :class="[{ valid: value && !error }, inputClasses]"
         aria-describedby="addon-right addon-left"
+        :value="modelValue"
+        v-model="model"
       />
     </slot>
     <slot name="addonRight">
@@ -53,9 +54,14 @@
 </template>
 <script>
 export default {
-  inheritAttrs: false,
   name: "fg-input",
+  inheritAttrs: false,
+  emits: ["update:modelValue"],
+  model: {
+    prop: "modelValue",
+  },
   props: {
+    modelValue: [String, Number],
     isError: Boolean,
     isValid: Boolean,
     required: Boolean,
@@ -63,7 +69,6 @@ export default {
     error: String,
     labelClasses: String,
     inputClasses: String,
-    value: [String, Number],
     addonRightIcon: String,
     addonLeftIcon: String,
   },
@@ -74,12 +79,16 @@ export default {
     };
   },
   computed: {
-    listeners() {
-      return {
-        input: this.updateValue,
-        focus: this.onFocus,
-        blur: this.onBlur,
-      };
+    model: {
+      get() {
+        return this.modelValue;
+      },
+      set(check) {
+        if (!this.touched) {
+          this.touched = true;
+        }
+        this.$emit("update:modelValue", check);
+      },
     },
     hasIcon() {
       const { addonRight, addonLeft } = this.$slots;
@@ -97,7 +106,7 @@ export default {
       if (!this.touched && value) {
         this.touched = true;
       }
-      this.$emit("input", value);
+      this.$emit("update:modelValue", value);
     },
     onFocus(value) {
       this.focused = true;

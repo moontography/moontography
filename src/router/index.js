@@ -79,7 +79,7 @@ const routes = [
         components: { default: ComingSoon, header: BulkTokenSenderHeader },
       },
       {
-        path: "passwords/:id?",
+        path: "passwords/:accountId?",
         name: "Password Manager",
         components: { default: PasswordManager, header: PasswordManagerHeader },
         props: true,

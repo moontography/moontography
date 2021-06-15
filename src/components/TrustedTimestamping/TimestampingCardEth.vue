@@ -30,7 +30,7 @@ div
             div Submit File Signature to Blockchain
         div.text-danger
           small 
-            | You will spend #[strong {{ timestampingCost || 'N/A' }} MTGY]
+            | You will spend #[strong {{ timestampingCost || `CAN'T CALCULATE` }} MTGY]
             | to send this file signature to the blockchain.
 
       div.text-center(v-else)
