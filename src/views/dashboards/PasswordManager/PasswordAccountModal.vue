@@ -8,7 +8,7 @@
     .modal-dialog.modal-lg
       .modal-content
         .modal-header
-          h3.modal-title.d-flex.align-items-center #[i.now-ui-icons.users_circle-08.mr-2] Account #[i.text-danger(v-if="this.mutableAccount.id") *]
+          h3.modal-title.d-flex.align-items-center #[i.now-ui-icons.users_circle-08.mr-2] Account
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
@@ -43,9 +43,6 @@
                 placeholder="Enter additional information"
                 v-model="mutableAccount.info")
 
-              div.d-flex(v-if="this.mutableAccount.id")
-                small.mx-auto
-                  i #[span.text-danger *]When editing an exisiting account, a new account will be created with the updated account information.
               div.d-flex.mt-2
                 div.ml-auto
                   div.d-flex.justify-content-end
