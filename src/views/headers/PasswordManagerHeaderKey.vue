@@ -1,8 +1,14 @@
 <template lang="pug">
 div
   div(v-if="!encryptionKey")
-    h5
-      button.btn.btn-success(@click="createKeyAndShow") #[i.fa.fa-plus-circle.mr-2] Create New Encryption Key
+    button.btn.btn-lg.btn-success(@click="createKeyAndShow") #[i.fa.fa-plus-circle.mr-2] Create New Encryption Key
+    p or
+    div.d-flex.align-items-center
+      input.form-control(
+        placeholder="Enter an exisiting encryption key..."
+        v-model="existingKey")
+      div.ml-2
+        button.btn.btn-sm.btn-info.m-0(@click="setExistingKey(existingKey)") #[i.fa.fa-check]
   template(v-else)
     div.mb-1
       small Click lock to show/hide your encryption key. Write this down in case you need it later!
@@ -23,6 +29,7 @@ export default {
     return {
       showEncryptionKey: false,
       base64EncryptionKey: null,
+      existingKey: null,
 
       keyAlert: Swal.mixin({
         customClass: {
@@ -45,6 +52,14 @@ export default {
   },
 
   methods: {
+    async setExistingKey(existingKey = this.existingKey) {
+      if (existingKey) {
+        localStorage.mtgyPasswordManagerEncryptionKey = existingKey;
+        await this.$store.dispatch("getPasswordManagerEncryptionKey");
+        await this.$store.dispatch("getPasswordManagerAccounts");
+      }
+    },
+
     async createKeyAndShow() {
       const crypt = Cryptography();
       const newKey = await crypt.generateCryptoKey();
