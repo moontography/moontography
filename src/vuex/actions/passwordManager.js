@@ -38,15 +38,23 @@ export default {
     const crypt = Cryptography();
     const decryptedAccounts = await Promise.all(
       accounts.map(async (a) => {
-        const decrypted = await crypt.decryptMessage({
-          key: encryptionKey,
-          ciphertext: crypt.base64ToArrayBuffer(a.ciphertext),
-          iv: new Uint8Array(crypt.base64ToArrayBuffer(a.iv)),
-        });
-        return { ...a, ...JSON.parse(decrypted) };
+        try {
+          const decrypted = await crypt.decryptMessage({
+            key: encryptionKey,
+            ciphertext: crypt.base64ToArrayBuffer(a.ciphertext),
+            iv: new Uint8Array(crypt.base64ToArrayBuffer(a.iv)),
+          });
+          return { ...a, ...JSON.parse(decrypted) };
+        } catch (err) {
+          console.error(`Error decrypting account`, err);
+          return null;
+        }
       })
     );
-    commit("SET_PASSWORD_MANAGER_ACCOUNTS", decryptedAccounts);
+    commit(
+      "SET_PASSWORD_MANAGER_ACCOUNTS",
+      decryptedAccounts.filter((a) => !!a && !a.isDeleted)
+    );
   },
 
   async sendPasswordManagerAccountTxn({ getters, state }, account) {
@@ -64,11 +72,6 @@ export default {
       mtgyCont.methods.allowance(userAddy, passwordManagerAddy).call(),
       pwCont.methods.mtgyServiceCost().call(),
     ]);
-    if (new BigNumber(currentApprovalAmount).lt(currentPwCost)) {
-      await mtgyCont.methods
-        .approve(passwordManagerAddy, currentPwCost)
-        .send({ from: userAddy });
-    }
 
     // store the account
     const crypt = Cryptography();
@@ -84,10 +87,25 @@ export default {
         .updateAccount(account.id, ciphertextBase64)
         .send({ from: userAddy });
     } else {
+      if (new BigNumber(currentApprovalAmount).lt(currentPwCost)) {
+        await mtgyCont.methods
+          .approve(passwordManagerAddy, currentPwCost)
+          .send({ from: userAddy });
+      }
       await pwCont.methods
         .addAccount(uuidv1(), ivBase64, ciphertextBase64)
         .send({ from: userAddy });
     }
     return { iv: ivBase64, key: keyBase64, ciphertext: ciphertextBase64 };
+  },
+
+  async deletePasswordManagerAccount({ getters, state }, accountId) {
+    const userAddy = state.web3.address;
+    const passwordManagerAddy = getters.activeNetwork.contracts.passwordManager;
+    const web3 = state.web3.instance;
+    const pwCont = MTGYPasswordManager(web3, passwordManagerAddy);
+    return await pwCont.methods
+      .deleteAccount(accountId)
+      .send({ from: userAddy });
   },
 };

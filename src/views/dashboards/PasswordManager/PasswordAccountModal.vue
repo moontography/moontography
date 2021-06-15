@@ -3,7 +3,8 @@
   tabindex='-1'
   role='dialog'
   aria-labelledby='password-account-modal'
-  aria-hidden='true')
+  aria-hidden='true'
+  v-loading="globalLoading")
     .modal-dialog.modal-lg
       .modal-content
         .modal-header
@@ -11,7 +12,7 @@
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
-          form(@submit.prevent="onSubmit")
+          form(@submit.prevent="sendAccountToBlockchain")
             div
               fg-input.mb-4(
                 label="Name"
@@ -64,9 +65,12 @@
                           | I wrote down my key and want to store this password on the blockchain!
                   div.text-danger
                     small
-                      | You will spend #[strong {{ cost || `CAN'T CALCULATE` }} MTGY]
-                      | to store this account on the blockchain. It will not cost anything to
-                      | read or update them in the future.
+                      div
+                        | You will spend #[strong {{ cost || `CAN'T CALCULATE` }} MTGY]
+                        | to store this account on the blockchain. 
+                      div 
+                        | It will not cost anything to
+                        | read or update them in the future.
 </template>
 
 <script>
@@ -101,7 +105,7 @@ export default {
   }),
 
   methods: {
-    async onSubmit() {
+    async sendAccountToBlockchain() {
       try {
         this.$store.commit("SET_GLOBAL_LOADING", true);
         const hasKeyAlready = !!this.encryptionKey;
@@ -116,6 +120,7 @@ export default {
         }
         await this.$store.dispatch("getPasswordManagerAccounts");
       } catch (err) {
+        console.error("Error sending account to blockchain", err);
         this.$toast.error(err.message);
       } finally {
         this.$store.commit("SET_GLOBAL_LOADING", false);

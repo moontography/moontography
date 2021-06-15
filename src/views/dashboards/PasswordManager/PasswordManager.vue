@@ -1,11 +1,13 @@
 <template lang="pug">
 .row
   .col-md-6.mx-auto
-    card.p-2
+    card.p-2(v-if="encryptionKey")
       div.d-flex.align-items-center.mb-2
         h3.m-0 #[i.fa.fa-address-book.text-primary.mr-2] Your Accounts
         div.ml-auto
-          button.btn.btn-primary(data-toggle="modal", data-target="#password-account-modal") #[i.fa.fa-plus-circle.mr-2] Add Account
+          button.btn.btn-primary(
+            data-toggle="modal"
+            data-target="#password-account-modal") #[i.fa.fa-plus-circle.mr-2] Add Account
       input.form-control(
         placeholder="Search accounts.."
         v-model="accountSearch")
@@ -59,6 +61,7 @@ export default {
     ...mapState({
       globalLoading: (state) => state.globalLoading,
       accounts: (state) => state.passwordManager.accounts || [],
+      encryptionKey: (state) => state.passwordManager.encryptionKey,
     }),
 
     filteredAccounts() {
