@@ -167,8 +167,8 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
     div(
       :class="{ content: !$route.meta.hideContent }"
       @click="toggleSidebar")
-        div.my-4.alert.alert-danger(v-if="globalError")
-          span {{ globalError.message }}
+        div.d-flex.my-4.alert.alert-danger(v-if="globalError")
+          span.mx-auto {{ globalError.message }}
         loading-panel(v-if="isInitLoading")
         router-view(v-else)
 
@@ -208,6 +208,7 @@ export default {
   computed: mapState({
     isInitLoading: (state) => state.initLoading,
     globalError: (state) => state.globalError,
+    isConnected: (_, getters) => getters.isConnected,
   }),
   methods: {
     toggleSidebar() {

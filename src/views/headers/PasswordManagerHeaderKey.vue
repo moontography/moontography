@@ -1,16 +1,16 @@
 <template lang="pug">
 div
   div(v-if="!encryptionKey")
-    h3.m-0
-      n-button(type="success" @click="createKeyAndShow") Create New Encryption Key
+    h5
+      button.btn.btn-success(@click="createKeyAndShow") #[i.fa.fa-plus-circle.mr-2] Create New Encryption Key
   template(v-else)
     div.mb-1
-      small Click lock to show/hide your encryption key! Write this down in case you need it later!
+      small Click lock to show/hide your encryption key. Write this down in case you need it later!
     a.clickable(@click="showEncryptionKey = !showEncryptionKey")
       i.now-ui-icons.ui-1_lock-circle-open
     div.mt-2(v-if="showEncryptionKey")
       div
-        small Encryption Key
+        small Encryption Key:
       b {{ base64EncryptionKey }}
 </template>
 

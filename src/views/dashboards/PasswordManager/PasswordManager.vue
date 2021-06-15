@@ -7,7 +7,7 @@
         div.ml-auto
           button.btn.btn-primary(
             data-toggle="modal"
-            data-target="#password-account-modal") #[i.fa.fa-plus-circle.mr-2] Add Account
+            data-target="#password-account-modal-add") #[i.fa.fa-plus-circle.mr-2] Add Account
       input.form-control(
         placeholder="Search accounts.."
         v-model="accountSearch")
@@ -32,7 +32,7 @@
   .col-md-6(v-if="activeAccount")
     active-account-card(:account="activeAccount")
 
-password-account-modal#password-account-modal
+password-account-modal#password-account-modal-add
 </template>
 
 <script>

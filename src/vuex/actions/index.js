@@ -37,14 +37,7 @@ export default {
       const { web3 } = await Web3Modal.connect();
       commit("SET_WEB3_INSTANCE", web3);
 
-      const isConnected = true;
-      commit("SET_WEB3_IS_CONNECTED", isConnected);
-      if (!isConnected) {
-        return commit(
-          "SET_GLOBAL_ERROR",
-          new Error(`User not connected. Please connect to your wallet.`)
-        );
-      }
+      commit("SET_WEB3_IS_CONNECTED", true);
 
       const resetConnection = async () => {
         dispatch("disconnect");

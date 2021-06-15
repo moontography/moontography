@@ -18,7 +18,9 @@ import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
 import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager.vue";
+import PasswordManagerLayout from "../views/layout/PasswordManagerLayout.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
+import TrustedTimestampingLayout from "../views/layout/TrustedTimestampingLayout.vue";
 
 const routes = [
   {
@@ -40,9 +42,16 @@ const routes = [
         path: "timestamping",
         name: "Timestamping",
         components: {
-          default: TrustedTimestamping,
+          default: TrustedTimestampingLayout,
           header: TrustedTimestampingHeader,
         },
+        children: [
+          {
+            path: "",
+            name: "Timestamping",
+            component: TrustedTimestamping,
+          },
+        ],
       },
       {
         path: "faas",
@@ -79,10 +88,25 @@ const routes = [
         components: { default: ComingSoon, header: BulkTokenSenderHeader },
       },
       {
-        path: "passwords/:accountId?",
+        path: "passwords",
         name: "Password Manager",
-        components: { default: PasswordManager, header: PasswordManagerHeader },
-        props: true,
+        components: {
+          default: PasswordManagerLayout,
+          header: PasswordManagerHeader,
+        },
+        children: [
+          {
+            path: ":accountId",
+            name: "Password",
+            component: PasswordManager,
+            props: true,
+          },
+          {
+            path: "",
+            name: "Password Manager",
+            component: PasswordManager,
+          },
+        ],
       },
       {
         path: "paas",

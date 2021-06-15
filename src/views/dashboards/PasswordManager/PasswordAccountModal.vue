@@ -8,7 +8,7 @@
     .modal-dialog.modal-lg
       .modal-content
         .modal-header
-          h3.modal-title.d-flex.align-items-center #[i.now-ui-icons.users_circle-08.mr-2] Account
+          h3.modal-title.d-flex.align-items-center #[i.now-ui-icons.users_circle-08.mr-2] Account #[i.text-danger(v-if="this.mutableAccount.id") *]
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
@@ -37,13 +37,16 @@
                 placeholder="Enter password"
                 v-model="mutableAccount.password")
 
-              fg-input.mb-4(
+              fg-input.mb-2(
                 label="Additional Info"
                 type="text"
                 placeholder="Enter additional information"
                 v-model="mutableAccount.info")
 
-              div.d-flex
+              div.d-flex(v-if="this.mutableAccount.id")
+                small.mx-auto
+                  i #[span.text-danger *]When editing an exisiting account, a new account will be created with the updated account information.
+              div.d-flex.mt-2
                 div.ml-auto
                   div.d-flex.justify-content-end
                     button.btn.btn-primary.ml-auto(
@@ -85,7 +88,11 @@ export default {
   watch: {
     account: {
       handler(newAccount) {
-        this.mutableAccount = { ...defaultAccount(), ...newAccount };
+        this.mutableAccount = {
+          ...defaultAccount(),
+          ...newAccount,
+          ...this.account,
+        };
       },
       deep: true,
     },

@@ -4,9 +4,9 @@ card.p-2(v-loading="globalLoading")
     div.d-flex.align-items-center
       h3.m-0.d-flex.align-items-center #[i.now-ui-icons.business_badge.mr-2] {{ account.name }}
       div.ml-auto.d-flex.align-items-center
-        button.btn.btn-sm.btn-secondary.mr-3(
+        button.btn.btn-secondary.mr-3(
           data-toggle="modal"
-          data-target="#password-account-modal") #[i.fa.fa-plus-circle.mr-2] Update {{ account.name }}
+          data-target="#password-account-modal-update") #[i.fa.fa-plus-circle.mr-2] Update {{ account.name }}
         router-link(to="/passwords")
           button.close.text-secondary(type='button')
             span(aria-hidden='true') &minus;
@@ -23,17 +23,23 @@ card.p-2(v-loading="globalLoading")
       div.d-flex.align-items-center.mt-4 #[i.now-ui-icons.travel_info.mr-1] Additional Info: 
       b {{ account.info }}
 
-    div.mt-4.d-flex.align-items-center #[i.fa.fa-lock.mr-1] Delete: 
+    div.mt-4.d-flex.align-items-center #[i.fa.fa-remove.mr-1] Delete: 
     b.clickable(@click="deleteAccount()")
       i.text-danger Delete Account
 
-password-account-modal#password-account-update-modal(:account="account")
+password-account-modal#password-account-modal-update(:account="account")
 </template>
 
 <script>
 import Swal from "sweetalert2";
 import { mapState } from "vuex";
+import PasswordAccountModal from "./PasswordAccountModal";
+
 export default {
+  components: {
+    PasswordAccountModal,
+  },
+
   props: {
     account: { type: Object, required: true },
   },
