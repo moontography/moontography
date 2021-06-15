@@ -15,6 +15,7 @@ export default {
 
   async init({ commit, dispatch, getters, state }, reset = false) {
     try {
+      commit("SET_INIT_LOADING", true);
       commit("SET_GLOBAL_ERROR", null);
       await Promise.all([
         dispatch("getMtgyPriceUsd"),
