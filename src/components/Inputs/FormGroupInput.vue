@@ -27,7 +27,7 @@
       <input
         v-bind="$attrs"
         class="form-control"
-        :class="[{ valid: value && !error }, inputClasses]"
+        :class="[{ valid: modelValue && !error }, inputClasses]"
         aria-describedby="addon-right addon-left"
         :value="modelValue"
         v-model="model"

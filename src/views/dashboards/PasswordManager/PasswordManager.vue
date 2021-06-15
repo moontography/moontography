@@ -23,7 +23,7 @@
                 i.now-ui-icons.users_circle-08.mr-2
                 h5.m-0
                   b {{ account.name }}
-              div #[i.now-ui-icons.business_badge.mr-2] {{ account.email }}
+              div #[i.now-ui-icons.business_badge.mr-2] {{ account.username }}
               div #[i.now-ui-icons.travel_info.mr-2] {{ account.info }}
 
         .text-center.mt-2(v-else)
@@ -69,14 +69,14 @@ export default {
         return (
           (a.name &&
             a.name.toLowerCase().includes(this.accountSearch.toLowerCase())) ||
-          (a.email &&
-            a.email.toLowerCase().includes(this.accountSearch.toLowerCase()))
+          (a.username &&
+            a.username.toLowerCase().includes(this.accountSearch.toLowerCase()))
         );
       });
     },
 
     activeAccount() {
-      return this.accounts.find((a) => this.accountId == a.id) || false;
+      return this.accounts.find((a) => this.accountId == a.id);
     },
   },
 

@@ -29,7 +29,7 @@
                 label="Username"
                 type="text"
                 placeholder="Enter username"
-                v-model="mutableAccount.email")
+                v-model="mutableAccount.username")
 
               fg-input.mb-4(
                 label="Password"
@@ -82,25 +82,33 @@ export default {
   name: "PasswordAccountModal",
 
   props: {
-    account: { type: Object, default: null },
+    accountId: { type: String, default: null },
+    iv: { type: String, default: null },
+    name: { type: String, default: null },
+    username: { type: String, default: null },
+    password: { type: String, default: null },
+    info: { type: String, default: null },
   },
 
   watch: {
-    account: {
-      handler(newAccount) {
-        this.mutableAccount = {
-          ...defaultAccount(),
-          ...newAccount,
-        };
-      },
-      deep: true,
+    accountId() {
+      this.mutableAccount = this.populateAccount();
+      console.log("GOTHERE2", this.mutableAccount);
+    },
+
+    name() {
+      this.mutableAccount = this.populateAccount();
+    },
+
+    username() {
+      this.mutableAccount = this.populateAccount();
     },
   },
 
   data() {
     return {
       needsToWriteDownPrivateKey: false,
-      mutableAccount: { ...defaultAccount(), ...this.account },
+      mutableAccount: this.populateAccount(),
     };
   },
 
@@ -111,6 +119,17 @@ export default {
   }),
 
   methods: {
+    populateAccount() {
+      return {
+        id: this.accountId,
+        iv: this.iv,
+        name: this.name,
+        username: this.username,
+        password: this.password,
+        info: this.info,
+      };
+    },
+
     async sendAccountToBlockchain() {
       try {
         this.$store.commit("SET_GLOBAL_LOADING", true);
@@ -125,6 +144,9 @@ export default {
           this.$store.commit("SET_PASSWORD_MANAGER_ENCRYPTION_KEY", key);
         }
         await this.$store.dispatch("getPasswordManagerAccounts");
+        this.$toast.success(
+          `Successfully sent account info to blockchain and refreshed list!`
+        );
       } catch (err) {
         console.error("Error sending account to blockchain", err);
         this.$toast.error(err.message);
@@ -136,15 +158,8 @@ export default {
 
   async created() {
     await this.$store.dispatch("getPasswordManagerCost");
+    this.mutableAccount = this.populateAccount();
+    console.log("GOTHERE1", this.mutableAccount);
   },
 };
-
-function defaultAccount() {
-  return {
-    name: null,
-    email: null,
-    password: null,
-    info: null,
-  };
-}
 </script>

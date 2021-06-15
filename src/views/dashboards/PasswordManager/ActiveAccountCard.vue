@@ -6,18 +6,19 @@ card.p-2(v-loading="globalLoading")
       div.ml-auto.d-flex.align-items-center
         button.btn.btn-secondary.mr-3(
           data-toggle="modal"
-          data-target="#password-account-modal-update") #[i.fa.fa-plus-circle.mr-2] Update {{ account.name }}
+          data-target="#password-account-modal-update") #[i.fa.fa-edit.mr-2] Update {{ account.name }}
         router-link(to="/passwords")
           button.close.text-secondary(type='button')
             span(aria-hidden='true') &minus;
     hr.mb-4
     
     div.d-flex.align-items-center #[i.now-ui-icons.business_badge.mr-1] Username:
-    b {{ account.email }}
+    b {{ account.username || 'N/A' }}
     
-    div.mt-4.d-flex.align-items-center #[i.fa.fa-lock.mr-1] Password: 
-    b.clickable(@click="toggleShowPassword()")
-      | {{ showPassword ? `${account.password} (hide)` : '(show)' }}
+    template(v-if="account.password")
+      div.mt-4.d-flex.align-items-center #[i.fa.fa-lock.mr-1] Password: 
+      b.clickable(@click="toggleShowPassword()")
+        | {{ showPassword ? `${account.password} (hide)` : '(show)' }}
 
     template(v-if="account.info")
       div.d-flex.align-items-center.mt-4 #[i.now-ui-icons.travel_info.mr-1] Additional Info: 
@@ -27,7 +28,13 @@ card.p-2(v-loading="globalLoading")
     b.clickable(@click="deleteAccount()")
       i.text-danger Delete Account
 
-password-account-modal#password-account-modal-update(:account="account")
+password-account-modal#password-account-modal-update(
+  :account-id="account.id"
+  :iv="account.iv"
+  :name="account.name"
+  :username="account.username"
+  :password="account.password"
+  :info="account.info")
 </template>
 
 <script>

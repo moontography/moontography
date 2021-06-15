@@ -84,7 +84,7 @@ export default {
     const ciphertextBase64 = crypt.arrayBufferOrUint8ArrayToBase64(ciphertext);
     if (account.id) {
       await pwCont.methods
-        .updateAccount(account.id, ciphertextBase64)
+        .updateAccountById(account.id, ivBase64, ciphertextBase64)
         .send({ from: userAddy });
     } else {
       if (new BigNumber(currentApprovalAmount).lt(currentPwCost)) {
