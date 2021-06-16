@@ -21,9 +21,10 @@ div
 </template>
 
 <script>
+import { mapState } from "vuex";
 import Cryptography from "browser-cryptography";
 import Swal from "sweetalert2";
-import { mapState } from "vuex";
+
 export default {
   data() {
     return {
