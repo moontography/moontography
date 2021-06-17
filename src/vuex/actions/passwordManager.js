@@ -44,7 +44,8 @@ export default {
             ciphertext: crypt.base64ToArrayBuffer(a.ciphertext),
             iv: new Uint8Array(crypt.base64ToArrayBuffer(a.iv)),
           });
-          return { ...a, ...JSON.parse(decrypted) };
+          const oDec = JSON.parse(decrypted);
+          return { ...a, ...oDec, id: oDec.id || a.id };
         } catch (err) {
           console.error(`Error decrypting account`, err);
           return null;

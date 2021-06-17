@@ -26,7 +26,7 @@
     "element-plus": "1.0.1-beta.24",
     "google-maps": "4.3.3",
     "jquery": "3.5.1",
-    "moontography-web3": "^0.0.2",
+    "moontography-web3": "^0.0.7",
     "nouislider": "14.6.3",
     "popper.js": "1.16.1",
     "stellar-sdk": "^8.2.1",

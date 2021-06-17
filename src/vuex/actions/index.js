@@ -1,3 +1,4 @@
+import farmingAsAService from "./farmingAsAService";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
@@ -10,6 +11,7 @@ import MTGYDataUtils from "@/factories/MTGYDataUtils";
 const toast = useToast();
 
 export default {
+  ...farmingAsAService,
   ...passwordManager,
   ...trustedTimestamping,
 
@@ -35,7 +37,8 @@ export default {
       if (state.web3 && state.web3.isConnected && !reset) return;
       if (state.activeNetwork === "xlm") return;
 
-      const { web3 } = await Web3Modal.connect();
+      const { provider, web3 } = await Web3Modal.connect();
+      commit("SET_WEB3_PROVIDER", provider);
       commit("SET_WEB3_INSTANCE", web3);
 
       commit("SET_WEB3_IS_CONNECTED", true);
@@ -87,6 +90,7 @@ export default {
   },
 
   disconnect({ commit }) {
+    commit("SET_WEB3_PROVIDER", null);
     commit("SET_WEB3_INSTANCE", null);
     commit("SET_WEB3_IS_CONNECTED", false);
     commit("SET_WEB3_CHAIN_ID", null);

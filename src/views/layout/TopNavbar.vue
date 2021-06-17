@@ -72,15 +72,15 @@ navbar#navigation(:show-navbar="showNavbar")
               style="max-height: 20px"
               src="img/coingecko.png")
             span.ml-2 CoinGecko
-        a.dropdown-item(
-          title="CoinMarketCap"
-          href="https://coinmarketcap.com/"
-          target="_blank"
-          rel="noopener noreferrer")
-            img(
-              style="max-height: 20px"
-              src="img/coinmarketcap.png")
-            span.ml-2 CoinMarketCap
+        //- a.dropdown-item(
+        //-   title="CoinMarketCap"
+        //-   href="https://coinmarketcap.com/"
+        //-   target="_blank"
+        //-   rel="noopener noreferrer")
+        //-     img(
+        //-       style="max-height: 20px"
+        //-       src="img/coinmarketcap.png")
+        //-     span.ml-2 CoinMarketCap
         a.dropdown-item(
           title="DEXTools"
           href="https://www.dextools.io/app/pancakeswap/pair-explorer/0xaabafd64feb2ec235b209a95d4dc9b08e225379c"

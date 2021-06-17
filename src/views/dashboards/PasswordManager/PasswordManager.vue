@@ -17,14 +17,16 @@
           loading-panel
 
         div.mt-2(v-else-if="filteredAccounts && filteredAccounts.length > 0")
-          router-link(v-for="account in filteredAccounts", :to="`/passwords/${account.id}`")
-            card.clickable(:class="`${accountId == account.id ? 'active' : ''}`")
-              div.d-flex.align-items-center
-                i.now-ui-icons.users_circle-08.mr-2
-                h5.m-0
-                  b {{ account.name }}
-              div #[i.now-ui-icons.business_badge.mr-2] {{ account.username }}
-              div #[i.now-ui-icons.travel_info.mr-2] {{ account.info }}
+          router-link(
+            v-for="account in filteredAccounts"
+            :to="`/passwords/${account.id}`")
+              card.clickable(:class="`${accountId == account.id ? 'active' : ''}`")
+                div.d-flex.align-items-center
+                  i.now-ui-icons.users_circle-08.mr-2
+                  h5.m-0
+                    b {{ account.name }}
+                div(v-if="account.username") #[i.now-ui-icons.business_badge.mr-2] {{ account.username }}
+                div(v-if="account.info") #[i.now-ui-icons.travel_info.mr-2] {{ account.info }}
 
         .text-center.mt-2(v-else)
           i No accounts added to the blockchain yet!

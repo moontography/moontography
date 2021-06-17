@@ -8,49 +8,31 @@ div
   //- div.px-4(v-else-if="!isAddyValid")
   //-   div.alert.alert-danger
   //-     | Enter a valid address to search for farms.
-  div.px-4(v-else-if="!tokenStakingContracts || tokenStakingContracts.length === 0")
+  div.px-4.pt-3(v-else-if="!tokenStakingContracts || tokenStakingContracts.length === 0")
     div.alert.alert-warning
-      | No staking contracts available for this token yet.
+      | No staking contracts available {{ isAddyValid ? 'for this token' : '' }} yet.
   div.table-full-width.table-responsive.pb-0(v-else)
     n-table.mb-0(
-      :columns="['Token', 'Balances', 'APR', 'Unharvested', '']"
+      :columns="['Token', 'Balances', 'Rewards APR', 'Unclaimed', '']"
       :data='tokenStakingContracts')
         template(v-slot:columns)
         template(v-slot:default='row')
-          td
-            div
-              h6.m-0
-                strong {{ row.item.currentTokenName }}
-            div.text-secondary
-              small {{ row.item.currentTokenSymbol }}
-          td.text-left
-            div
-              h6.m-0
-                strong {{ row.item.farmingTokenBalance }} {{ row.item.currentTokenSymbol }} staked
-            div.text-secondary
-              small {{ row.item.currentTokenBalance }} remaining
-          td APRRR
-          td 0
-          td.td-actions.text-right
-            small buttons
-
-  //- el-table(
-  //-   v-else
-  //-   :data='tokenStakingContracts')
-  //-     el-table-column(min-width='150' label='Symbol' property='currentTokenSymbol')
-  //-     el-table-column(min-width='150' label='Token' property='currentTokenName')
-  //-     //- el-table-column(min-width='150' label='Farming Token' property='farmingTokenName')
-  //-     el-table-column(min-width='150' label='Your Token Balance' property='currentTokenBalance')
-  //-     el-table-column(min-width='150' label='Your Staked Balance' property='farmingTokenBalance')
+          staking-tokens-list-row(
+            :row="row"
+            @harvested="lookUpTokenStakingContracts")
 </template>
 
 <script>
-import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
+import StakingTokensListRow from "./StakingTokensListRow";
 import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
 
 export default {
+  components: {
+    StakingTokensListRow,
+  },
+
   data() {
     return {
       isLoadingLocal: false,
@@ -100,8 +82,9 @@ export default {
         this.tokenStakingContracts = await Promise.all(
           tokenAddresses.map(async (farmingTokenAddy) => {
             const tokenCont = MTGYFaaSToken(this.web3, farmingTokenAddy);
-            const [tokenAddy, farmingInfo] = await Promise.all([
-              tokenCont.methods.tokenAddress().call(),
+            const [tokenAddy, rewardAddy, farmingInfo] = await Promise.all([
+              tokenCont.methods.stakedTokenAddress().call(),
+              tokenCont.methods.rewardsTokenAddress().call(),
               this.$store.dispatch("getErc20TokenInfo", farmingTokenAddy),
             ]);
             const {
@@ -110,17 +93,27 @@ export default {
               decimals,
               userBalance,
             } = await this.$store.dispatch("getErc20TokenInfo", tokenAddy);
+            const {
+              name: rewardName,
+              symbol: rewardSymbol,
+              decimals: rewardDecimals,
+              userBalance: rewardUserBalance,
+            } = await this.$store.dispatch("getErc20TokenInfo", tokenAddy);
             return {
+              farmingTokenAddy,
+              tokenAddy,
               farmingTokenName: farmingInfo.name,
               farmingTokenSymbol: farmingInfo.symbol,
-              farmingTokenBalance: new BigNumber(farmingInfo.userBalance)
-                .div(new BigNumber(10).pow(farmingInfo.decimals))
-                .toFormat(0, BigNumber.ROUND_DOWN),
+              farmingTokenDecimals: farmingInfo.decimals,
+              farmingTokenBalance: farmingInfo.userBalance,
               currentTokenName: name,
               currentTokenSymbol: symbol,
-              currentTokenBalance: new BigNumber(userBalance)
-                .div(new BigNumber(10).pow(decimals))
-                .toFormat(0, BigNumber.ROUND_DOWN),
+              currentTokenDecimals: decimals,
+              currentTokenBalance: userBalance,
+              rewardTokenName: rewardName,
+              rewardTokenSymbol: rewardSymbol,
+              rewardTokenDecimals: rewardDecimals,
+              rewardTokenBalance: rewardUserBalance,
             };
           })
         );

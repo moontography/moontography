@@ -32,5 +32,5 @@ appInstance.use(router);
 appInstance.use(store);
 appInstance.use(Toast, options);
 appInstance.use(DashboardPlugin);
-appInstance.mount("#app");
+appInstance.mount("#moontography");
 appInstance.config.globalProperties.$toast = useToast();

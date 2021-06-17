@@ -63,7 +63,7 @@
                         v-loading="globalLoading"
                         :disabled="globalLoading")
                           | I wrote down my key and want to store this password on the blockchain!
-                  div.text-danger
+                  div.text-danger(v-if="!accountId")
                     small
                       div
                         | You will spend #[strong {{ cost || `CAN'T CALCULATE` }} MTGY]
@@ -91,7 +91,6 @@ export default {
   watch: {
     accountId() {
       this.mutableAccount = this.populateAccount();
-      console.log("GOTHERE2", this.mutableAccount);
     },
 
     name() {
@@ -119,7 +118,7 @@ export default {
   methods: {
     populateAccount() {
       return {
-        id: this.accountId,
+        id: this.accountId || undefined,
         iv: this.iv,
         name: this.name,
         username: this.username,

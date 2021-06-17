@@ -91,9 +91,9 @@ export default {
         contracts: {
           mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
           mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-          passwordManager: "0xcF5231f39b23C051Ab62b9F9FfF0D020F2A28765",
+          passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-          faas: "0x7C16fF60378bfe3dE46827918F27d251cc7FBc67",
+          faas: "0xa1fF69016EF0F8f2c593792b1b894DA740f4423B",
         },
       },
       // {

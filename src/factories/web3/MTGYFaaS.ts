@@ -108,7 +108,12 @@ const mtgyFaasAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "_tokenAddy",
+        name: "_rewardsTokenAddy",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_stakedTokenAddy",
         type: "address",
       },
       {
@@ -242,7 +247,7 @@ const mtgyFaasAbi: AbiItem[] = [
       },
       {
         internalType: "address",
-        name: "_stakingContract",
+        name: "_stakingAddy",
         type: "address",
       },
     ],
@@ -309,7 +314,7 @@ const mtgyFaasAbi: AbiItem[] = [
         type: "address",
       },
     ],
-    name: "userIsStakingIndex",
+    name: "userInd",
     outputs: [
       {
         internalType: "int256",
@@ -333,7 +338,7 @@ const mtgyFaasAbi: AbiItem[] = [
         type: "uint256",
       },
     ],
-    name: "userStakingContracts",
+    name: "userStakes",
     outputs: [
       {
         internalType: "address",

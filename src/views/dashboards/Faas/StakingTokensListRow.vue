@@ -1,0 +1,209 @@
+<template lang="pug">
+td
+  div
+    h6.m-0
+      strong {{ tokenName }}
+  div.text-secondary
+    small {{ stakedTokenSymbol }}
+td.text-left
+  div
+    h6.m-0
+      strong {{ stakedBalance }} {{ stakedTokenSymbol }} staked
+  div.text-secondary
+    small {{ remainingBalance }} balance
+td
+  div
+    strong {{ stakingApr || 0 }}%
+  div
+    small
+      | {{ totalTokensStaked[1] }} staked
+      | ({{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block)
+td
+  div.text-success.d-flex.align-items-center(v-if="isInFarm")
+    i.text-success.fa.fa-check
+    div.ml-1 {{ amountUnharvested[1] }}
+    a.clickable.ml-1(@click="getUnharvestedTokens")
+      i.fa.fa-refresh
+    button.ml-3.btn.btn-sm.btn-primary(
+      v-loading="globalLoading"
+      :disabled="globalLoading"
+      @click="claimTokens") Claim
+  div(v-else) ---
+td.td-actions.text-right
+  small
+    n-button(type="success" icon round)
+      i.fa.fa-play
+    //- a.text-danger.clickable.mr-1(
+    //-   v-if="isInFarm"
+    //-   data-toggle="modal"
+    //-   data-target="")
+    //-     i.fa.fa-2x.fa-minus-circle
+    //- a.text-success.clickable(
+    //-   data-toggle="modal"
+    //-   data-target="")
+    //-     i.fa.fa-2x.fa-plus-circle
+</template>
+
+<script>
+import BigNumber from "bignumber.js";
+import { mapState } from "vuex";
+// import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
+import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
+
+export default {
+  props: {
+    row: { type: Object, required: true },
+  },
+
+  emits: ["harvested"],
+
+  data() {
+    return {
+      isInFarm: false,
+      tokensStakedPerBlock: [],
+      amountUnharvested: [],
+      totalTokensStaked: [],
+      tokenInfo: null,
+    };
+  },
+
+  computed: {
+    ...mapState({
+      globalLoading: (state) => state.globalLoading,
+      userAddy: (state) => state.web3.address,
+      web3: (state) => state.web3.instance,
+    }),
+
+    perBlockNumTokens() {
+      return new BigNumber(this.tokensStakedPerBlock[0] || 0)
+        .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
+        .toFormat(1);
+    },
+
+    farmingTokenAddress() {
+      return this.row.item.farmingTokenAddy;
+    },
+
+    tokenAddress() {
+      return this.row.item.tokenAddy;
+    },
+
+    tokenName() {
+      return this.row.item.currentTokenName;
+    },
+
+    rewardTokenSymbol() {
+      return this.row.item.rewardTokenSymbol;
+    },
+
+    stakedTokenSymbol() {
+      return this.row.item.currentTokenSymbol;
+    },
+
+    stakedBalance() {
+      return new BigNumber(this.row.item.farmingTokenBalance)
+        .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
+        .toFormat(0, BigNumber.ROUND_DOWN);
+    },
+
+    remainingBalance() {
+      return new BigNumber(this.row.item.currentTokenBalance)
+        .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
+        .toFormat(0, BigNumber.ROUND_DOWN);
+    },
+
+    stakingApr() {
+      const blocksPerDay = new BigNumber(28800);
+      const userStakedTokens = new BigNumber(
+        this.row.item.farmingTokenBalance || 0
+      );
+      const totalStakedBalance = new BigNumber(this.totalTokensStaked[0] || 0);
+      const perBlockAmount = new BigNumber(this.tokensStakedPerBlock[0] || 0);
+      if (totalStakedBalance.toString() === "0") return;
+
+      const tokensStakablePerYear = perBlockAmount
+        .times(blocksPerDay)
+        .times(365);
+      const userStakablePerYear = userStakedTokens
+        .div(totalStakedBalance)
+        .times(tokensStakablePerYear);
+      const apr = userStakablePerYear
+        .div(userStakedTokens)
+        .times(100)
+        .toFormat(2);
+      return apr;
+    },
+  },
+
+  methods: {
+    async claimTokens() {
+      try {
+        this.$store.commit("SET_GLOBAL_LOADING", true);
+
+        await this.$store.dispatch(
+          "faasHarvestTokens",
+          this.farmingTokenAddress
+        );
+        this.$toast.success(`Successfully claimed your tokens!`);
+        this.$emit("harvested");
+      } catch (err) {
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
+      }
+    },
+
+    async getUnharvestedTokens() {
+      try {
+        const stakingContract = MTGYFaaSToken(
+          this.web3,
+          this.farmingTokenAddress
+        );
+        const stakingBalance = await stakingContract.methods
+          .balanceOf(this.userAddy)
+          .call();
+        this.isInFarm = stakingBalance && stakingBalance > 0;
+        if (!this.isInFarm) return;
+
+        const [
+          amountUnharvested,
+          totalTokensStaked,
+          tokensStakedPerBlock,
+        ] = await Promise.all([
+          stakingContract.methods.calcHarvestTot(this.userAddy).call(),
+          stakingContract.methods.totalTokensStaked().call(),
+          stakingContract.methods.perBlockNum().call(),
+        ]);
+        this.amountUnharvested = [
+          amountUnharvested,
+          new BigNumber(amountUnharvested)
+            .div(new BigNumber(10).pow(this.tokenInfo.decimals))
+            .toFormat(2),
+        ];
+        this.totalTokensStaked = [
+          totalTokensStaked,
+          new BigNumber(totalTokensStaked)
+            .div(new BigNumber(10).pow(this.tokenInfo.decimals))
+            .toFormat(),
+        ];
+        this.tokensStakedPerBlock = [
+          tokensStakedPerBlock,
+          new BigNumber(tokensStakedPerBlock)
+            .div(new BigNumber(10).pow(this.tokenInfo.decimals))
+            .toFormat(),
+        ];
+      } catch (err) {
+        true;
+      }
+    },
+  },
+
+  async mounted() {
+    this.tokenInfo = await this.$store.dispatch(
+      "getErc20TokenInfo",
+      this.tokenAddress
+    );
+    await this.getUnharvestedTokens();
+  },
+};
+</script>

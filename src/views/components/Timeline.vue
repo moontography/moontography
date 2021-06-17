@@ -34,6 +34,21 @@ div.row.d-flex.justify-content-center
             i.ti-time Coming Soon
 
       time-line-item(
+        badge-type="secondary" 
+        badge-icon="now-ui-icons objects_spaceship")
+      
+        template(v-slot:header)
+          span.badge.badge-primary Atomic Swap as a Service
+
+        template(v-slot:content)
+          p Allows swapping pegged tokens across blockchains seamlessly.
+
+        template(v-slot:footer)
+          h6
+            i.ti-time Coming Soon
+
+      time-line-item(
+        inverted
         badge-type="info"
         badge-icon="now-ui-icons business_money-coins"
       )

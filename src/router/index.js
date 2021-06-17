@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import DashboardLayout from "../views/layout/DashboardLayout.vue";
 
 // Page Headers
+import AsaasHeader from "../views/headers/AsaasHeader";
 import BulkTokenSenderHeader from "../views/headers/BulkTokenSenderHeader";
 import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import DefaultHeader from "../views/headers/DefaultHeader";
@@ -37,6 +38,11 @@ const routes = [
         path: "dashboard",
         name: "Dashboard",
         components: { default: Dashboard, header: DashboardHeader },
+      },
+      {
+        path: "asaas",
+        name: "ASAAS",
+        components: { default: ComingSoon, header: AsaasHeader },
       },
       {
         path: "timestamping",

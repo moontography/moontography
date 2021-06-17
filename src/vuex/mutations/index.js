@@ -57,6 +57,10 @@ export default {
     state.web3.instance = web3;
   },
 
+  SET_WEB3_PROVIDER(state, provider) {
+    state.web3.provider = provider;
+  },
+
   SET_WEB3_USER_ADDRESS(state, addy) {
     state.web3.address = addy;
   },

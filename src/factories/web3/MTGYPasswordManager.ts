@@ -48,6 +48,46 @@ const mtgyPwAbi: AbiItem[] = [
   {
     inputs: [
       {
+        components: [
+          {
+            internalType: "string",
+            name: "id",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "iv",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "ciphertext",
+            type: "string",
+          },
+          {
+            internalType: "bool",
+            name: "isDeleted",
+            type: "bool",
+          },
+        ],
+        internalType: "struct MTGYPasswordManager.AccountInfo[]",
+        name: "accounts",
+        type: "tuple[]",
+      },
+    ],
+    name: "bulkAddAccounts",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "_spendAddy",
         type: "address",
