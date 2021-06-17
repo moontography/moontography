@@ -11,7 +11,7 @@ div
         button.btn.btn-sm.btn-info.m-0(@click="setExistingKey(existingKey)") #[i.fa.fa-check]
   template(v-else)
     div.mb-1
-      small Click lock to show/hide your encryption key. Write this down in case you need it later!
+      small Click lock to show/hide your encryption key. #[b.text-danger Store it somewhere safe, you need it to access your accounts!]
     a.clickable(@click="showEncryptionKey = !showEncryptionKey")
       i.now-ui-icons.ui-1_lock-circle-open
     div.mt-2(v-if="showEncryptionKey")
@@ -69,11 +69,12 @@ export default {
       await this.$store.dispatch("getPasswordManagerEncryptionKey");
 
       /* const result = */ await this.keyAlert.fire({
-        title: "Please write this down!",
+        title: "<span class='text-danger'>Please write this down!</span>",
         html: `
           <div>The following is required to recover and show your
-          accounts that are stored on the blockchain. Write this down
-          somewhere safe in case you need to enter it again:</div>
+          accounts that are stored on the blockchain. If you lose this key
+          you will not be able to recover any accounts created with it. Write it down
+          somewhere safe because you may need to enter it again:</div>
           <div class="mt-3"><b><small>${newKeyBase64}</small></b></div>
         `,
         confirmButtonText: "Okay, I wrote it down!",
