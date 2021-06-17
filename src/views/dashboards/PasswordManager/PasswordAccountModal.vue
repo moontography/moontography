@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import $ from "jquery";
 import { mapState } from "vuex";
 export default {
   name: "PasswordAccountModal",
@@ -144,6 +145,7 @@ export default {
         this.$toast.success(
           `Successfully sent account info to blockchain and refreshed list!`
         );
+        $(`#${this.$el.id}`).modal("hide");
       } catch (err) {
         console.error("Error sending account to blockchain", err);
         this.$toast.error(err.message);
@@ -156,7 +158,6 @@ export default {
   async created() {
     await this.$store.dispatch("getPasswordManagerCost");
     this.mutableAccount = this.populateAccount();
-    console.log("GOTHERE1", this.mutableAccount);
   },
 };
 </script>
