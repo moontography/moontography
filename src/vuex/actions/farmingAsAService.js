@@ -13,14 +13,17 @@ export default {
 
   async getFaasStakingInfo({ dispatch, state }, farmingAddy) {
     const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
     const faasToken = MTGYFaaSToken(web3, farmingAddy);
     const [
+      userStakingAmount,
       stakingContract,
       rewardsContract,
       tokensRewardedPerBlock,
       lastBlock,
       currentBlock,
     ] = await Promise.all([
+      faasToken.methods.balanceOf(userAddy).call(),
       faasToken.methods.stakedTokenAddress().call(),
       faasToken.methods.rewardsTokenAddress().call(),
       faasToken.methods.perBlockNum().call(),
@@ -32,6 +35,7 @@ export default {
       dispatch("getErc20TokenInfo", rewardsContract),
     ]);
     return {
+      userStakingAmount,
       tokensRewardedPerBlock,
       currentBlock,
       lastBlock,
@@ -57,5 +61,17 @@ export default {
         .send({ from: userAddy });
     }
     await faasToken.methods.stakeTokens(amountTokens).send({ from: userAddy });
+  },
+
+  async faasUnstakeTokens({ state }, { farmingContractAddress, amountTokens }) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
+    if (!amountTokens) {
+      amountTokens = await faasToken.methods.balanceOf(userAddy).call();
+    }
+    await faasToken.methods
+      .unstakeTokens(amountTokens)
+      .send({ from: userAddy });
   },
 };

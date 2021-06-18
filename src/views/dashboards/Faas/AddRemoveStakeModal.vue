@@ -16,14 +16,18 @@
           div.text-center(v-else)
             div You will stake:
             h1.card-title {{ stakingInfo.stakingTokenInfo.symbol }}
-            h3.card-category {{ stakingInfo.stakingTokenInfo.name }}
+            h3.card-category
+              div {{ stakingInfo.stakingTokenInfo.name }}
+              div
+                | {{ stakingInfo.stakingTokenInfo.symbol }} contract:
+                | {{ stakingInfo.stakingTokenInfo.address }}
             p.card-description
               | You and any other stakers will be rewarded #[strong {{ getRewardsTokens(stakingInfo.tokensRewardedPerBlock) }}]
               | {{ stakingInfo.rewardsTokenInfo.symbol }} per block in aggregate.
             hr
             div.card-footer
               div
-                | Your can stake up to #[strong {{ userStakingBalance }}]
+                | You can stake up to #[strong {{ userStakingBalance }}]
                 | {{ stakingInfo.stakingTokenInfo.symbol }}
               div.row
                 div.col-9
@@ -33,18 +37,20 @@
                     addon-right-icon="fa fa-percent"
                     v-model="percAmountToStake")
               //- div {{ formattedAmountToStake }}
-              n-button(
-                type="success"
-                size="lg"
-                v-loading="globalLoading"
-                :disabled="globalLoading"
-                @click="stakeTokens") Stake {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
-              n-button.ml-2(
-                type="danger"
-                size="lg"
-                v-loading="globalLoading"
-                :disabled="globalLoading"
-                @click="unstakeTokens") Unstake All Tokens
+              div
+                n-button(
+                  type="success"
+                  size="lg"
+                  v-loading="globalLoading"
+                  :disabled="globalLoading"
+                  @click="stakeTokens") Stake {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
+              div(v-if="hasStakedTokens")
+                n-button.mt-4(
+                  type="danger"
+                  size="sm"
+                  v-loading="globalLoading"
+                  :disabled="globalLoading"
+                  @click="unstakeTokens") Unstake Tokens Currently Staked
 </template>
 
 <script>
@@ -86,6 +92,10 @@ export default {
       ).toFixed(0);
     },
 
+    hasStakedTokens() {
+      return new BigNumber(this.stakingInfo.userStakingAmount).gt(0);
+    },
+
     formattedAmountToStake() {
       return new BigNumber(
         new BigNumber(this.percAmountToStake)
@@ -112,6 +122,7 @@ export default {
 
     async stakeTokens() {
       try {
+        if (this.rawAmountToStake <= 0) return;
         this.$store.commit("SET_GLOBAL_LOADING", true);
         await this.$store.dispatch("faasStakeTokens", {
           farmingContractAddress: this.farmAddress,
@@ -128,25 +139,24 @@ export default {
         this.$store.commit("SET_GLOBAL_LOADING", false);
       }
     },
-  },
 
-  async unstakeTokens() {
-    try {
-      this.$store.commit("SET_GLOBAL_LOADING", true);
-      // await this.$store.dispatch("faasStakeTokens", {
-      //   farmingContractAddress: this.farmAddress,
-      //   stakingContractAddress: this.stakingInfo.stakingTokenInfo.address,
-      //   amountTokens: this.rawAmountToStake,
-      // });
-      this.$toast.success(`Successfully unstaked all tokens!`);
-      this.$emit("staked");
-      $(`#${this.$el.id}`).modal("hide");
-    } catch (err) {
-      console.error("Error unstaking tokens", err);
-      this.$toast.error(err.message);
-    } finally {
-      this.$store.commit("SET_GLOBAL_LOADING", false);
-    }
+    async unstakeTokens() {
+      try {
+        this.$store.commit("SET_GLOBAL_LOADING", true);
+        await this.$store.dispatch("faasUnstakeTokens", {
+          farmingContractAddress: this.farmAddress,
+          // amountTokens: this.rawAmountToStake,
+        });
+        this.$toast.success(`Successfully unstaked all tokens!`);
+        this.$emit("staked");
+        $(`#${this.$el.id}`).modal("hide");
+      } catch (err) {
+        console.error("Error unstaking tokens", err);
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
+      }
+    },
   },
 
   async created() {

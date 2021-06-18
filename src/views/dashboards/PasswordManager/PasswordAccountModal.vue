@@ -15,7 +15,7 @@
           form(@submit.prevent="sendAccountToBlockchain")
             div
               fg-input.mb-4(
-                label="Name"
+                label="Account Name (i.e. Facebook, Twitter, etc.)"
                 type="text"
                 placeholder="Enter account name"
                 v-model="mutableAccount.name")
@@ -70,7 +70,7 @@
                         | to store this account on the blockchain. 
                       div 
                         | It will not cost anything to
-                        | read or update them in the future.
+                        | read or update it in the future.
 </template>
 
 <script>
