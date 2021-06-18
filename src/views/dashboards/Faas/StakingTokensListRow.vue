@@ -31,8 +31,13 @@ td
   div(v-else) ---
 td.td-actions.text-right
   small
-    n-button(type="success" icon round)
-      i.fa.fa-play
+    n-button(
+      type="success"
+      icon
+      round
+      data-toggle="modal"
+      :data-target="`#stake-modal-${farmingTokenAddress}`")
+        i.fa.fa-play
     //- a.text-danger.clickable.mr-1(
     //-   v-if="isInFarm"
     //-   data-toggle="modal"
@@ -42,17 +47,27 @@ td.td-actions.text-right
     //-   data-toggle="modal"
     //-   data-target="")
     //-     i.fa.fa-2x.fa-plus-circle
+
+add-remove-stake-modal(
+  :id="`stake-modal-${farmingTokenAddress}`"
+  :farm-address="farmingTokenAddress"
+  @staked="getUnharvestedTokens")
 </template>
 
 <script>
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
+import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
 
 export default {
   props: {
     row: { type: Object, required: true },
+  },
+
+  components: {
+    AddRemoveStakeModal,
   },
 
   emits: ["harvested"],
@@ -77,7 +92,7 @@ export default {
     perBlockNumTokens() {
       return new BigNumber(this.tokensStakedPerBlock[0] || 0)
         .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
-        .toFormat(1);
+        .toFormat(0);
     },
 
     farmingTokenAddress() {
@@ -184,13 +199,13 @@ export default {
           totalTokensStaked,
           new BigNumber(totalTokensStaked)
             .div(new BigNumber(10).pow(this.tokenInfo.decimals))
-            .toFormat(),
+            .toFormat(2),
         ];
         this.tokensStakedPerBlock = [
           tokensStakedPerBlock,
           new BigNumber(tokensStakedPerBlock)
             .div(new BigNumber(10).pow(this.tokenInfo.decimals))
-            .toFormat(),
+            .toFormat(2),
         ];
       } catch (err) {
         true;

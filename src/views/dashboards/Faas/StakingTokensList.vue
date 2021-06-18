@@ -13,7 +13,7 @@ div
       | No staking contracts available {{ isAddyValid ? 'for this token' : '' }} yet.
   div.table-full-width.table-responsive.pb-0(v-else)
     n-table.mb-0(
-      :columns="['Token', 'Balances', 'Rewards APR', 'Unclaimed', '']"
+      :columns="['Staking Token', 'Balances', 'Rewards APR', 'Unclaimed', '']"
       :data='tokenStakingContracts')
         template(v-slot:columns)
         template(v-slot:default='row')
@@ -98,7 +98,7 @@ export default {
               symbol: rewardSymbol,
               decimals: rewardDecimals,
               userBalance: rewardUserBalance,
-            } = await this.$store.dispatch("getErc20TokenInfo", tokenAddy);
+            } = await this.$store.dispatch("getErc20TokenInfo", rewardAddy);
             return {
               farmingTokenAddy,
               tokenAddy,

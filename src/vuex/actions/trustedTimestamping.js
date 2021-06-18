@@ -3,6 +3,13 @@ import MTGY from "../../factories/web3/MTGY";
 import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
 
 export default {
+  async trustedTimestampingInit({ dispatch }) {
+    await Promise.all([
+      dispatch("getTimestampingHashes"),
+      dispatch("getTimestampingCost"),
+    ]);
+  },
+
   async sendTrustedTimestampTxn(
     { getters, state },
     { hash, fileName, fileSize }

@@ -7,6 +7,7 @@ import {
   Dropdown as DropDown,
   FormGroupInput as FgInput,
   LoadingPanel,
+  Slider,
   Tabs,
   TabPane,
   Table as NTable,
@@ -45,6 +46,7 @@ const GlobalComponents = {
     app.component("fg-input", FgInput);
     app.component("loading-panel", LoadingPanel);
     app.component("n-table", NTable);
+    app.component("slider", Slider);
     app.component("tabs", Tabs);
     app.component("tab-pane", TabPane);
     app.component("token-input", TokenInput);

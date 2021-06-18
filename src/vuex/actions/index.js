@@ -82,13 +82,6 @@ export default {
     }
   },
 
-  async trustedTimestampingInit({ dispatch }) {
-    await Promise.all([
-      dispatch("getTimestampingHashes"),
-      dispatch("getTimestampingCost"),
-    ]);
-  },
-
   disconnect({ commit }) {
     commit("SET_WEB3_PROVIDER", null);
     commit("SET_WEB3_INSTANCE", null);
@@ -186,6 +179,7 @@ export default {
       contract.methods.balanceOf(userAddy).call(),
     ]);
     return {
+      address: tokenAddy,
       name,
       symbol,
       decimals,

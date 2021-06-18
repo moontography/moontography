@@ -93,7 +93,7 @@ export default {
           mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
           passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-          faas: "0xa1fF69016EF0F8f2c593792b1b894DA740f4423B",
+          faas: "0x53E3e069Ad98DF11E1B03E959Fb6c15E593bF269",
         },
       },
       // {

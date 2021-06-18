@@ -7,7 +7,7 @@ div.row
       no-footer-line)
         template(v-slot:header)
           div.d-flex.align-items-center
-            h4.card-title.pl-3 #[i.fa.fa-file.mr-2.text-primary] Your File Signatures
+            h4.card-title.pl-3 #[i.fa.fa-file.mr-1.text-primary] Your File Signatures
             div.ml-auto
               div.mr-3.d-flex.justify-content-center.justify-content-sm-between.flex-wrap  
                 div.ml-auto
