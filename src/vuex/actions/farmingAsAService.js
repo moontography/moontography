@@ -1,5 +1,3 @@
-import BigNumber from "bignumber.js";
-import ERC20 from "../../factories/web3/ERC20";
 import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
 
 export default {
@@ -45,21 +43,17 @@ export default {
   },
 
   async faasStakeTokens(
-    { state },
+    { dispatch, state },
     { farmingContractAddress, stakingContractAddress, amountTokens }
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
-    const stakingToken = ERC20(web3, stakingContractAddress);
-    const stakingAllowance = await stakingToken.methods
-      .allowance(userAddy, farmingContractAddress)
-      .call();
-    if (new BigNumber(stakingAllowance).lt(amountTokens)) {
-      await stakingToken.methods
-        .approve(farmingContractAddress, amountTokens)
-        .send({ from: userAddy });
-    }
+    await dispatch("genericTokenApproval", {
+      spendAmount: amountTokens,
+      tokenAddress: stakingContractAddress,
+      delegateAddress: farmingContractAddress,
+    });
     await faasToken.methods.stakeTokens(amountTokens).send({ from: userAddy });
   },
 

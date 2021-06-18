@@ -11,7 +11,7 @@ export default {
   },
 
   async sendTrustedTimestampTxn(
-    { getters, state },
+    { dispatch, getters, state },
     { hash, fileName, fileSize }
   ) {
     const userAddy = state.web3.address;
@@ -19,20 +19,15 @@ export default {
     const trustedTimestampingAddress =
       getters.activeNetwork.contracts.trustedTimestamping;
     const web3 = state.web3.instance;
-    const mtgyCont = MTGY(web3, mtgyAddy);
     const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
 
     // make sure the current user has allowed the appropriate amount of MTGY to
     // spend on the timestamping service
-    const [currentApprovalAmount, currentTtCost] = await Promise.all([
-      mtgyCont.methods.allowance(userAddy, trustedTimestampingAddress).call(),
-      ttCont.methods.mtgyServiceCost().call(),
-    ]);
-    if (new BigNumber(currentApprovalAmount).lt(currentTtCost)) {
-      await mtgyCont.methods
-        .approve(trustedTimestampingAddress, currentTtCost)
-        .send({ from: userAddy });
-    }
+    await dispatch("genericTokenApproval", {
+      spendAmount: await ttCont.methods.mtgyServiceCost().call(),
+      tokenAddress: mtgyAddy,
+      delegateAddress: trustedTimestampingAddress,
+    });
 
     // store the hash if we haven't bombed out yet
     await ttCont.methods

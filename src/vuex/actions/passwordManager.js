@@ -58,21 +58,13 @@ export default {
     );
   },
 
-  async sendPasswordManagerAccountTxn({ getters, state }, account) {
+  async sendPasswordManagerAccountTxn({ dispatch, getters, state }, account) {
     const userAddy = state.web3.address;
     const encryptionKey = state.passwordManager.encryptionKey;
     const mtgyAddy = getters.activeNetwork.contracts.mtgy;
     const passwordManagerAddy = getters.activeNetwork.contracts.passwordManager;
     const web3 = state.web3.instance;
-    const mtgyCont = MTGY(web3, mtgyAddy);
     const pwCont = MTGYPasswordManager(web3, passwordManagerAddy);
-
-    // make sure the current user has allowed the appropriate amount of MTGY to
-    // spend on the service
-    const [currentApprovalAmount, currentPwCost] = await Promise.all([
-      mtgyCont.methods.allowance(userAddy, passwordManagerAddy).call(),
-      pwCont.methods.mtgyServiceCost().call(),
-    ]);
 
     // store the account
     const crypt = Cryptography();
@@ -88,11 +80,13 @@ export default {
         .updateAccountById(account.id, ivBase64, ciphertextBase64)
         .send({ from: userAddy });
     } else {
-      if (new BigNumber(currentApprovalAmount).lt(currentPwCost)) {
-        await mtgyCont.methods
-          .approve(passwordManagerAddy, currentPwCost)
-          .send({ from: userAddy });
-      }
+      // make sure the current user has allowed the appropriate amount of MTGY to
+      // spend on the service
+      await dispatch("genericTokenApproval", {
+        spendAmount: await pwCont.methods.mtgyServiceCost().call(),
+        tokenAddress: mtgyAddy,
+        delegateAddress: passwordManagerAddy,
+      });
       await pwCont.methods
         .addAccount(uuidv1(), ivBase64, ciphertextBase64)
         .send({ from: userAddy });

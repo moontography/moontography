@@ -615,30 +615,4 @@ const mtgyFaasTokenAbi: AbiItem[] = [
     stateMutability: "nonpayable",
     type: "function",
   },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "updatePerBlockAmount",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_newTime",
-        type: "uint256",
-      },
-    ],
-    name: "updateTimestamp",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
 ];

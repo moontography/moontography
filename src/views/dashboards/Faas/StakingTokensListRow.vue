@@ -5,6 +5,12 @@ td
       strong {{ tokenName }}
   div.text-secondary
     small {{ stakedTokenSymbol }}
+td
+  div
+    h6.m-0
+      strong {{ rewardsTokenName }}
+  div.text-secondary
+    small {{ rewardTokenSymbol }}
 td.text-left
   div
     h6.m-0
@@ -18,6 +24,10 @@ td
     small
       | {{ totalTokensStaked[1] }} staked
       | ({{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block)
+td
+  div {{ row.item.lastStakableBlock }}
+  div.text-danger(v-if="isFarmExpired")
+    b EXPIRED FARM
 td
   div.text-success.d-flex.align-items-center(v-if="isInFarm")
     i.text-success.fa.fa-check
@@ -84,10 +94,18 @@ export default {
 
   computed: {
     ...mapState({
+      currentBlock: (state) => state.currentBlock,
       globalLoading: (state) => state.globalLoading,
       userAddy: (state) => state.web3.address,
       web3: (state) => state.web3.instance,
     }),
+
+    isFarmExpired() {
+      return (
+        this.row.item.lastStakableBlock &&
+        new BigNumber(this.row.item.lastStakableBlock).lte(this.currentBlock)
+      );
+    },
 
     perBlockNumTokens() {
       return new BigNumber(this.tokensStakedPerBlock[0] || 0)
@@ -105,6 +123,10 @@ export default {
 
     tokenName() {
       return this.row.item.currentTokenName;
+    },
+
+    rewardsTokenName() {
+      return this.row.item.rewardTokenName;
     },
 
     rewardTokenSymbol() {

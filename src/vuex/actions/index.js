@@ -19,12 +19,6 @@ export default {
     try {
       commit("SET_INIT_LOADING", true);
       commit("SET_GLOBAL_ERROR", null);
-      await Promise.all([
-        dispatch("getMtgyPriceUsd"),
-        dispatch("getMTGYCirculatingSupply"),
-        dispatch("getMtgyTokenInfo"),
-        dispatch("getMtgyTokenChart"),
-      ]);
 
       if (!window.web3) {
         return commit(
@@ -64,22 +58,41 @@ export default {
 
       const [accountAddy] = await web3.eth.getAccounts();
       commit("SET_WEB3_USER_ADDRESS", accountAddy);
-      const { userBalance, decimals } = await dispatch(
-        "getErc20TokenInfo",
-        getters.activeNetwork.contracts.mtgy
-      );
-      commit(
-        "SET_WEB3_USER_MTGY_BALANCE",
-        new BigNumber(userBalance)
-          .div(new BigNumber(10).pow(decimals))
-          .toString()
-      );
+      await dispatch("refreshable");
     } catch (err) {
       toast.error(err.message || err);
       commit("SET_GLOBAL_ERROR", err);
     } finally {
       commit("SET_INIT_LOADING", false);
     }
+  },
+
+  async getUserBalance({ commit, dispatch, getters }) {
+    const { userBalance, decimals } = await dispatch(
+      "getErc20TokenInfo",
+      getters.activeNetwork.contracts.mtgy
+    );
+    commit(
+      "SET_WEB3_USER_MTGY_BALANCE",
+      new BigNumber(userBalance).div(new BigNumber(10).pow(decimals)).toString()
+    );
+  },
+
+  async refreshable({ dispatch, state }) {
+    if (state.refreshableInterval) return;
+
+    const go = async () => {
+      await Promise.all([
+        dispatch("getUserBalance"),
+        dispatch("getMtgyPriceUsd"),
+        dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMtgyTokenInfo"),
+        dispatch("getMtgyTokenChart"),
+        dispatch("getCurrentBlock"),
+      ]);
+    };
+    state.refreshableInterval = setInterval(go, 3000);
+    await go();
   },
 
   disconnect({ commit }) {
@@ -134,6 +147,13 @@ export default {
   //   }
   // },
 
+  async getCurrentBlock({ state, commit }) {
+    const web3 = state.web3.instance;
+    if (!web3) return;
+    const block = await web3.eth.getBlockNumber();
+    commit("SET_CURRENT_BLOCK", block);
+  },
+
   async getMtgyPriceUsd({ commit }) {
     const price = await DexUtils.getTokenPrice(
       "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
@@ -151,7 +171,8 @@ export default {
     commit("SET_MTGY_TOKEN_INFO", info);
   },
 
-  async getMtgyTokenChart({ commit }) {
+  async getMtgyTokenChart({ commit, state }, reset = false) {
+    if (state.mtgyChart && state.mtgyChart.length > 0 && !reset) return;
     const prices = await MTGYDataUtils.getTokenChart(
       "the-moontography-project"
     );
@@ -167,6 +188,23 @@ export default {
         .div(new BigNumber(10).pow(info.decimals))
         .toString(),
     });
+  },
+
+  async genericTokenApproval(
+    { state },
+    { spendAmount, tokenAddress, delegateAddress }
+  ) {
+    const userAddy = state.web3.address;
+    const contract = ERC20(state.web3.instance, tokenAddress);
+    const [userBalance, currentAllowance] = await Promise.all([
+      contract.methods.balanceOf(userAddy).call(),
+      contract.methods.allowance(userAddy, delegateAddress).call(),
+    ]);
+    if (new BigNumber(currentAllowance).lt(spendAmount)) {
+      await contract.methods
+        .approve(delegateAddress, userBalance)
+        .send({ from: userAddy });
+    }
   },
 
   async getErc20TokenInfo({ state }, tokenAddy) {

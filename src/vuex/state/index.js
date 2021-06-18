@@ -8,10 +8,12 @@ export default {
   globalError: null,
   globalLoading: false,
   initLoading: true,
+  refreshableInterval: null,
 
   activeNetwork: localStorage.activeNetwork || "eth",
   mtgyCircSupply: "0",
   mtgyPriceUsd: "0",
+  currentBlock: "0",
   mtgyTokenInfo: {
     community_data: {},
     market_data: {
@@ -93,7 +95,7 @@ export default {
           mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
           passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-          faas: "0x53E3e069Ad98DF11E1B03E959Fb6c15E593bF269",
+          faas: "0x337c57686db2C0073229d418b5DEFe45eC632cA3",
         },
       },
       // {
@@ -243,9 +245,9 @@ export default {
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
-          passwordManager: "",
+          passwordManager: "0x2f74DFc0753d9DD7E67a27ef8789745a8086b28F",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
-          faas: "",
+          faas: "0xCc52339e62A8e2297ebE5aD6C9389DAd69397808",
         },
       },
     ],

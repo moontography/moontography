@@ -14,14 +14,18 @@
         .modal-body
           loading-panel(v-if="this.isLoadingLocal")
           div.text-center(v-else)
-            div You will stake:
+            div
+              div.card-category
+                | Farm contract:
+                | {{ farmAddress }}
+              div You will stake:
             h1.card-title {{ stakingInfo.stakingTokenInfo.symbol }}
             h3.card-category
               div {{ stakingInfo.stakingTokenInfo.name }}
               div
-                | {{ stakingInfo.stakingTokenInfo.symbol }} contract:
+                | {{ stakingInfo.stakingTokenInfo.symbol }} token contract:
                 | {{ stakingInfo.stakingTokenInfo.address }}
-            p.card-description
+            p
               | You and any other stakers will be rewarded #[strong {{ getRewardsTokens(stakingInfo.tokensRewardedPerBlock) }}]
               | {{ stakingInfo.rewardsTokenInfo.symbol }} per block in aggregate.
             hr

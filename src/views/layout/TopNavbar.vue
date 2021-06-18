@@ -110,6 +110,9 @@ navbar#navigation(:show-navbar="showNavbar")
             span.ml-2 PancakeSwap
       li.nav-item
         a.nav-link.no-hover
+          | Block: {{ currentBlock }}
+      li.nav-item
+        a.nav-link.no-hover
           | 1 MTGY = ${{ mtgyPriceUsd }} USD
 </template>
 <script>
@@ -124,6 +127,7 @@ export default {
   },
   computed: {
     ...mapState({
+      currentBlock: (state) => state.currentBlock,
       mtgyPriceUsd: (state) => new BigNumber(state.mtgyPriceUsd).toFixed(6),
     }),
 

@@ -72,4 +72,8 @@ export default {
   SET_WEB3_MAIN_BALANCE(state, balance) {
     state.web3.mainCurrencyBalance = balance;
   },
+
+  SET_CURRENT_BLOCK(state, block) {
+    state.currentBlock = block;
+  },
 };

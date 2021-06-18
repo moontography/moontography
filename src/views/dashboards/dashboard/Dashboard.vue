@@ -4,7 +4,8 @@ div
     .col-md-12
       .card.card-stats.card-raised
         .card-body
-          .row
+          loading-panel(v-if="isInitLoading")
+          .row(v-else)
             //- .col-md
             //-   .statistics
             //-     .info
@@ -57,15 +58,15 @@ div
                     small $
                     animated-number(:value='totalVolume')
                   h6.stats-title Daily Volume
-            .col-md
-              .statistics
-                .info
-                  .icon.icon-danger
-                    i.now-ui-icons.ui-1_lock-circle-open
-                  h3.info-title
-                    small $
-                    animated-number(:value='tvl')
-                  h6.stats-title Total Value Locked
+            //- .col-md
+            //-   .statistics
+            //-     .info
+            //-       .icon.icon-danger
+            //-         i.now-ui-icons.ui-1_lock-circle-open
+            //-       h3.info-title
+            //-         small $
+            //-         animated-number(:value='tvl')
+            //-       h6.stats-title Total Value Locked
   .row    
     .col-lg-4
       card
@@ -164,6 +165,7 @@ export default {
 
   computed: {
     ...mapState({
+      isInitLoading: (state) => state.initLoading,
       circSupply: (state) => state.mtgyCircSupply,
       mtgyPriceUsd: (state) => state.mtgyPriceUsd,
       tokenInfo: (state) => state.mtgyTokenInfo,

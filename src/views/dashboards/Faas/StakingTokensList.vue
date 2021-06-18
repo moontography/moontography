@@ -13,16 +13,18 @@ div
       | No staking contracts available {{ isAddyValid ? 'for this token' : '' }} yet.
   div.table-full-width.table-responsive.pb-0(v-else)
     n-table.mb-0(
-      :columns="['Staking Token', 'Balances', 'Rewards APR', 'Unclaimed', '']"
+      :columns="['Staked Token', 'Rewards Token', 'Balances', 'Rewards APR', 'Expiration Block', 'Unclaimed', '']"
       :data='tokenStakingContracts')
         template(v-slot:columns)
         template(v-slot:default='row')
           staking-tokens-list-row(
+            v-if="shouldShowFarm(row)"
             :row="row"
             @harvested="lookUpTokenStakingContracts")
 </template>
 
 <script>
+import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 import StakingTokensListRow from "./StakingTokensListRow";
 import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
@@ -49,6 +51,7 @@ export default {
 
   computed: {
     ...mapState({
+      currentBlock: (state) => state.currentBlock,
       faasAddy: (_, getters) => getters.activeNetwork.contracts.faas,
       selectedTokenAddress: (state) => state.selectedAddressInfo.address,
       web3: (state) => state.web3.instance,
@@ -64,6 +67,16 @@ export default {
   },
 
   methods: {
+    shouldShowFarm(farmInfo) {
+      return (
+        (farmInfo.item.lastStakableBlock &&
+          new BigNumber(farmInfo.item.lastStakableBlock).gt(
+            this.currentBlock
+          )) ||
+        new BigNumber(farmInfo.item.farmingTokenBalance).gt(0)
+      );
+    },
+
     async lookUpTokenStakingContracts() {
       try {
         let tokenAddresses;
@@ -81,10 +94,16 @@ export default {
 
         this.tokenStakingContracts = await Promise.all(
           tokenAddresses.map(async (farmingTokenAddy) => {
-            const tokenCont = MTGYFaaSToken(this.web3, farmingTokenAddy);
-            const [tokenAddy, rewardAddy, farmingInfo] = await Promise.all([
-              tokenCont.methods.stakedTokenAddress().call(),
-              tokenCont.methods.rewardsTokenAddress().call(),
+            const farmingCont = MTGYFaaSToken(this.web3, farmingTokenAddy);
+            const [
+              tokenAddy,
+              rewardAddy,
+              lastStakableBlock,
+              farmingInfo,
+            ] = await Promise.all([
+              farmingCont.methods.stakedTokenAddress().call(),
+              farmingCont.methods.rewardsTokenAddress().call(),
+              farmingCont.methods.getLastStakableBlock().call(),
               this.$store.dispatch("getErc20TokenInfo", farmingTokenAddy),
             ]);
             const {
@@ -102,6 +121,7 @@ export default {
             return {
               farmingTokenAddy,
               tokenAddy,
+              lastStakableBlock,
               farmingTokenName: farmingInfo.name,
               farmingTokenSymbol: farmingInfo.symbol,
               farmingTokenDecimals: farmingInfo.decimals,

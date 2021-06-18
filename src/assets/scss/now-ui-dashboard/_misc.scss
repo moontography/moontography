@@ -77,3 +77,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 .clickable {
   cursor: pointer;
 }
+
+.Vue-Toastification__container {
+  z-index: 10001;
+}
