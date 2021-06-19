@@ -44,22 +44,30 @@ export default {
 
   eth: {
     networks: [
-      // {
-      //   name: "Ethereum Mainnet",
-      //   short_name: "eth",
-      //   chain: "ETH",
-      //   network: "mainnet",
-      //   chain_id: 1,
-      //   network_id: 1,
-      //   rpc_url: "https://mainnet.infura.io/v3/%API_KEY%",
-      //   native_currency: {
-      //     symbol: "ETH",
-      //     name: "Ethereum",
-      //     decimals: "18",
-      //     contractAddress: "",
-      //     balance: ""
-      //   }
-      // },
+      {
+        name: "Ethereum Mainnet",
+        short_name: "eth",
+        chain: "ETH",
+        network: "mainnet",
+        chain_id: 1,
+        network_id: 1,
+        rpc_url: "https://mainnet.infura.io/v3/%API_KEY%",
+        blocks_per_day: 6450,
+        native_currency: {
+          symbol: "ETH",
+          name: "Ethereum",
+          decimals: "18",
+          contractAddress: "",
+          balance: "",
+        },
+        contracts: {
+          mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+          mtgySpend: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
+          passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
+          trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
+          faas: "0xf99693b010e35B38274835CE91ccCBb1eB89B32A",
+        },
+      },
       // {
       //   name: "Ethereum Ropsten",
       //   short_name: "rop",
@@ -76,30 +84,30 @@ export default {
       //     balance: ""
       //   }
       // },
-      {
-        name: "Ethereum Rinkeby",
-        short_name: "rin",
-        chain: "ETH",
-        network: "rinkeby",
-        chain_id: 4,
-        network_id: 4,
-        rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
-        blocks_per_day: 6450,
-        native_currency: {
-          symbol: "ETH",
-          name: "Ethereum",
-          decimals: "18",
-          contractAddress: "",
-          balance: "",
-        },
-        contracts: {
-          mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
-          mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-          passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
-          trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-          faas: "0x7De398556D1048d51450192c3196ACE787888d0F",
-        },
-      },
+      // {
+      //   name: "Ethereum Rinkeby",
+      //   short_name: "rin",
+      //   chain: "ETH",
+      //   network: "rinkeby",
+      //   chain_id: 4,
+      //   network_id: 4,
+      //   rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
+      //   blocks_per_day: 6450,
+      //   native_currency: {
+      //     symbol: "ETH",
+      //     name: "Ethereum",
+      //     decimals: "18",
+      //     contractAddress: "",
+      //     balance: "",
+      //   },
+      //   contracts: {
+      //     mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
+      //     mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
+      //     passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
+      //     trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
+      //     faas: "0x7De398556D1048d51450192c3196ACE787888d0F",
+      //   },
+      // },
       // {
       //   name: "Ethereum Görli",
       //   short_name: "gor",
@@ -248,9 +256,9 @@ export default {
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
-          passwordManager: "0x2f74DFc0753d9DD7E67a27ef8789745a8086b28F",
+          passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
-          faas: "0x1E01101aF412E4510E22D7cb1Faf6f5E5eA3fDA4",
+          faas: "0xaC2f4E214704791617f651Fd1090800C68426d56",
         },
       },
     ],

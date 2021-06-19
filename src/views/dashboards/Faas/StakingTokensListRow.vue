@@ -16,7 +16,7 @@ td.text-left
     h6.m-0
       strong {{ stakedBalance }} {{ stakedTokenSymbol }} staked
   div.text-secondary
-    small {{ remainingBalance }} balance
+    small {{ remainingTokenBalance }} balance
 td
   div
     strong {{ stakingApr || 0 }}%
@@ -98,29 +98,11 @@ export default {
 
   computed: {
     ...mapState({
+      blocksPerDay: (_, getters) => getters.activeNetwork.blocks_per_day,
       currentBlock: (state) => state.currentBlock,
       globalLoading: (state) => state.globalLoading,
       userAddy: (state) => state.web3.address,
       web3: (state) => state.web3.instance,
-
-      estimateExpirationTime(_, getters) {
-        const currentBlock = this.currentBlock;
-        const lastBlock = this.row.item.lastStakableBlock;
-        const blocksPerSecond = new BigNumber(
-          getters.activeNetwork.blocks_per_day
-        )
-          .div(24)
-          .div(60)
-          .div(60);
-        if (new BigNumber(lastBlock).lt(currentBlock)) return;
-
-        const secondsFromNow = new BigNumber(
-          new BigNumber(lastBlock).minus(currentBlock)
-        ).div(blocksPerSecond);
-        return dayjs()
-          .add(secondsFromNow, "seconds")
-          .format("MMM D, YYYY hh:mm");
-      },
     }),
 
     isFarmExpired() {
@@ -128,6 +110,21 @@ export default {
         this.row.item.lastStakableBlock &&
         new BigNumber(this.row.item.lastStakableBlock).lte(this.currentBlock)
       );
+    },
+
+    estimateExpirationTime() {
+      const currentBlock = this.currentBlock;
+      const lastBlock = this.row.item.lastStakableBlock;
+      const blocksPerSecond = new BigNumber(this.blocksPerDay)
+        .div(24)
+        .div(60)
+        .div(60);
+      if (new BigNumber(lastBlock).lt(currentBlock)) return;
+
+      const secondsFromNow = new BigNumber(
+        new BigNumber(lastBlock).minus(currentBlock)
+      ).div(blocksPerSecond);
+      return dayjs().add(secondsFromNow, "seconds").format("MMM D, YYYY hh:mm");
     },
 
     perBlockNumTokens() {
@@ -166,14 +163,14 @@ export default {
         .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
-    remainingBalance() {
+    remainingTokenBalance() {
       return new BigNumber(this.row.item.currentTokenBalance)
         .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
         .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
     stakingApr() {
-      const blocksPerDay = new BigNumber(28800);
+      const blocksPerDay = new BigNumber(this.blocksPerDay);
       const userStakedTokens = new BigNumber(
         new BigNumber(this.row.item.farmingTokenBalance).gt(0)
           ? this.row.item.farmingTokenBalance
