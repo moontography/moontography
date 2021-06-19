@@ -4,30 +4,32 @@
     div.alert.alert-danger(v-if="localError")
       | | {{ localError.message }}
     div.row
-      div.col-lg-8
+      div.col-lg-12.mx-auto
         card
           template(v-slot:header='')
             h4.card-title
               | Find a Token to Farm and Earn
           template(v-slot:raw-content="")
             div
-              token-input
-            div.card-body.table-full-width.pb-0.border-top
+              token-input(
+                btn-size="sm"
+                btn-text="Retrieve Farms for Token")
+            div.card-body.table-full-width.py-0.border-top
               staking-tokens-list
-      div.col-lg-4
-        card
-          template(v-slot:header='')
-            h4.card-title
-              | Your Farms
-          template(v-slot:raw-content="")
-            div.card-body(v-if="userStakingContractsCleaned.length === 0")
-              i You're not in any farms yet!
-            div.card-body.table-full-width.py-0(v-else)
-              el-table(:data='userStakingContractsCleaned')
-                el-table-column(min-width='150' label='Contract' property='contract')
-                //- el-table-column(min-width='150' label='Country' property='country')
-                //- el-table-column(min-width='150' label='City' property='city')
-                //- el-table-column(min-width='150' align='right' header-align='right' label='Salary' property='salary')
+      //- div.col-lg-4
+      //-   card
+      //-     template(v-slot:header='')
+      //-       h4.card-title
+      //-         | Your Farms
+      //-     template(v-slot:raw-content="")
+      //-       div.card-body(v-if="userStakingContractsCleaned.length === 0")
+      //-         i You're not in any farms yet!
+      //-       div.card-body.table-full-width.py-0(v-else)
+      //-         el-table(:data='userStakingContractsCleaned')
+      //-           el-table-column(min-width='150' label='Contract' property='contract')
+      //-           //- el-table-column(min-width='150' label='Country' property='country')
+      //-           //- el-table-column(min-width='150' label='City' property='city')
+      //-           //- el-table-column(min-width='150' align='right' header-align='right' label='Salary' property='salary')
 
 </template>
 <script>
@@ -55,6 +57,7 @@ export default {
   computed: {
     ...mapState({
       activeNetwork: (state) => state.activeNetwork,
+      web3Provider: (state) => state.web3.provider,
       web3: (state) => state.web3.instance,
       faasAddy: (_, getters) => getters.activeNetwork.contracts.faas,
       userAddy: (state) => state.web3.address,

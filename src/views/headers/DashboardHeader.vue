@@ -1,20 +1,45 @@
 <template lang="pug">
 div.panel-header.panel-header-lg
-  canvas(:id="headerChartId")
+  canvas(:id="chartId")
 </template>
 
 <script>
+import { mapState } from "vuex";
 import headerChart from "./HeaderChart";
 
 export default {
   name: "overview-header",
+
   data() {
     return {
-      headerChartId: "headerChart",
+      chartId: "headerChart",
     };
   },
+
+  watch: {
+    chartData() {
+      this.populateChart();
+    },
+  },
+
+  computed: {
+    ...mapState({
+      chartData: (state) => state.mtgyChart,
+    }),
+  },
+
+  methods: {
+    populateChart() {
+      try {
+        headerChart.createChart(this.chartId, this.chartData);
+      } catch (err) {
+        true;
+      }
+    },
+  },
+
   mounted() {
-    headerChart.createChart(this.headerChartId);
+    this.populateChart();
   },
 };
 </script>

@@ -5,29 +5,43 @@ div.row.d-flex.justify-content-center
   div.col-md-12
     time-line
       time-line-item(
-        inverted
-        badge-type="danger"
-        badge-icon="now-ui-icons sport_trophy")
+        badge-type="warning" 
+        badge-icon="now-ui-icons objects_spaceship")
       
         template(v-slot:header)
-          span.badge.badge-danger Farming as a Service
+          span.badge.badge-warning Bulk Token Sender
 
         template(v-slot:content)
-          p Provide farming for any contract address.
+          p Bulk send tokens from any contract address to a CSV list of wallet addresses.
+
+        template(v-slot:footer)
+          h6
+            i.ti-time Coming Soon
+      
+      time-line-item(
+        inverted
+        badge-type="danger" 
+        badge-icon="now-ui-icons education_agenda-bookmark")
+      
+        template(v-slot:header)
+          span.badge.badge-danger Polling as a Service (Paas)
+
+        template(v-slot:content)
+          p Create anonymous polls based on contract.
 
         template(v-slot:footer)
           h6
             i.ti-time Coming Soon
 
       time-line-item(
-        badge-type="success" 
+        badge-type="default" 
         badge-icon="now-ui-icons objects_spaceship")
       
         template(v-slot:header)
-          span.badge.badge-success Bulk Token Sender
+          span.badge.badge-default Atomic Swap as a Service
 
         template(v-slot:content)
-          p Bulk send tokens from any contract address to a CSV list of wallet addresses.
+          p Allows swapping pegged tokens across blockchains seamlessly.
 
         template(v-slot:footer)
           h6

@@ -12,11 +12,15 @@ div
     div.px-3
       input.form-control(
         placeholder="Token Contract"
-        v-model="insertedTokenAddy")
+        v-model="insertedTokenAddy"
+        @input="checkAndClear")
     div.text-center
       n-button(
         type="primary"
-        @click="selectAndGetToken") Get Token Info
+        :size="btnSize"
+        v-loading="globalLoading"
+        :disabled="globalLoading"
+        @click="selectAndGetToken") {{ btnText }}
     template(v-if="selectedTokenSymbol")
       hr
       div.row.pb-3
@@ -40,9 +44,11 @@ export default {
 
   props: {
     value: { type: String, default: null },
+    btnSize: { type: String, default: null },
+    btnText: { type: String, default: "Get Token Info" },
   },
 
-  emits: ["input"],
+  emits: ["clear", "input"],
 
   data() {
     return {
@@ -52,6 +58,7 @@ export default {
 
   computed: {
     ...mapState({
+      globalLoading: (state) => state.globalLoading,
       isConnected: (state) => state.web3.isConnected,
       selectedTokenAddress: (state) => state.selectedAddressInfo.address,
       selectedTokenUserBalance: (state) =>
@@ -73,10 +80,15 @@ export default {
   },
 
   methods: {
-    async selectAndGetToken() {
+    async checkAndClear() {
+      // if (!this.insertedTokenAddy || this.insertedTokenAddy.length === 0)
+      //   await this.selectAndGetToken(true);
+    },
+
+    async selectAndGetToken(allowCleared = false) {
       try {
         const tokenAddy = this.insertedTokenAddy;
-        if (!tokenAddy) return;
+        if (!tokenAddy && !allowCleared) return;
         await this.$store.dispatch("setUserInfoForToken", tokenAddy);
         this.$emit("input", tokenAddy);
       } catch (err) {

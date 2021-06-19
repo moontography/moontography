@@ -1,6 +1,8 @@
 import trustedTimestamping from "./trustedTimestamping";
+import passwordManager from "./passwordManager";
 
 export default {
+  ...passwordManager,
   ...trustedTimestamping,
 
   SET_GLOBAL_ERROR(state, error) {
@@ -27,8 +29,24 @@ export default {
     };
   },
 
+  SET_MTGY_CIRC_SUPPLY(state, supply) {
+    state.mtgyCircSupply = supply;
+  },
+
+  SET_MTGY_TOT_SUPPLY(state, supply) {
+    state.mtgyTotSupply = supply;
+  },
+
   SET_MTGY_PRICE_USD(state, price) {
     state.mtgyPriceUsd = price;
+  },
+
+  SET_MTGY_TOKEN_INFO(state, info) {
+    state.mtgyTokenInfo = info;
+  },
+
+  SET_MTGY_TOKEN_CHART(state, prices) {
+    state.mtgyChart = prices;
   },
 
   SET_WEB3_IS_CONNECTED(state, isConnected) {
@@ -43,6 +61,10 @@ export default {
     state.web3.instance = web3;
   },
 
+  SET_WEB3_PROVIDER(state, provider) {
+    state.web3.provider = provider;
+  },
+
   SET_WEB3_USER_ADDRESS(state, addy) {
     state.web3.address = addy;
   },
@@ -53,5 +75,9 @@ export default {
 
   SET_WEB3_MAIN_BALANCE(state, balance) {
     state.web3.mainCurrencyBalance = balance;
+  },
+
+  SET_CURRENT_BLOCK(state, block) {
+    state.currentBlock = block;
   },
 };

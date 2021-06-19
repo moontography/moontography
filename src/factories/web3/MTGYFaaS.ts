@@ -10,22 +10,6 @@ const mtgyFaasAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "_mtgyAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_mtgySpendAddress",
-        type: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "_addy",
         type: "address",
       },
@@ -52,6 +36,99 @@ const mtgyFaasAbi: AbiItem[] = [
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "newCost",
+        type: "uint256",
+      },
+    ],
+    name: "changeServiceCost",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_rewardsTokenAddy",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_stakedTokenAddy",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_supply",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_perBlockAllocation",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_lockedUntilDate",
+        type: "uint256",
+      },
+    ],
+    name: "createNewTokenContract",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_userAddress",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_stakingAddy",
+        type: "address",
+      },
+    ],
+    name: "removeContractFromUser",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_addy",
+        type: "address",
+      },
+    ],
+    name: "removeUserAsStaking",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_mtgyAddress",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_mtgySpendAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
   },
   {
     inputs: [
@@ -89,47 +166,6 @@ const mtgyFaasAbi: AbiItem[] = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "newCost",
-        type: "uint256",
-      },
-    ],
-    name: "changeServiceCost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_tokenAddy",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_supply",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_perBlockAllocation",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_lockedUntilDate",
-        type: "uint256",
-      },
-    ],
-    name: "createNewTokenContract",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -237,37 +273,6 @@ const mtgyFaasAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_stakingContract",
-        type: "address",
-      },
-    ],
-    name: "removeContractFromUser",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_addy",
-        type: "address",
-      },
-    ],
-    name: "removeUserAsStaking",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "",
         type: "address",
       },
@@ -309,7 +314,7 @@ const mtgyFaasAbi: AbiItem[] = [
         type: "address",
       },
     ],
-    name: "userIsStakingIndex",
+    name: "userInd",
     outputs: [
       {
         internalType: "int256",
@@ -333,7 +338,7 @@ const mtgyFaasAbi: AbiItem[] = [
         type: "uint256",
       },
     ],
-    name: "userStakingContracts",
+    name: "userStakes",
     outputs: [
       {
         internalType: "address",

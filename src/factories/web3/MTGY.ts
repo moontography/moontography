@@ -7,6 +7,17 @@ export default function MTGY(web3: Web3, contractAddy: string) {
 
 const mtgyAbi: AbiItem[] = [
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "total",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -29,6 +40,25 @@ const mtgyAbi: AbiItem[] = [
       },
     ],
     name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Spend",
     type: "event",
   },
   {
@@ -65,7 +95,7 @@ const mtgyAbi: AbiItem[] = [
       },
       {
         internalType: "address",
-        name: "spender",
+        name: "delegate",
         type: "address",
       },
     ],
@@ -84,12 +114,12 @@ const mtgyAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "spender",
+        name: "delegate",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "numTokens",
         type: "uint256",
       },
     ],
@@ -108,7 +138,7 @@ const mtgyAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "account",
+        name: "tokenOwner",
         type: "address",
       },
     ],
@@ -118,6 +148,103 @@ const mtgyAbi: AbiItem[] = [
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "burnWallet",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "decimals",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "devWallet",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "rewardsWallet",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amountTokens",
+        type: "uint256",
+      },
+    ],
+    name: "spendOnProduct",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -140,12 +267,12 @@ const mtgyAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "recipient",
+        name: "receiver",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "numTokens",
         type: "uint256",
       },
     ],
@@ -164,17 +291,17 @@ const mtgyAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "sender",
+        name: "owner",
         type: "address",
       },
       {
         internalType: "address",
-        name: "recipient",
+        name: "buyer",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "numTokens",
         type: "uint256",
       },
     ],

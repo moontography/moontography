@@ -4,7 +4,8 @@ div
     //- div.mr-2 #[img(style ="max-height: 20px" :src="activeNetworkLogo")]
     div
       div {{ shortAddy }}
-      div {{ userMtgyBalance }} MTGY
+      div {{ walletMtgyBalance }} MTGY 
+      div ${{ walletUsdValue }} USD
     div.ml-auto
       button.btn-sm.close.py-0.m-0(
         v-loading="globalLoading"
@@ -29,15 +30,28 @@ export default {
     ...mapState({
       globalLoading: (state) => state.globalLoading,
       // activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
+      mtgyPrice: (state) => state.mtgyPriceUsd,
       userAddress: (state) => state.web3.address,
-      userMtgyBalance: (state) =>
-        new BigNumber(state.web3.userMtgyBalance).toFixed(2),
+      userMtgyBalance: (state) => state.web3.userMtgyBalance,
     }),
 
     shortAddy() {
       const f3 = this.userAddress.slice(0, 6);
       const l3 = this.userAddress.slice(-4);
       return `${f3}...${l3}`;
+    },
+
+    walletMtgyBalance() {
+      return new BigNumber(this.userMtgyBalance).toFormat(
+        2,
+        BigNumber.ROUND_DOWN
+      );
+    },
+
+    walletUsdValue() {
+      return new BigNumber(this.mtgyPrice)
+        .times(this.userMtgyBalance)
+        .toFormat(2, BigNumber.ROUND_DOWN);
     },
   },
 

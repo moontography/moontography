@@ -30,7 +30,7 @@ div
             div Submit File Signature to Blockchain
         div.text-danger
           small 
-            | You will spend #[strong {{ timestampingCost || 'N/A' }} MTGY]
+            | You will spend #[strong {{ timestampingCost || `CAN'T CALCULATE` }} MTGY]
             | to send this file signature to the blockchain.
 
       div.text-center(v-else)
@@ -89,7 +89,7 @@ export default {
         ...existingHash,
         time: `${dayjs(
           new BigNumber(existingHash.time).times(1e3).toNumber()
-        ).format("YYYY-MM-DD HH:mm")}`,
+        ).format("YYYY-MM-DD HH:mm:ss")}`,
       };
     },
   },

@@ -1,31 +1,52 @@
+import farmingAsAService from "./farmingAsAService";
+import passwordManager from "./passwordManager";
+import trustedTimestamping from "./trustedTimestamping";
+
 import BigNumber from "bignumber.js";
 import DexUtils from "../../factories/DexUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
-import MTGY from "../../factories/web3/MTGY";
-import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
 import { useToast } from "vue-toastification";
+import MTGYDataUtils from "@/factories/MTGYDataUtils";
 const toast = useToast();
 
 export default {
+  ...farmingAsAService,
+  ...passwordManager,
+  ...trustedTimestamping,
+
   async init({ commit, dispatch, getters, state }, reset = false) {
     try {
+      commit("SET_INIT_LOADING", true);
       commit("SET_GLOBAL_ERROR", null);
-      dispatch("getMtgyPriceUsd");
+
+      // Get MTGY info before having to connect wallet.
+      // Allows dashboard data to be shown even if user does not connect wallet.
+      await Promise.all([
+        dispatch("getMtgyPriceUsd"),
+        dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMTGYTotalSupply"),
+        dispatch("getMtgyTokenInfo"),
+        dispatch("getMtgyTokenChart"),
+        dispatch("getCurrentBlock"),
+      ]);
+
+      if (!window.web3) {
+        return commit(
+          "SET_GLOBAL_ERROR",
+          new Error(
+            `Make sure you using a web3 enabled browser like Metamask, TrustWallet etc.`
+          )
+        );
+      }
       if (state.web3 && state.web3.isConnected && !reset) return;
       if (state.activeNetwork === "xlm") return;
 
-      const { web3 } = await Web3Modal.connect();
+      const { provider, web3 } = await Web3Modal.connect();
+      commit("SET_WEB3_PROVIDER", provider);
       commit("SET_WEB3_INSTANCE", web3);
 
-      const isConnected = true;
-      commit("SET_WEB3_IS_CONNECTED", isConnected);
-      if (!isConnected) {
-        return commit(
-          "SET_GLOBAL_ERROR",
-          new Error(`User not connected. Please connect to your wallet.`)
-        );
-      }
+      commit("SET_WEB3_IS_CONNECTED", true);
 
       const resetConnection = async () => {
         dispatch("disconnect");
@@ -48,16 +69,7 @@ export default {
 
       const [accountAddy] = await web3.eth.getAccounts();
       commit("SET_WEB3_USER_ADDRESS", accountAddy);
-      const { userBalance, decimals } = await dispatch(
-        "getErc20TokenInfo",
-        getters.activeNetwork.contracts.mtgy
-      );
-      commit(
-        "SET_WEB3_USER_MTGY_BALANCE",
-        new BigNumber(userBalance)
-          .div(new BigNumber(10).pow(decimals))
-          .toString()
-      );
+      await dispatch("refreshable");
     } catch (err) {
       toast.error(err.message || err);
       commit("SET_GLOBAL_ERROR", err);
@@ -66,14 +78,37 @@ export default {
     }
   },
 
-  async trustedTimestampingInit({ dispatch }) {
-    await Promise.all([
-      dispatch("getTimestampingHashes"),
-      dispatch("getTimestampingCost"),
-    ]);
+  async getUserBalance({ commit, dispatch, getters }) {
+    const { userBalance, decimals } = await dispatch(
+      "getErc20TokenInfo",
+      getters.activeNetwork.contracts.mtgy
+    );
+    commit(
+      "SET_WEB3_USER_MTGY_BALANCE",
+      new BigNumber(userBalance).div(new BigNumber(10).pow(decimals)).toString()
+    );
+  },
+
+  async refreshable({ dispatch, state }) {
+    if (state.refreshableInterval) return;
+
+    const go = async () => {
+      await Promise.all([
+        dispatch("getUserBalance"),
+        dispatch("getMtgyPriceUsd"),
+        dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMTGYTotalSupply"),
+        dispatch("getMtgyTokenInfo"),
+        dispatch("getMtgyTokenChart"),
+        dispatch("getCurrentBlock"),
+      ]);
+    };
+    state.refreshableInterval = setInterval(go, 3000);
+    await go();
   },
 
   disconnect({ commit }) {
+    commit("SET_WEB3_PROVIDER", null);
     commit("SET_WEB3_INSTANCE", null);
     commit("SET_WEB3_IS_CONNECTED", false);
     commit("SET_WEB3_CHAIN_ID", null);
@@ -124,56 +159,11 @@ export default {
   //   }
   // },
 
-  async sendTrustedTimestampTxn(
-    { getters, state },
-    { hash, fileName, fileSize }
-  ) {
-    const userAddy = state.web3.address;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const trustedTimestampingAddress =
-      getters.activeNetwork.contracts.trustedTimestamping;
+  async getCurrentBlock({ state, commit }) {
     const web3 = state.web3.instance;
-    const mtgyCont = MTGY(web3, mtgyAddy);
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-
-    // make sure the current user has allowed the appropriate amount of MTGY to
-    // spend on the timestamping service
-    const [currentApprovalAmount, currentTtCost] = await Promise.all([
-      mtgyCont.methods.allowance(userAddy, trustedTimestampingAddress).call(),
-      ttCont.methods.mtgyServiceCost().call(),
-    ]);
-    if (new BigNumber(currentApprovalAmount).lt(currentTtCost)) {
-      await mtgyCont.methods
-        .approve(trustedTimestampingAddress, currentTtCost)
-        .send({ from: userAddy });
-    }
-
-    // store the hash if we haven't bombed out yet
-    await ttCont.methods
-      .storeHash(hash, fileName, fileSize)
-      .send({ from: userAddy });
-  },
-
-  async getTimestampingHashes({ commit, state, getters }) {
-    const web3 = state.web3.instance;
-    const userAddy = state.web3.address;
-    const trustedTimestampingAddress =
-      getters.activeNetwork.contracts.trustedTimestamping;
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-    const hashes = await ttCont.methods.getHashesForAddress(userAddy).call();
-    commit("SET_TRUSTED_TIMESTAMPING_HASHES", hashes);
-  },
-
-  async getTimestampingCost({ commit, getters, state }) {
-    const web3 = state.web3.instance;
-    const trustedTimestampingAddress =
-      getters.activeNetwork.contracts.trustedTimestamping;
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-    const cost = await ttCont.methods.mtgyServiceCost().call();
-    commit(
-      "SET_TRUSTED_TIMESTAMPING_COST",
-      new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
-    );
+    if (!web3) return;
+    const block = await web3.eth.getBlockNumber();
+    commit("SET_CURRENT_BLOCK", block);
   },
 
   async getMtgyPriceUsd({ commit }) {
@@ -181,6 +171,29 @@ export default {
       "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
     );
     commit("SET_MTGY_PRICE_USD", price);
+  },
+
+  async getMTGYCirculatingSupply({ commit }) {
+    const supply = await MTGYDataUtils.getCirculatingSupply();
+    commit("SET_MTGY_CIRC_SUPPLY", supply);
+  },
+
+  async getMTGYTotalSupply({ commit }) {
+    const supply = await MTGYDataUtils.getTotalSupply();
+    commit("SET_MTGY_TOT_SUPPLY", supply);
+  },
+
+  async getMtgyTokenInfo({ commit }) {
+    const info = await MTGYDataUtils.getTokenInfo("the-moontography-project");
+    commit("SET_MTGY_TOKEN_INFO", info);
+  },
+
+  async getMtgyTokenChart({ commit, state }, reset = false) {
+    if (state.mtgyChart && state.mtgyChart.length > 0 && !reset) return;
+    const prices = await MTGYDataUtils.getTokenChart(
+      "the-moontography-project"
+    );
+    commit("SET_MTGY_TOKEN_CHART", prices);
   },
 
   async setUserInfoForToken({ commit, dispatch }, tokenAddy) {
@@ -194,6 +207,23 @@ export default {
     });
   },
 
+  async genericTokenApproval(
+    { state },
+    { spendAmount, tokenAddress, delegateAddress }
+  ) {
+    const userAddy = state.web3.address;
+    const contract = ERC20(state.web3.instance, tokenAddress);
+    const [userBalance, currentAllowance] = await Promise.all([
+      contract.methods.balanceOf(userAddy).call(),
+      contract.methods.allowance(userAddy, delegateAddress).call(),
+    ]);
+    if (new BigNumber(currentAllowance).lt(spendAmount)) {
+      await contract.methods
+        .approve(delegateAddress, userBalance)
+        .send({ from: userAddy });
+    }
+  },
+
   async getErc20TokenInfo({ state }, tokenAddy) {
     const userAddy = state.web3.address;
     const contract = ERC20(state.web3.instance, tokenAddy);
@@ -204,6 +234,7 @@ export default {
       contract.methods.balanceOf(userAddy).call(),
     ]);
     return {
+      address: tokenAddy,
       name,
       symbol,
       decimals,

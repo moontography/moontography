@@ -8,26 +8,32 @@ div
   //- div.px-4(v-else-if="!isAddyValid")
   //-   div.alert.alert-danger
   //-     | Enter a valid address to search for farms.
-  div.px-4(v-else-if="!tokenStakingContracts || tokenStakingContracts.length === 0")
-    div.alert.alert-warning
-      | No staking contracts available for this token yet.
-  el-table(
-    v-else
-    :data='tokenStakingContracts')
-      el-table-column(min-width='150' label='Symbol' property='currentTokenSymbol')
-      el-table-column(min-width='150' label='Token' property='currentTokenName')
-      //- el-table-column(min-width='150' label='Farming Token' property='farmingTokenName')
-      el-table-column(min-width='150' label='Your Token Balance' property='currentTokenBalance')
-      el-table-column(min-width='150' label='Your Staked Balance' property='farmingTokenBalance')
+  div.px-4.py-3(v-else-if="!filteredStakingContracts || filteredStakingContracts.length === 0")
+    i
+      | No staking contracts available {{ isAddyValid ? 'for this token' : '' }} yet.
+  div.table-full-width.table-responsive.pb-0(v-else)
+    n-table.mb-0(
+      :columns="['Staked Token', 'Rewards Token', 'Balances', 'Rewards APR', 'Expiration Block', 'Unclaimed', '']"
+      :data='filteredStakingContracts')
+        template(v-slot:columns)
+        template(v-slot:default='row')
+          staking-tokens-list-row(
+            :row="row"
+            @harvested="lookUpTokenStakingContracts")
 </template>
 
 <script>
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
+import StakingTokensListRow from "./StakingTokensListRow";
 import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
 
 export default {
+  components: {
+    StakingTokensListRow,
+  },
+
   data() {
     return {
       isLoadingLocal: false,
@@ -44,6 +50,7 @@ export default {
 
   computed: {
     ...mapState({
+      currentBlock: (state) => state.currentBlock,
       faasAddy: (_, getters) => getters.activeNetwork.contracts.faas,
       selectedTokenAddress: (state) => state.selectedAddressInfo.address,
       web3: (state) => state.web3.instance,
@@ -55,6 +62,16 @@ export default {
         this.web3 &&
         this.web3.utils.isAddress(this.selectedTokenAddress)
       );
+    },
+
+    filteredStakingContracts() {
+      return this.tokenStakingContracts.slice(0).filter((c) => {
+        return (
+          (c.lastStakableBlock &&
+            new BigNumber(c.lastStakableBlock).gt(this.currentBlock)) ||
+          new BigNumber(c.farmingTokenBalance).gt(0)
+        );
+      });
     },
   },
 
@@ -74,33 +91,59 @@ export default {
             .call();
         }
 
-        this.tokenStakingContracts = await Promise.all(
+        const stakingContracts = await Promise.all(
           tokenAddresses.map(async (farmingTokenAddy) => {
-            const tokenCont = MTGYFaaSToken(this.web3, farmingTokenAddy);
-            const [tokenAddy, farmingInfo] = await Promise.all([
-              tokenCont.methods.tokenAddress().call(),
-              this.$store.dispatch("getErc20TokenInfo", farmingTokenAddy),
-            ]);
-            const {
-              name,
-              symbol,
-              decimals,
-              userBalance,
-            } = await this.$store.dispatch("getErc20TokenInfo", tokenAddy);
-            return {
-              farmingTokenName: farmingInfo.name,
-              farmingTokenSymbol: farmingInfo.symbol,
-              farmingTokenBalance: new BigNumber(farmingInfo.userBalance)
-                .div(new BigNumber(10).pow(farmingInfo.decimals))
-                .toString(),
-              currentTokenName: name,
-              currentTokenSymbol: symbol,
-              currentTokenBalance: new BigNumber(userBalance)
-                .div(new BigNumber(10).pow(decimals))
-                .toFixed(3),
-            };
+            try {
+              const farmingCont = MTGYFaaSToken(this.web3, farmingTokenAddy);
+              const [
+                tokenAddy,
+                rewardAddy,
+                lastStakableBlock,
+                farmingInfo,
+              ] = await Promise.all([
+                farmingCont.methods.stakedTokenAddress().call(),
+                farmingCont.methods.rewardsTokenAddress().call(),
+                farmingCont.methods.getLastStakableBlock().call(),
+                this.$store.dispatch("getErc20TokenInfo", farmingTokenAddy),
+              ]);
+              const {
+                name,
+                symbol,
+                decimals,
+                userBalance,
+              } = await this.$store.dispatch("getErc20TokenInfo", tokenAddy);
+              const {
+                name: rewardName,
+                symbol: rewardSymbol,
+                decimals: rewardDecimals,
+                userBalance: rewardUserBalance,
+              } = await this.$store.dispatch("getErc20TokenInfo", rewardAddy);
+              return {
+                farmingTokenAddy,
+                tokenAddy,
+                lastStakableBlock,
+                farmingTokenName: farmingInfo.name,
+                farmingTokenSymbol: farmingInfo.symbol,
+                farmingTokenDecimals: farmingInfo.decimals,
+                farmingTokenBalance: farmingInfo.userBalance,
+                currentTokenName: name,
+                currentTokenSymbol: symbol,
+                currentTokenDecimals: decimals,
+                currentTokenBalance: userBalance,
+                rewardTokenName: rewardName,
+                rewardTokenSymbol: rewardSymbol,
+                rewardTokenDecimals: rewardDecimals,
+                rewardTokenBalance: rewardUserBalance,
+              };
+            } catch (err) {
+              console.error(`error getting farming contract`, err);
+              return null;
+            }
           })
         );
+        return (this.tokenStakingContracts = stakingContracts.filter(
+          (c) => !!c
+        ));
       } catch (err) {
         this.$toast.error(err.message);
       } finally {
