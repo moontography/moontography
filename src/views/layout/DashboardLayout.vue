@@ -40,7 +40,7 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Atomic Swapping (PaaS)',
+          name: 'Atomic Swapping',
           icon: 'now-ui-icons education_agenda-bookmark',
           path: '/asaas',
         }`

@@ -24,7 +24,7 @@ div.row.d-flex.justify-content-center
         badge-icon="now-ui-icons education_agenda-bookmark")
       
         template(v-slot:header)
-          span.badge.badge-danger Polling as a Service (PAAS)
+          span.badge.badge-danger Polling as a Service (Paas)
 
         template(v-slot:content)
           p Create anonymous polls based on contract.
@@ -34,11 +34,11 @@ div.row.d-flex.justify-content-center
             i.ti-time Coming Soon
 
       time-line-item(
-        badge-type="secondary" 
+        badge-type="default" 
         badge-icon="now-ui-icons objects_spaceship")
       
         template(v-slot:header)
-          span.badge.badge-primary Atomic Swap as a Service
+          span.badge.badge-default Atomic Swap as a Service
 
         template(v-slot:content)
           p Allows swapping pegged tokens across blockchains seamlessly.
