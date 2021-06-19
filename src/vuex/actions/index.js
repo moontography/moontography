@@ -25,6 +25,7 @@ export default {
       await Promise.all([
         dispatch("getMtgyPriceUsd"),
         dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMTGYTotalSupply"),
         dispatch("getMtgyTokenInfo"),
         dispatch("getMtgyTokenChart"),
         dispatch("getCurrentBlock"),
@@ -96,6 +97,7 @@ export default {
         dispatch("getUserBalance"),
         dispatch("getMtgyPriceUsd"),
         dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMTGYTotalSupply"),
         dispatch("getMtgyTokenInfo"),
         dispatch("getMtgyTokenChart"),
         dispatch("getCurrentBlock"),
@@ -174,6 +176,11 @@ export default {
   async getMTGYCirculatingSupply({ commit }) {
     const supply = await MTGYDataUtils.getCirculatingSupply();
     commit("SET_MTGY_CIRC_SUPPLY", supply);
+  },
+
+  async getMTGYTotalSupply({ commit }) {
+    const supply = await MTGYDataUtils.getTotalSupply();
+    commit("SET_MTGY_TOT_SUPPLY", supply);
   },
 
   async getMtgyTokenInfo({ commit }) {

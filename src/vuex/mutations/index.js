@@ -33,6 +33,10 @@ export default {
     state.mtgyCircSupply = supply;
   },
 
+  SET_MTGY_TOT_SUPPLY(state, supply) {
+    state.mtgyTotSupply = supply;
+  },
+
   SET_MTGY_PRICE_USD(state, price) {
     state.mtgyPriceUsd = price;
   },

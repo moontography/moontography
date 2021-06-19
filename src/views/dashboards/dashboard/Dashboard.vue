@@ -25,6 +25,15 @@ div
             .col-md
               .statistics
                 .info
+                  .icon.icon-danger
+                    i.now-ui-icons.ui-1_lock-circle-open
+                  h3.info-title
+                    //- small $
+                    animated-number(:value='totSupply')
+                  h6.stats-title Total Supply
+            .col-md
+              .statistics
+                .info
                   .icon.icon-primary
                     i.now-ui-icons.business_bank
                   h3.info-title
@@ -167,6 +176,7 @@ export default {
     ...mapState({
       isInitLoading: (state) => state.initLoading,
       circSupply: (state) => state.mtgyCircSupply,
+      totSupply: (state) => state.mtgyTotSupply,
       mtgyPriceUsd: (state) => state.mtgyPriceUsd,
       tokenInfo: (state) => state.mtgyTokenInfo,
     }),

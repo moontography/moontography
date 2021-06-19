@@ -12,6 +12,7 @@ export default {
 
   activeNetwork: localStorage.activeNetwork || "eth",
   mtgyCircSupply: "0",
+  mtgyTotSupply: "0",
   mtgyPriceUsd: "0",
   currentBlock: "0",
   mtgyTokenInfo: {
