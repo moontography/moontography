@@ -609,6 +609,11 @@ const mtgyFaasTokenAbi: AbiItem[] = [
         name: "_amount",
         type: "uint256",
       },
+      {
+        internalType: "bool",
+        name: "shouldHarvest",
+        type: "bool",
+      },
     ],
     name: "unstakeTokens",
     outputs: [],

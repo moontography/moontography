@@ -16,7 +16,7 @@ td.text-left
     h6.m-0
       strong {{ stakedBalance }} {{ stakedTokenSymbol }} staked
   div.text-secondary
-    small {{ remainingBalance }} balance
+    small {{ remainingTokenBalance }} balance
 td
   div
     strong {{ stakingApr || 0 }}%
@@ -26,6 +26,8 @@ td
       | ({{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block)
 td
   div {{ row.item.lastStakableBlock }}
+  div.text-secondary(v-if="estimateExpirationTime")
+    small Estimated: {{ estimateExpirationTime }}
   div.text-danger(v-if="isFarmExpired")
     b EXPIRED FARM
 td
@@ -60,12 +62,15 @@ td.td-actions.text-right
 
 add-remove-stake-modal(
   :id="`stake-modal-${farmingTokenAddress}`"
+  :is-expired="isFarmExpired"
   :farm-address="farmingTokenAddress"
   @staked="getUnharvestedTokens")
 </template>
 
 <script>
+import $ from "jquery";
 import BigNumber from "bignumber.js";
+import dayjs from "dayjs";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
@@ -94,6 +99,7 @@ export default {
 
   computed: {
     ...mapState({
+      blocksPerDay: (_, getters) => getters.activeNetwork.blocks_per_day,
       currentBlock: (state) => state.currentBlock,
       globalLoading: (state) => state.globalLoading,
       userAddy: (state) => state.web3.address,
@@ -105,6 +111,21 @@ export default {
         this.row.item.lastStakableBlock &&
         new BigNumber(this.row.item.lastStakableBlock).lte(this.currentBlock)
       );
+    },
+
+    estimateExpirationTime() {
+      const currentBlock = this.currentBlock;
+      const lastBlock = this.row.item.lastStakableBlock;
+      const blocksPerSecond = new BigNumber(this.blocksPerDay)
+        .div(24)
+        .div(60)
+        .div(60);
+      if (new BigNumber(lastBlock).lt(currentBlock)) return;
+
+      const secondsFromNow = new BigNumber(
+        new BigNumber(lastBlock).minus(currentBlock)
+      ).div(blocksPerSecond);
+      return dayjs().add(secondsFromNow, "seconds").format("MMM D, YYYY hh:mm");
     },
 
     perBlockNumTokens() {
@@ -143,20 +164,22 @@ export default {
         .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
-    remainingBalance() {
+    remainingTokenBalance() {
       return new BigNumber(this.row.item.currentTokenBalance)
         .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
         .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
     stakingApr() {
-      const blocksPerDay = new BigNumber(28800);
+      const blocksPerDay = new BigNumber(this.blocksPerDay);
       const userStakedTokens = new BigNumber(
-        this.row.item.farmingTokenBalance || 0
+        new BigNumber(this.row.item.farmingTokenBalance).gt(0)
+          ? this.row.item.farmingTokenBalance
+          : new BigNumber(this.totalTokensStaked[0]).div(500)
       );
       const totalStakedBalance = new BigNumber(this.totalTokensStaked[0] || 0);
       const perBlockAmount = new BigNumber(this.tokensStakedPerBlock[0] || 0);
-      if (totalStakedBalance.toString() === "0") return;
+      if (totalStakedBalance.toString() === "0") return 0;
 
       const tokensStakablePerYear = perBlockAmount
         .times(blocksPerDay)
@@ -200,7 +223,6 @@ export default {
           .balanceOf(this.userAddy)
           .call();
         this.isInFarm = stakingBalance && stakingBalance > 0;
-        if (!this.isInFarm) return;
 
         const [
           amountUnharvested,
@@ -241,6 +263,14 @@ export default {
       this.tokenAddress
     );
     await this.getUnharvestedTokens();
+
+    // Modal appearing in table and below backgound on mobile
+    $(`#stake-modal-${this.farmingTokenAddress}`).appendTo("body");
+  },
+
+  beforeUnmount() {
+    // See comments above as to why this needs to be here.
+    $(`#stake-modal-${this.farmingTokenAddress}`).remove();
   },
 };
 </script>

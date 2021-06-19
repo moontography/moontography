@@ -65,7 +65,7 @@ export default {
       amountTokens = await faasToken.methods.balanceOf(userAddy).call();
     }
     await faasToken.methods
-      .unstakeTokens(amountTokens)
+      .unstakeTokens(amountTokens, true)
       .send({ from: userAddy });
   },
 };

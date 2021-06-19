@@ -3,12 +3,13 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import DashboardLayout from "../views/layout/DashboardLayout.vue";
 
 // Page Headers
+// import DefaultHeader from "../views/headers/DefaultHeader";
 import AsaasHeader from "../views/headers/AsaasHeader";
 import BulkTokenSenderHeader from "../views/headers/BulkTokenSenderHeader";
 import DashboardHeader from "../views/headers/DashboardHeader.vue";
-import DefaultHeader from "../views/headers/DefaultHeader";
 import DtaxHeader from "../views/headers/DtaxHeader";
 import FaasHeader from "../views/headers/FaasHeader";
+import PaasHeader from "../views/headers/PaasHeader";
 import PasswordManagerHeader from "../views/headers/PasswordManagerHeader";
 import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
 
@@ -41,7 +42,7 @@ const routes = [
       },
       {
         path: "asaas",
-        name: "ASAAS",
+        name: "Atomic Swapping",
         components: { default: ComingSoon, header: AsaasHeader },
       },
       {
@@ -117,7 +118,7 @@ const routes = [
       {
         path: "paas",
         name: "Polling as a Service",
-        components: { default: ComingSoon, header: DefaultHeader },
+        components: { default: ComingSoon, header: PaasHeader },
       },
       {
         path: "dtax",

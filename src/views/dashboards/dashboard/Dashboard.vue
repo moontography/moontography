@@ -25,6 +25,15 @@ div
             .col-md
               .statistics
                 .info
+                  .icon.icon-danger
+                    i.now-ui-icons.ui-1_lock-circle-open
+                  h3.info-title
+                    //- small $
+                    animated-number(:value='totSupply')
+                  h6.stats-title Total Supply
+            .col-md
+              .statistics
+                .info
                   .icon.icon-primary
                     i.now-ui-icons.business_bank
                   h3.info-title
@@ -134,11 +143,11 @@ div
           a(href="#/asaas")
             .statistics
               .info
-                .icon.icon-warning
+                .icon.icon-default
                   i.now-ui-icons.business_money-coins
                 h3.info-title
                   | Atomic Swapping Service
-                h6.stats-title.text-warning Coming Soon..
+                h6.stats-title Coming Soon..
 
     .col-lg-12
       card
@@ -167,6 +176,7 @@ export default {
     ...mapState({
       isInitLoading: (state) => state.initLoading,
       circSupply: (state) => state.mtgyCircSupply,
+      totSupply: (state) => state.mtgyTotSupply,
       mtgyPriceUsd: (state) => state.mtgyPriceUsd,
       tokenInfo: (state) => state.mtgyTokenInfo,
     }),
