@@ -30,10 +30,10 @@
               | {{ stakingInfo.rewardsTokenInfo.symbol }} per block in aggregate.
             hr
             div.card-footer
-              div
+              div(v-if="!isExpired")
                 | You can stake up to #[strong {{ userStakingBalance }}]
                 | {{ stakingInfo.stakingTokenInfo.symbol }}
-              div.row
+              div.row(v-if="!isExpired")
                 div.col-9
                   slider(v-model="percAmountToStake")
                 div.col-3
@@ -43,6 +43,7 @@
               //- div {{ formattedAmountToStake }}
               div
                 n-button(
+                  v-if="!isExpired"
                   type="success"
                   size="lg"
                   v-loading="globalLoading"
@@ -66,6 +67,7 @@ export default {
 
   props: {
     farmAddress: { type: String, default: null },
+    isExpired: { type: Boolean, default: false },
   },
 
   emits: ["staked"],

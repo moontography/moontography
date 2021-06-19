@@ -60,6 +60,7 @@ td.td-actions.text-right
 
 add-remove-stake-modal(
   :id="`stake-modal-${farmingTokenAddress}`"
+  :is-expired="isFarmExpired"
   :farm-address="farmingTokenAddress"
   @staked="getUnharvestedTokens")
 </template>
