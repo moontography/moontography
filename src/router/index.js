@@ -42,7 +42,7 @@ const routes = [
       },
       {
         path: "asaas",
-        name: "ASAAS",
+        name: "Atomic Swapping",
         components: { default: ComingSoon, header: AsaasHeader },
       },
       {
