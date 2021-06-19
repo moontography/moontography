@@ -47,13 +47,15 @@ export default {
     return hexCodes.join("");
   },
 
-  parseCsvFileAsync(file: File) {
+  parseCsvFileAsync(file: File, hasHeader: boolean = false) {
     // Parse CSV file using browser APIs
     // https://www.papaparse.com/
     return new Promise((resolve, reject) => {
       Papa.parse(file, {
+        header: hasHeader,
+        skipEmptyLines: true,
         complete: (results: any) => {
-          resolve(results.data);
+          resolve(results);
         },
         error: (err: any) => {
           reject(err);
@@ -62,9 +64,25 @@ export default {
     });
   },
 
-  async parseCsvFile(file: File) {
+  async parseCsvFile(file: File, hasHeader: boolean = false) {
     try {
-      return await this.parseCsvFileAsync(file);
+      const parsed = await this.parseCsvFileAsync(file, hasHeader);
+
+      const parsedData = parsed.data;
+      const parsedHeaders = parsed.meta.fields;
+
+      if (hasHeader && parsedHeaders && parsedHeaders.length > 0)
+        return parsedData;
+
+      return parsedData.map((data: Array<string>) => {
+        const object: { [key: string]: string } = {};
+
+        data.map((d: string, i: number) => {
+          if (d) object[i] = d;
+        });
+
+        return object;
+      });
     } catch (err) {
       throw new Error(err);
     }

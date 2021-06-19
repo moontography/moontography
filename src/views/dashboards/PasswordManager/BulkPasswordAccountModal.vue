@@ -13,7 +13,7 @@
             span(aria-hidden='true') &times;
         .modal-body
           div.text-center
-            p Upload a .csv of multiple accounts to add to Password Manager. #[b Format should follow table below].
+            p Upload a .csv of at least five accounts to add to Password Manager. #[b Format should follow table below:]
           form(@submit.prevent="sendAccountsToBlockchain")
             div
               div.text-center
@@ -25,7 +25,7 @@
                   v-loading="globalLoading"
                   :disabled="globalLoading"
                   @click.prevent="triggerFile")
-                    | #[i.now-ui-icons.arrows-1_share-66] Upload Account List CSV
+                    | #[i.now-ui-icons.arrows-1_share-66] Upload CSV
 
               div.mt-2.table-responsive
                 table.table.table-striped.table-bordered.m-0
@@ -40,10 +40,10 @@
                       td(colspan="100%")
                         i No accounts uploaded yet...
                     tr(v-for="account in uploadedAccounts")
-                      td {{ account[0] }}
-                      td {{ account[1] }}
-                      td {{ account[2] }}
-                      td {{ account[3] }}
+                      td {{ account.name }}
+                      td {{ account.username }}
+                      td {{ account.password }}
+                      td {{ account.info }}
                 
               p.mt-2.text-center If all information looks correct above, click submit to store accounts on the blockchain!
 
@@ -107,13 +107,25 @@ export default {
         const file = evt.target.files[0];
         this.uploadedAccounts = await FileUtils.parseCsvFile(file);
 
-        // Remove header row if starts with 'name' or 'account name'
         if (
           this.uploadedAccounts[0] &&
+          this.uploadedAccounts[0][0] &&
           (this.uploadedAccounts[0][0].toLowerCase() == "name" ||
             this.uploadedAccounts[0][0].toLowerCase() == "account name")
-        )
-          this.uploadedAccounts.shift();
+        ) {
+          // If first row looks like header, re-parse with `hasHeaders = true`
+          this.uploadedAccounts = await FileUtils.parseCsvFile(file, true);
+        } else {
+          // Else map rows with expected account keys
+          this.uploadedAccounts = this.uploadedAccounts.map((a) => {
+            return {
+              name: a[0],
+              username: a[1],
+              password: a[2],
+              info: a[3],
+            };
+          });
+        }
 
         this.$toast.success(`Successfully parsed file.`);
       } catch (err) {
