@@ -20,6 +20,16 @@ export default {
       commit("SET_INIT_LOADING", true);
       commit("SET_GLOBAL_ERROR", null);
 
+      // Get MTGY info before having to connect wallet.
+      // Allows dashboard data to be shown even if user does not connect wallet.
+      await Promise.all([
+        dispatch("getMtgyPriceUsd"),
+        dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMtgyTokenInfo"),
+        dispatch("getMtgyTokenChart"),
+        dispatch("getCurrentBlock"),
+      ]);
+
       if (!window.web3) {
         return commit(
           "SET_GLOBAL_ERROR",

@@ -134,11 +134,11 @@ div
           a(href="#/asaas")
             .statistics
               .info
-                .icon.icon-warning
+                .icon.icon-default
                   i.now-ui-icons.business_money-coins
                 h3.info-title
                   | Atomic Swapping Service
-                h6.stats-title.text-warning Coming Soon..
+                h6.stats-title Coming Soon..
 
     .col-lg-12
       card
