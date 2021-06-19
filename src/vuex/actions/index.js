@@ -20,6 +20,17 @@ export default {
       commit("SET_INIT_LOADING", true);
       commit("SET_GLOBAL_ERROR", null);
 
+      // Get MTGY info before having to connect wallet.
+      // Allows dashboard data to be shown even if user does not connect wallet.
+      await Promise.all([
+        dispatch("getMtgyPriceUsd"),
+        dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMTGYTotalSupply"),
+        dispatch("getMtgyTokenInfo"),
+        dispatch("getMtgyTokenChart"),
+        dispatch("getCurrentBlock"),
+      ]);
+
       if (!window.web3) {
         return commit(
           "SET_GLOBAL_ERROR",
@@ -86,6 +97,7 @@ export default {
         dispatch("getUserBalance"),
         dispatch("getMtgyPriceUsd"),
         dispatch("getMTGYCirculatingSupply"),
+        dispatch("getMTGYTotalSupply"),
         dispatch("getMtgyTokenInfo"),
         dispatch("getMtgyTokenChart"),
         dispatch("getCurrentBlock"),
@@ -164,6 +176,11 @@ export default {
   async getMTGYCirculatingSupply({ commit }) {
     const supply = await MTGYDataUtils.getCirculatingSupply();
     commit("SET_MTGY_CIRC_SUPPLY", supply);
+  },
+
+  async getMTGYTotalSupply({ commit }) {
+    const supply = await MTGYDataUtils.getTotalSupply();
+    commit("SET_MTGY_TOT_SUPPLY", supply);
   },
 
   async getMtgyTokenInfo({ commit }) {

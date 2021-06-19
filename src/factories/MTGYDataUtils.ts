@@ -28,6 +28,16 @@ export default {
     return prices;
   },
 
+  async getTotalSupply() {
+    const { data: totalSupply } = await axios.get(
+      `https://api.moontography.com/supply`,
+      {
+        responseType: "text",
+      }
+    );
+    return totalSupply;
+  },
+
   async getCirculatingSupply() {
     const { data: circulatingSupply } = await axios.get(
       `https://api.moontography.com/circulating`,
