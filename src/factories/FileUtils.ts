@@ -1,3 +1,5 @@
+import Papa from "papaparse";
+
 export default {
   async sha256(file: File): Promise<string> {
     return this.bufferToHex(await this.hashFileSha256(file));
@@ -43,5 +45,28 @@ export default {
     }
 
     return hexCodes.join("");
+  },
+
+  parseCsvFileAsync(file: File) {
+    // Parse CSV file using browser APIs
+    // https://www.papaparse.com/
+    return new Promise((resolve, reject) => {
+      Papa.parse(file, {
+        complete: (results: any) => {
+          resolve(results.data);
+        },
+        error: (err: any) => {
+          reject(err);
+        },
+      });
+    });
+  },
+
+  async parseCsvFile(file: File) {
+    try {
+      return await this.parseCsvFileAsync(file);
+    } catch (err) {
+      throw new Error(err);
+    }
   },
 };

@@ -8,6 +8,9 @@
           button.btn.btn-primary(
             data-toggle="modal"
             data-target="#password-account-modal-add") #[i.fa.fa-plus-circle.mr-2] Add Account
+          button.btn.btn-info(
+            data-toggle="modal"
+            data-target="#bulk-password-account-modal-add") #[i.fa.fa-plus-circle.mr-2] Bulk Upload
       input.form-control(
         placeholder="Search accounts.."
         v-model="accountSearch")
@@ -35,17 +38,20 @@
     active-account-card(:account="activeAccount")
 
 password-account-modal#password-account-modal-add
+bulk-password-account-modal#bulk-password-account-modal-add
 </template>
 
 <script>
 import { mapState } from "vuex";
 import ActiveAccountCard from "./ActiveAccountCard";
 import PasswordAccountModal from "./PasswordAccountModal";
+import BulkPasswordAccountModal from "./BulkPasswordAccountModal";
 
 export default {
   components: {
     ActiveAccountCard,
     PasswordAccountModal,
+    BulkPasswordAccountModal,
   },
 
   data() {

@@ -28,6 +28,7 @@
     "jquery": "3.5.1",
     "moontography-web3": "^0.0.7",
     "nouislider": "14.6.3",
+    "papaparse": "^5.3.1",
     "popper.js": "1.16.1",
     "stellar-sdk": "^8.2.1",
     "sweetalert2": "10.13.0",
@@ -45,6 +46,7 @@
     "yup": "0.32.8"
   },
   "devDependencies": {
+    "@types/papaparse": "^5.2.5",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "@vue/cli-plugin-babel": "4.5.10",
