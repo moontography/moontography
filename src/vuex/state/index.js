@@ -84,6 +84,7 @@ export default {
         chain_id: 4,
         network_id: 4,
         rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
+        blocks_per_day: 6450,
         native_currency: {
           symbol: "ETH",
           name: "Ethereum",
@@ -235,6 +236,7 @@ export default {
         chain_id: 56,
         network_id: 56,
         rpc_url: "https://bsc-dataseed1.defibit.io/",
+        blocks_per_day: 28800,
         native_currency: {
           symbol: "BNB",
           name: "BNB",

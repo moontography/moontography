@@ -26,6 +26,8 @@ td
       | ({{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block)
 td
   div {{ row.item.lastStakableBlock }}
+  div.text-secondary(v-if="estimateExpirationTime")
+    small Estimated: {{ estimateExpirationTime }}
   div.text-danger(v-if="isFarmExpired")
     b EXPIRED FARM
 td
@@ -67,6 +69,7 @@ add-remove-stake-modal(
 
 <script>
 import BigNumber from "bignumber.js";
+import dayjs from "dayjs";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
@@ -99,6 +102,25 @@ export default {
       globalLoading: (state) => state.globalLoading,
       userAddy: (state) => state.web3.address,
       web3: (state) => state.web3.instance,
+
+      estimateExpirationTime(_, getters) {
+        const currentBlock = this.currentBlock;
+        const lastBlock = this.row.item.lastStakableBlock;
+        const blocksPerSecond = new BigNumber(
+          getters.activeNetwork.blocks_per_day
+        )
+          .div(24)
+          .div(60)
+          .div(60);
+        if (new BigNumber(lastBlock).lt(currentBlock)) return;
+
+        const secondsFromNow = new BigNumber(
+          new BigNumber(lastBlock).minus(currentBlock)
+        ).div(blocksPerSecond);
+        return dayjs()
+          .add(secondsFromNow, "seconds")
+          .format("MMM D, YYYY hh:mm");
+      },
     }),
 
     isFarmExpired() {
@@ -153,11 +175,13 @@ export default {
     stakingApr() {
       const blocksPerDay = new BigNumber(28800);
       const userStakedTokens = new BigNumber(
-        this.row.item.farmingTokenBalance || 0
+        new BigNumber(this.row.item.farmingTokenBalance).gt(0)
+          ? this.row.item.farmingTokenBalance
+          : new BigNumber(this.totalTokensStaked[0]).div(500)
       );
       const totalStakedBalance = new BigNumber(this.totalTokensStaked[0] || 0);
       const perBlockAmount = new BigNumber(this.tokensStakedPerBlock[0] || 0);
-      if (totalStakedBalance.toString() === "0") return;
+      if (totalStakedBalance.toString() === "0") return 0;
 
       const tokensStakablePerYear = perBlockAmount
         .times(blocksPerDay)
@@ -201,7 +225,6 @@ export default {
           .balanceOf(this.userAddy)
           .call();
         this.isInFarm = stakingBalance && stakingBalance > 0;
-        if (!this.isInFarm) return;
 
         const [
           amountUnharvested,
