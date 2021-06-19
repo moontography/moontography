@@ -28,7 +28,7 @@
             p
               | You and any other stakers will be rewarded #[strong {{ getRewardsTokens(stakingInfo.tokensRewardedPerBlock) }}]
               | {{ stakingInfo.rewardsTokenInfo.symbol }} per block in aggregate.
-            hr
+
             div.card-footer
               div(v-if="!isExpired")
                 | You can stake up to #[strong {{ userStakingBalance }}]
