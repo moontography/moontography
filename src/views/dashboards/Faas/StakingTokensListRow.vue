@@ -68,6 +68,7 @@ add-remove-stake-modal(
 </template>
 
 <script>
+import $ from "jquery";
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import { mapState } from "vuex";
@@ -262,6 +263,14 @@ export default {
       this.tokenAddress
     );
     await this.getUnharvestedTokens();
+
+    // Modal appearing in table and below backgound on mobile
+    $(`#stake-modal-${this.farmingTokenAddress}`).appendTo("body");
+  },
+
+  beforeUnmount() {
+    // See comments above as to why this needs to be here.
+    $(`#stake-modal-${this.farmingTokenAddress}`).remove();
   },
 };
 </script>
