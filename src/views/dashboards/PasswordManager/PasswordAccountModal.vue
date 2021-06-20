@@ -63,14 +63,14 @@
                         v-loading="globalLoading"
                         :disabled="globalLoading")
                           | I wrote down my key and want to store this password on the blockchain!
-                  div.text-danger(v-if="!accountId")
-                    small
-                      div
-                        | You will spend #[strong {{ cost || `CAN'T CALCULATE` }} MTGY]
-                        | to store this account on the blockchain. 
-                      div 
-                        | It will not cost anything to
-                        | read or update it in the future.
+              div.text-center.text-danger(v-if="!accountId")
+                small
+                  div
+                    | You will spend #[strong {{ cost || `CAN'T CALCULATE` }} MTGY]
+                    | to store this account on the blockchain. 
+                  div 
+                    | It will not cost anything to
+                    | read or update it in the future.
 </template>
 
 <script>
