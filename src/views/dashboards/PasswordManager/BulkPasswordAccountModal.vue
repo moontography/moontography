@@ -13,13 +13,15 @@
             span(aria-hidden='true') &times;
         .modal-body
           div.text-center
-            p Upload a .csv of accounts. Click here for template.
+            p.m-2 Upload a .csv of accounts or manually add below. 
+            a.clickable(@click="generateTemplate") Click  here for .csv template.
           form(@submit.prevent="sendAccountsToBlockchain")
             div
               div.text-center
                 input.form-control.input-block.mr-2(
                   :id="`bulk-upload-file-${uid}`"
                   type="file",
+                  accept=".csv",
                   @change="parseFile")
                 button.btn.btn-primary(
                   v-loading="globalLoading"
@@ -155,6 +157,25 @@ export default {
 
     removeAccount(index) {
       this.uploadAccounts.splice(index, 1);
+    },
+
+    generateTemplate() {
+      const rows = [
+        ["account name", "username", "password", "info"],
+        [
+          "Example Account",
+          "example@gmail.com",
+          "pAsSwOrD",
+          "This is an example account for bulk upload.",
+        ],
+      ];
+
+      let csvContent =
+        "data:text/csv;charset=utf-8," +
+        rows.map((e) => e.join(",")).join("\n");
+
+      var encodedUri = encodeURI(csvContent);
+      window.open(encodedUri);
     },
 
     async parseFile(evt) {
