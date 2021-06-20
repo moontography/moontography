@@ -29,22 +29,32 @@ export default {
   },
 
   async getTotalSupply() {
-    const { data: totalSupply } = await axios.get(
-      `https://api.moontography.com/supply`,
-      {
-        responseType: "text",
-      }
-    );
-    return totalSupply;
+    try {
+      const { data: totalSupply } = await axios.get(
+        `https://api.moontography.com/supply`,
+        {
+          responseType: "text",
+        }
+      );
+      return totalSupply;
+    } catch (err) {
+      console.error(`Error getting circulating supply`, err);
+      return "0";
+    }
   },
 
   async getCirculatingSupply() {
-    const { data: circulatingSupply } = await axios.get(
-      `https://api.moontography.com/circulating`,
-      {
-        responseType: "text",
-      }
-    );
-    return circulatingSupply;
+    try {
+      const { data: circulatingSupply } = await axios.get(
+        `https://api.moontography.com/circulating`,
+        {
+          responseType: "text",
+        }
+      );
+      return circulatingSupply;
+    } catch (err) {
+      console.error(`Error getting circulating supply`, err);
+      return "0";
+    }
   },
 };
