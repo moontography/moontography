@@ -57,7 +57,10 @@ export default {
     await faasToken.methods.stakeTokens(amountTokens).send({ from: userAddy });
   },
 
-  async faasUnstakeTokens({ state }, { farmingContractAddress, amountTokens }) {
+  async faasUnstakeTokens(
+    { state },
+    { farmingContractAddress, amountTokens, harvestTokens }
+  ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
@@ -65,7 +68,10 @@ export default {
       amountTokens = await faasToken.methods.balanceOf(userAddy).call();
     }
     await faasToken.methods
-      .unstakeTokens(amountTokens, true)
+      .unstakeTokens(
+        amountTokens,
+        typeof harvestTokens === "boolean" ? harvestTokens : true
+      )
       .send({ from: userAddy });
   },
 };

@@ -49,18 +49,27 @@
                   v-loading="globalLoading"
                   :disabled="globalLoading"
                   @click="stakeTokens") Stake {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
-              div(v-if="hasStakedTokens")
-                n-button.mt-4(
-                  type="danger"
-                  size="sm"
+              div.d-flex.align-items-center.mt-4(v-if="hasStakedTokens")
+                a.clickable.text-danger(
                   v-loading="globalLoading"
-                  :disabled="globalLoading"
-                  @click="unstakeTokens") Unstake Tokens Currently Staked
+                  @click="unstakeTokens()") Unstake Tokens Currently Staked
+                //- n-button.mt-4(
+                //-   type="danger"
+                //-   size="sm"
+                //-   v-loading="globalLoading"
+                //-   :disabled="globalLoading"
+                //-   @click="unstakeTokens") Unstake Tokens Currently Staked
+                div.ml-auto
+                  a.text-danger.clickable(
+                    v-loading="globalLoading"
+                    @click="unstakeTokens(false)")
+                      i.fa.fa-exclamation-triangle
 </template>
 
 <script>
 import $ from "jquery";
 import BigNumber from "bignumber.js";
+import Swal from "sweetalert2";
 import { mapState } from "vuex";
 export default {
   name: "AddRemoveStakeModal",
@@ -81,6 +90,14 @@ export default {
       isLoadingLocal: true,
       percAmountToStake: 0,
       stakingInfo: {},
+
+      emergencyUnstake: Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-danger",
+          cancelButton: "btn btn-secondary",
+        },
+        buttonsStyling: false,
+      }),
     };
   },
 
@@ -146,12 +163,30 @@ export default {
       }
     },
 
-    async unstakeTokens() {
+    async unstakeTokens(harvestAsWell = true) {
       try {
         this.$store.commit("SET_GLOBAL_LOADING", true);
+
+        if (harvestAsWell === false) {
+          const { isConfirmed } = await this.emergencyUnstake.fire({
+            title: "<span class='text-danger'>Emergency Unstake!</span>",
+            html: `
+          <div>
+            Are you sure you want to emergency unstake your tokens?
+            You <b>WILL NOT</b> receive any unclaimed rewards.
+          </div>
+        `,
+            confirmButtonText: "Yes, I want to unstake without rewards!",
+            cancelButtonText: "Cancel, do not unstake.",
+            showCancelButton: true,
+          });
+          if (!isConfirmed) return;
+        }
+
         await this.$store.dispatch("faasUnstakeTokens", {
           farmingContractAddress: this.farmAddress,
           // amountTokens: this.rawAmountToStake,
+          harvestTokens: harvestAsWell,
         });
         this.$toast.success(`Successfully unstaked all tokens!`);
         this.$emit("staked");
