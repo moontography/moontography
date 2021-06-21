@@ -36,10 +36,10 @@ td
     div.ml-1 {{ amountUnharvested[1] }}
     a.clickable.ml-1(@click="getUnharvestedTokens")
       i.fa.fa-refresh
-    button.ml-3.btn.btn-sm.btn-primary(
-      v-loading="globalLoading"
-      :disabled="globalLoading"
-      @click="claimTokens") Claim
+    //- button.ml-3.btn.btn-sm.btn-primary(
+    //-   v-loading="globalLoading"
+    //-   :disabled="globalLoading"
+    //-   @click="claimTokens") Claim
   div(v-else) ---
 td.td-actions.text-right
   small
@@ -64,7 +64,7 @@ add-remove-stake-modal(
   :id="`stake-modal-${farmingTokenAddress}`"
   :is-expired="isFarmExpired"
   :farm-address="farmingTokenAddress"
-  @staked="getUnharvestedTokens")
+  @staked="init")
 </template>
 
 <script>
@@ -196,21 +196,29 @@ export default {
   },
 
   methods: {
-    async claimTokens() {
-      try {
-        this.$store.commit("SET_GLOBAL_LOADING", true);
+    // async claimTokens() {
+    //   try {
+    //     this.$store.commit("SET_GLOBAL_LOADING", true);
 
-        await this.$store.dispatch(
-          "faasHarvestTokens",
-          this.farmingTokenAddress
-        );
-        this.$toast.success(`Successfully claimed your tokens!`);
-        this.$emit("harvested");
-      } catch (err) {
-        this.$toast.error(err.message);
-      } finally {
-        this.$store.commit("SET_GLOBAL_LOADING", false);
-      }
+    //     await this.$store.dispatch(
+    //       "faasHarvestTokens",
+    //       this.farmingTokenAddress
+    //     );
+    //     this.$toast.success(`Successfully claimed your tokens!`);
+    //     this.$emit("harvested");
+    //   } catch (err) {
+    //     this.$toast.error(err.message);
+    //   } finally {
+    //     this.$store.commit("SET_GLOBAL_LOADING", false);
+    //   }
+    // },
+
+    async init() {
+      this.tokenInfo = await this.$store.dispatch(
+        "getErc20TokenInfo",
+        this.tokenAddress
+      );
+      await this.getUnharvestedTokens();
     },
 
     async getUnharvestedTokens() {
@@ -224,14 +232,9 @@ export default {
           .call();
         this.isInFarm = stakingBalance && stakingBalance > 0;
 
-        const [
-          amountUnharvested,
-          totalTokensStaked,
-          tokensStakedPerBlock,
-        ] = await Promise.all([
+        const [amountUnharvested, pool] = await Promise.all([
           stakingContract.methods.calcHarvestTot(this.userAddy).call(),
-          stakingContract.methods.totalTokensStaked().call(),
-          stakingContract.methods.perBlockNum().call(),
+          stakingContract.methods.pool().call(),
         ]);
         this.amountUnharvested = [
           amountUnharvested,
@@ -240,29 +243,26 @@ export default {
             .toFormat(2),
         ];
         this.totalTokensStaked = [
-          totalTokensStaked,
-          new BigNumber(totalTokensStaked)
+          pool.totalTokensStaked,
+          new BigNumber(pool.totalTokensStaked)
             .div(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFormat(2),
         ];
         this.tokensStakedPerBlock = [
-          tokensStakedPerBlock,
-          new BigNumber(tokensStakedPerBlock)
+          pool.tokensStakedPerBlock,
+          new BigNumber(pool.tokensStakedPerBlock)
             .div(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFormat(2),
         ];
       } catch (err) {
+        console.error(`Error getting unharvested`, err);
         true;
       }
     },
   },
 
   async mounted() {
-    this.tokenInfo = await this.$store.dispatch(
-      "getErc20TokenInfo",
-      this.tokenAddress
-    );
-    await this.getUnharvestedTokens();
+    await this.init();
 
     // Modal appearing in table and below backgound on mobile
     $(`#stake-modal-${this.farmingTokenAddress}`).appendTo("body");

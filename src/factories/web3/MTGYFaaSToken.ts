@@ -48,6 +48,11 @@ const mtgyFaasTokenAbi: AbiItem[] = [
         name: "_lockedUntilDate",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "_stakeTimeLockSec",
+        type: "uint256",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -172,30 +177,6 @@ const mtgyFaasTokenAbi: AbiItem[] = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "blockTotals",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "blockNumber",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "totalTokens",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "_userAddy",
         type: "address",
@@ -220,45 +201,6 @@ const mtgyFaasTokenAbi: AbiItem[] = [
         internalType: "bool",
         name: "",
         type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "creationBlock",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "creator",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "curRewardsSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -334,19 +276,6 @@ const mtgyFaasTokenAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "harvestTokens",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -372,19 +301,6 @@ const mtgyFaasTokenAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "lockedUntilDate",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "name",
     outputs: [
       {
@@ -398,24 +314,61 @@ const mtgyFaasTokenAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "origTotSupply",
+    name: "pool",
     outputs: [
       {
+        internalType: "address",
+        name: "creator",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "tokenOwner",
+        type: "address",
+      },
+      {
         internalType: "uint256",
-        name: "",
+        name: "origTotSupply",
         type: "uint256",
       },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "perBlockNum",
-    outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "curRewardsSupply",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalTokensStaked",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "creationBlock",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "perBlockNum",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "lockedUntilDate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "lastRewardBlock",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "accERC20PerShare",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "stakeTimeLockSec",
         type: "uint256",
       },
     ],
@@ -469,32 +422,6 @@ const mtgyFaasTokenAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "symbol",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "tokenOwner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -502,7 +429,7 @@ const mtgyFaasTokenAbi: AbiItem[] = [
         type: "address",
       },
     ],
-    name: "tokenStakers",
+    name: "stakers",
     outputs: [
       {
         internalType: "address",
@@ -519,17 +446,9 @@ const mtgyFaasTokenAbi: AbiItem[] = [
         name: "blockLastHarvested",
         type: "uint256",
       },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "rewardDebt",
         type: "uint256",
       },
     ],
@@ -538,7 +457,20 @@ const mtgyFaasTokenAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "totalTokensStaked",
+    name: "symbol",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalSupply",
     outputs: [
       {
         internalType: "uint256",

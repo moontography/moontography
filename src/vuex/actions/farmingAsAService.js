@@ -1,13 +1,13 @@
 import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
 
 export default {
-  async faasHarvestTokens({ state }, tokenAddy) {
-    const userAddy = state.web3.address;
-    // const faasAddress = getters.activeNetwork.contracts.faas;
-    const web3 = state.web3.instance;
-    const contract = MTGYFaaSToken(web3, tokenAddy);
-    await contract.methods.harvestTokens().send({ from: userAddy });
-  },
+  // async faasHarvestTokens({ state }, tokenAddy) {
+  //   const userAddy = state.web3.address;
+  //   // const faasAddress = getters.activeNetwork.contracts.faas;
+  //   const web3 = state.web3.instance;
+  //   const contract = MTGYFaaSToken(web3, tokenAddy);
+  //   await contract.methods.harvestTokens().send({ from: userAddy });
+  // },
 
   async getFaasStakingInfo({ dispatch, state }, farmingAddy) {
     const web3 = state.web3.instance;
@@ -17,17 +17,18 @@ export default {
       userStakingAmount,
       stakingContract,
       rewardsContract,
-      tokensRewardedPerBlock,
+      poolInfo,
       lastBlock,
       currentBlock,
     ] = await Promise.all([
       faasToken.methods.balanceOf(userAddy).call(),
       faasToken.methods.stakedTokenAddress().call(),
       faasToken.methods.rewardsTokenAddress().call(),
-      faasToken.methods.perBlockNum().call(),
+      faasToken.methods.pool().call(),
       faasToken.methods.getLastStakableBlock().call(),
       web3.eth.getBlockNumber(),
     ]);
+    const tokensRewardedPerBlock = poolInfo.perBlockNum;
     const [stakingTokenInfo, rewardsTokenInfo] = await Promise.all([
       dispatch("getErc20TokenInfo", stakingContract),
       dispatch("getErc20TokenInfo", rewardsContract),
@@ -57,7 +58,10 @@ export default {
     await faasToken.methods.stakeTokens(amountTokens).send({ from: userAddy });
   },
 
-  async faasUnstakeTokens({ state }, { farmingContractAddress, amountTokens }) {
+  async faasUnstakeTokens(
+    { state },
+    { farmingContractAddress, amountTokens, harvestTokens }
+  ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
@@ -65,7 +69,10 @@ export default {
       amountTokens = await faasToken.methods.balanceOf(userAddy).call();
     }
     await faasToken.methods
-      .unstakeTokens(amountTokens, true)
+      .unstakeTokens(
+        amountTokens,
+        typeof harvestTokens === "boolean" ? harvestTokens : true
+      )
       .send({ from: userAddy });
   },
 };

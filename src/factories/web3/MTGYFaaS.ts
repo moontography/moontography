@@ -77,6 +77,11 @@ const mtgyFaasAbi: AbiItem[] = [
         name: "_lockedUntilDate",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "_timelockSeconds",
+        type: "uint256",
+      },
     ],
     name: "createNewTokenContract",
     outputs: [],
