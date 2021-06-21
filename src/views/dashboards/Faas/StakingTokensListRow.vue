@@ -36,10 +36,10 @@ td
     div.ml-1 {{ amountUnharvested[1] }}
     a.clickable.ml-1(@click="getUnharvestedTokens")
       i.fa.fa-refresh
-    button.ml-3.btn.btn-sm.btn-primary(
-      v-loading="globalLoading"
-      :disabled="globalLoading"
-      @click="claimTokens") Claim
+    //- button.ml-3.btn.btn-sm.btn-primary(
+    //-   v-loading="globalLoading"
+    //-   :disabled="globalLoading"
+    //-   @click="claimTokens") Claim
   div(v-else) ---
 td.td-actions.text-right
   small
