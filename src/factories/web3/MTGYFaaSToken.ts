@@ -470,11 +470,6 @@ const mtgyFaasTokenAbi: AbiItem[] = [
     name: "stakers",
     outputs: [
       {
-        internalType: "address",
-        name: "tokenAddy",
-        type: "address",
-      },
-      {
         internalType: "uint256",
         name: "blockOriginallyStaked",
         type: "uint256",

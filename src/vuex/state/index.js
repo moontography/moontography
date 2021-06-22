@@ -258,7 +258,7 @@ export default {
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
-          faas: "0x9Dcc41E58c3515255C7CfB4E9fA118b5dc8f2bB0",
+          faas: "0x1172476e8dbB8Dfe6EA0bD9d312F85C9Da20C94f",
           faas_V1: "0xaC2f4E214704791617f651Fd1090800C68426d56",
         },
       },
