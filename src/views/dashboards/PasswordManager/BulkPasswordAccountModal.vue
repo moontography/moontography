@@ -14,20 +14,20 @@
         .modal-body
           div.text-center
             p.m-2 Upload a .csv of accounts or manually add below. 
-            a.clickable(@click="generateTemplate") Click  here for .csv template.
+            a.clickable(@click="generateTemplate") Click here to download template.
           form(@submit.prevent="sendAccountsToBlockchain")
             div
               div.text-center
                 input.form-control.input-block.mr-2(
-                  :id="`bulk-upload-file-${uid}`"
+                  :id="`bulk-upload-file-input`"
                   type="file",
-                  accept=".csv",
+                  accept="text/csv, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx",
                   @change="parseFile")
                 button.btn.btn-primary(
                   v-loading="globalLoading"
                   :disabled="globalLoading"
                   @click.prevent="triggerFile")
-                    | #[i.now-ui-icons.arrows-1_share-66] Upload CSV
+                    | #[i.now-ui-icons.arrows-1_share-66] Upload Spreadsheet (.csv or .xlsx)
 
               div.mt-2.table-responsive
                 table.table.table-striped.table-bordered.m-0
@@ -147,7 +147,7 @@ export default {
 
   methods: {
     triggerFile() {
-      document.getElementById(`bulk-upload-file-${this.uid}`).click();
+      document.getElementById(`bulk-upload-file-input`).click();
     },
 
     addAccount(account = this.newAccount) {
@@ -170,37 +170,36 @@ export default {
         ],
       ];
 
-      let csvContent =
-        "data:text/csv;charset=utf-8," +
-        rows.map((e) => e.join(",")).join("\n");
+      let csvContent = `data:text/csv;charset=utf-8,${rows
+        .map((e) => e.join(","))
+        .join("\n")}`;
 
-      var encodedUri = encodeURI(csvContent);
+      const encodedUri = encodeURI(csvContent);
       window.open(encodedUri);
     },
 
     async parseFile(evt) {
       try {
         const file = evt.target.files[0];
-        let importedAccounts = await FileUtils.parseCsvFile(file);
+        let importedAccounts = await FileUtils.parseSpreadsheet(file);
         if (
           importedAccounts[0] &&
           importedAccounts[0][0] &&
           (importedAccounts[0][0].toLowerCase() == "name" ||
-            importedAccounts[0][0].toLowerCase() == "account name")
+            importedAccounts[0][0].toLowerCase() == "account name" ||
+            importedAccounts[0][0].toLowerCase() == "account_name")
         ) {
           // If first row looks like header, re-parse with `hasHeaders = true`
-          importedAccounts = await FileUtils.parseCsvFile(file, true);
-        } else {
-          // Else map rows with expected account keys
-          importedAccounts = importedAccounts.map((a) => {
-            return {
-              name: a[0],
-              username: a[1],
-              password: a[2],
-              info: a[3],
-            };
-          });
+          importedAccounts = importedAccounts.slice(1);
         }
+        importedAccounts = importedAccounts.map((a) => {
+          return {
+            name: a[0],
+            username: a[1],
+            password: a[2],
+            info: a[3],
+          };
+        });
         this.uploadAccounts = this.uploadAccounts.concat(importedAccounts);
         this.$toast.success(`Successfully parsed file.`);
       } catch (err) {
