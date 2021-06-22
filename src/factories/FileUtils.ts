@@ -1,3 +1,5 @@
+import parseSpreadsheetFile from "browser-spreadsheet-parser";
+
 export default {
   async sha256(file: File): Promise<string> {
     return this.bufferToHex(await this.hashFileSha256(file));
@@ -43,5 +45,10 @@ export default {
     }
 
     return hexCodes.join("");
+  },
+
+  // Accepts .csv and .xlsx files
+  async parseSpreadsheet(file: File): Promise<string[][]> {
+    return await parseSpreadsheetFile(file);
   },
 };

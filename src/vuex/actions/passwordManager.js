@@ -1,7 +1,8 @@
+import dayjs from "dayjs";
 import BigNumber from "bignumber.js";
 import Cryptography from "browser-cryptography";
 import { v1 as uuidv1 } from "uuid";
-import MTGY from "../../factories/web3/MTGY";
+// import MTGY from "../../factories/web3/MTGY";
 import MTGYPasswordManager from "../../factories/web3/MTGYPasswordManager";
 
 export default {
@@ -56,6 +57,59 @@ export default {
       "SET_PASSWORD_MANAGER_ACCOUNTS",
       decryptedAccounts.filter((a) => !!a && !a.isDeleted)
     );
+  },
+
+  async bulkUploadPasswordManagerAccountsTxn(
+    { commit, dispatch, getters, state },
+    accounts
+  ) {
+    const userAddy = state.web3.address;
+    const encryptionKey = state.passwordManager.encryptionKey;
+    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
+    const passwordManagerAddy = getters.activeNetwork.contracts.passwordManager;
+    const web3 = state.web3.instance;
+    const pwCont = MTGYPasswordManager(web3, passwordManagerAddy);
+
+    const crypt = Cryptography();
+    const encryptedAccounts = await Promise.all(
+      accounts.map(async (account) => {
+        // store the accounts
+        const { iv, key, ciphertext } = await crypt.encryptMessage(
+          JSON.stringify(account),
+          encryptionKey
+        );
+        const ivBase64 = crypt.arrayBufferOrUint8ArrayToBase64(iv);
+        const keyBase64 = await crypt.cryptoKeyToBase64(key);
+        const ciphertextBase64 = crypt.arrayBufferOrUint8ArrayToBase64(
+          ciphertext
+        );
+        if (!encryptionKey) commit("SET_PASSWORD_MANAGER_ENCRYPTION_KEY", key);
+        return {
+          id: uuidv1(),
+          iv: ivBase64,
+          key: keyBase64,
+          ciphertext: ciphertextBase64,
+          timestamp: dayjs().unix(),
+          isDeleted: false,
+        };
+      })
+    );
+
+    const basePwMgrCost = await pwCont.methods.mtgyServiceCost().call();
+    await dispatch("genericTokenApproval", {
+      spendAmount: new BigNumber(basePwMgrCost)
+        .times(accounts.length)
+        .div(2)
+        .toFixed(0),
+      tokenAddress: mtgyAddy,
+      delegateAddress: passwordManagerAddy,
+    });
+
+    await pwCont.methods
+      .bulkAddAccounts(encryptedAccounts)
+      .send({ from: userAddy });
+
+    return { key: encryptedAccounts[0].key };
   },
 
   async sendPasswordManagerAccountTxn({ dispatch, getters, state }, account) {

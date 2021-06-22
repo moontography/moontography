@@ -1,16 +1,5 @@
 <template>
-  <div
-    class="form-group"
-    :class="[
-      { 'input-group': hasIcon },
-      { 'has-danger': error },
-      { 'has-danger': isError },
-      { 'input-group-focus': focused },
-      { 'has-label': label || $slots.label },
-      { 'has-success': !error && touched },
-      { 'has-success': isValid },
-    ]"
-  >
+  <div class="form-group" :class="groupClassesAgg">
     <slot name="label">
       <label v-if="label" :class="labelClasses">
         {{ label }}
@@ -67,6 +56,7 @@ export default {
     required: Boolean,
     label: String,
     error: String,
+    groupClasses: String,
     labelClasses: String,
     inputClasses: String,
     addonRightIcon: String,
@@ -90,6 +80,20 @@ export default {
         this.$emit("update:modelValue", check);
       },
     },
+
+    groupClassesAgg() {
+      const base = [
+        { "input-group": this.hasIcon },
+        { "has-danger": this.error },
+        { "has-danger": this.isError },
+        { "input-group-focus": this.focused },
+        { "has-label": this.label || this.$slots.label },
+        { "has-success": !this.error && this.touched },
+        { "has-success": this.isValid },
+      ];
+      return this.groupClasses ? base.concat([this.groupClasses]) : base;
+    },
+
     hasIcon() {
       const { addonRight, addonLeft } = this.$slots;
       return (
