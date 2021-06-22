@@ -122,7 +122,7 @@ div
                 .icon.icon-warning
                   i.now-ui-icons.business_money-coins
                 h3.info-title
-                  | Bulk Token Sender
+                  | Airdropper
                 h6.stats-title.text-warning Coming Soon..
     
     .col-lg-4

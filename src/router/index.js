@@ -5,7 +5,7 @@ import DashboardLayout from "../views/layout/DashboardLayout.vue";
 // Page Headers
 // import DefaultHeader from "../views/headers/DefaultHeader";
 import AsaasHeader from "../views/headers/AsaasHeader";
-import BulkTokenSenderHeader from "../views/headers/BulkTokenSenderHeader";
+import AirdropperHeader from "../views/headers/AirdropperHeader";
 import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import DtaxHeader from "../views/headers/DtaxHeader";
 import FaasHeader from "../views/headers/FaasHeader";
@@ -91,8 +91,8 @@ const routes = [
       },
       {
         path: "bts",
-        name: "Bulk Token Sender",
-        components: { default: ComingSoon, header: BulkTokenSenderHeader },
+        name: "Airdropper",
+        components: { default: ComingSoon, header: AirdropperHeader },
       },
       {
         path: "passwords",

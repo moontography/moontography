@@ -1,9 +1,9 @@
 <template lang="pug">
 div.panel-header
   div.header.text-center
-    h2.title Bulk Token Sender
+    h2.title Airdropper
     p.category
-      | Bulk send tokens from any contract address to a CSV list of wallet addresses.
+      | Airdrop or send tokens in bulk to a list of wallets in seconds and for cheap!
 </template>
 
 <script>

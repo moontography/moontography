@@ -31,27 +31,8 @@
               | You and any other stakers will be rewarded #[strong {{ getRewardsTokens(stakingInfo.tokensRewardedPerBlock) }}]
               | {{ stakingInfo.rewardsTokenInfo.symbol }} per block in aggregate.
 
-            div.card-footer
-              div(v-if="!isExpired")
-                | You can stake up to #[strong {{ userStakingBalance }}]
-                | {{ stakingInfo.stakingTokenInfo.symbol }}
-              div.row(v-if="!isExpired")
-                div.col-9
-                  slider(v-model="percAmountToStake")
-                div.col-3
-                  fg-input(
-                    addon-right-icon="fa fa-percent"
-                    v-model="percAmountToStake")
-              //- div {{ formattedAmountToStake }}
-              div
-                n-button(
-                  v-if="!isExpired"
-                  type="success"
-                  size="lg"
-                  v-loading="globalLoading"
-                  :disabled="globalLoading"
-                  @click="stakeTokens") Stake {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
-              div.d-flex.align-items-center.mt-4(v-if="hasStakedTokens")
+            div.card-footer(v-if="hasStakedTokens")
+              div.d-flex.align-items-center(v-if="hasStakedTokens")
                 a.clickable.text-danger(
                   v-loading="globalLoading"
                   @click="unstakeTokens()") Unstake Tokens Currently Staked
@@ -205,7 +186,7 @@ export default {
   async created() {
     try {
       this.stakingInfo = await this.$store.dispatch(
-        "getFaasStakingInfo",
+        "getFaasStakingInfoV1",
         this.farmAddress
       );
     } finally {

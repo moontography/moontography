@@ -33,7 +33,7 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Bulk Token Sender',
+          name: 'Airdropper',
           icon: 'now-ui-icons objects_spaceship',
           path: '/bts',
         }`

@@ -103,7 +103,7 @@ export default {
         dispatch("getCurrentBlock"),
       ]);
     };
-    state.refreshableInterval = setInterval(go, 3000);
+    state.refreshableInterval = setInterval(go, 7500);
     await go();
   },
 

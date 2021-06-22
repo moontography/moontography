@@ -105,7 +105,7 @@ export default {
       //     mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
       //     passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
       //     trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-      //     faas: "0x7De398556D1048d51450192c3196ACE787888d0F",
+      //     faas: "0xf6D073af537d440C98aF5541A0084B3d98cDeB8D",
       //   },
       // },
       // {
@@ -258,7 +258,8 @@ export default {
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
-          faas: "0xaC2f4E214704791617f651Fd1090800C68426d56",
+          faas: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
+          faas_V1: "0xaC2f4E214704791617f651Fd1090800C68426d56",
         },
       },
     ],

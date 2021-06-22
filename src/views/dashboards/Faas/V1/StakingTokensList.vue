@@ -13,7 +13,7 @@ div
       | No staking contracts available {{ isAddyValid ? 'for this token' : '' }} yet.
   div.table-full-width.table-responsive.pb-0(v-else)
     n-table.mb-0(
-      :columns="['Staked Token', 'Rewards Token', 'Balances', 'Rewards APR', 'Expiration Block', 'Rewards', '']"
+      :columns="['Staked Token', 'Rewards Token', 'Balances', 'Rewards APR', 'Expiration Block', 'Unclaimed', '']"
       :data='filteredStakingContracts')
         template(v-slot:columns)
         template(v-slot:default='row')
@@ -26,8 +26,8 @@ div
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 import StakingTokensListRow from "./StakingTokensListRow";
-import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
+import MTGYFaaS from "../../../../factories/web3/MTGYFaaS";
+import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken";
 
 export default {
   components: {
@@ -51,7 +51,7 @@ export default {
   computed: {
     ...mapState({
       currentBlock: (state) => state.currentBlock,
-      faasAddy: (_, getters) => getters.activeNetwork.contracts.faas,
+      faasAddy: (_, getters) => getters.activeNetwork.contracts.faas_V1,
       selectedTokenAddress: (state) => state.selectedAddressInfo.address,
       web3: (state) => state.web3.instance,
     }),
@@ -130,7 +130,6 @@ export default {
                 currentTokenSymbol: symbol,
                 currentTokenDecimals: decimals,
                 currentTokenBalance: userBalance,
-                rewardAddy,
                 rewardTokenName: rewardName,
                 rewardTokenSymbol: rewardSymbol,
                 rewardTokenDecimals: rewardDecimals,
