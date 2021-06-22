@@ -88,6 +88,25 @@ const mtgyFaasTokenAbi: AbiItem[] = [
       {
         indexed: true,
         internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "Deposit",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
         name: "from",
         type: "address",
       },
@@ -105,6 +124,25 @@ const mtgyFaasTokenAbi: AbiItem[] = [
       },
     ],
     name: "Transfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "Withdraw",
     type: "event",
   },
   {
@@ -438,7 +476,12 @@ const mtgyFaasTokenAbi: AbiItem[] = [
       },
       {
         internalType: "uint256",
-        name: "blockOriginallStaked",
+        name: "blockOriginallyStaked",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "timeOriginallyStaked",
         type: "uint256",
       },
       {

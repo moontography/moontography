@@ -1,6 +1,7 @@
 <template lang="pug">
 div
-  div(v-if="isLoadingLocal")
+  div(v-if="!faasAddy")
+  div(v-else-if="isLoadingLocal")
     loading-panel
   div.px-4(v-else-if="!web3")
     div.alert.alert-danger
