@@ -9,10 +9,12 @@ div.row.d-flex.justify-content-center
         badge-icon="now-ui-icons objects_spaceship")
       
         template(v-slot:header)
-          span.badge.badge-warning Bulk Token Sender
+          span.badge.badge-warning Airdropper
 
         template(v-slot:content)
-          p Bulk send tokens from any contract address to a CSV list of wallet addresses.
+          p
+            | Airdrop or send tokens in bulk to multiple wallets from
+            | any token contract.
 
         template(v-slot:footer)
           h6
@@ -27,7 +29,7 @@ div.row.d-flex.justify-content-center
           span.badge.badge-danger Polling as a Service (Paas)
 
         template(v-slot:content)
-          p Create anonymous polls based on contract.
+          p Create anonymous polls that can be weighted by token balances.
 
         template(v-slot:footer)
           h6

@@ -16,29 +16,30 @@
                 btn-text="Retrieve Farms for Token")
             div.card-body.table-full-width.py-0.border-top
               staking-tokens-list
-      //- div.col-lg-4
-      //-   card
-      //-     template(v-slot:header='')
-      //-       h4.card-title
-      //-         | Your Farms
-      //-     template(v-slot:raw-content="")
-      //-       div.card-body(v-if="userStakingContractsCleaned.length === 0")
-      //-         i You're not in any farms yet!
-      //-       div.card-body.table-full-width.py-0(v-else)
-      //-         el-table(:data='userStakingContractsCleaned')
-      //-           el-table-column(min-width='150' label='Contract' property='contract')
-      //-           //- el-table-column(min-width='150' label='Country' property='country')
-      //-           //- el-table-column(min-width='150' label='City' property='city')
-      //-           //- el-table-column(min-width='150' align='right' header-align='right' label='Salary' property='salary')
+
+        card.mt-4
+          template(v-slot:header='')
+            h4.card-title.m-0
+              | V1 Farms
+            div.text-danger.mt-2(style="line-height: 1;")
+              small
+                i
+                  | YOU CAN ONLY UNSTAKE TOKENS YOU'VE STAKED FROM THESE POOLS. PLEASE
+                  | ONLY STAKE TOKENS IN THE NEW POOLS IN THE LIST ABOVE.
+          template(v-slot:raw-content="")
+            div.card-body.table-full-width.py-0.mt-3.border-top
+              staking-tokens-list-v1
 
 </template>
 <script>
 import { mapState } from "vuex";
+import StakingTokensListV1 from "./V1/StakingTokensList.vue";
 import StakingTokensList from "./StakingTokensList.vue";
 import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
 
 export default {
   components: {
+    StakingTokensListV1,
     StakingTokensList,
   },
 

@@ -259,6 +259,7 @@ export default {
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           faas: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
+          faas_V1: "0xaC2f4E214704791617f651Fd1090800C68426d56",
         },
       },
     ],
