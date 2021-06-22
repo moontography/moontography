@@ -13,7 +13,10 @@
             span(aria-hidden='true') &times;
         .modal-body
           div.text-center
-            p.m-2 Upload a .csv of accounts or manually add below. 
+            p.m-2
+              small
+                | Upload a spreadsheet of accounts or manually add below.
+                | #[strong You get a 50% discount by bulk uploading instead of adding 1-by-1].
             a.clickable(@click="generateTemplate") Click here to download template.
           form(@submit.prevent="sendAccountsToBlockchain")
             div
@@ -41,7 +44,7 @@
                   tbody
                     tr(v-if="!uploadAccounts || uploadAccounts.length === 0")
                       td(colspan="100%")
-                        i No accounts uploaded yet...
+                        i No accounts added yet...
                     tr(v-for="(account, ind) in uploadAccounts")
                       td {{ account.name }}
                       td {{ account.username }}
@@ -56,21 +59,25 @@
                     tr  
                       td
                         fg-input(
+                          group-classes="mb-0"
                           type="text"
                           placeholder="Enter account name"
                           v-model="newAccount.name")
                       td
                         fg-input(
+                          group-classes="mb-0"
                           type="text"
                           placeholder="Enter username"
                           v-model="newAccount.username")
                       td
                         fg-input(
+                          group-classes="mb-0"
                           type="password"
                           placeholder="Enter password"
                           v-model="newAccount.password")
                       td
                         fg-input(
+                          group-classes="mb-0"
                           type="text"
                           placeholder="Enter additional info"
                           v-model="newAccount.info")
@@ -115,6 +122,7 @@
 </template>
 
 <script>
+import $ from "jquery";
 import { mapState } from "vuex";
 import FileUtils from "../../../factories/FileUtils";
 
@@ -208,34 +216,35 @@ export default {
     },
 
     async sendAccountsToBlockchain() {
-      if (!this.uploadAccounts || this.uploadAccounts.length < 5)
-        return this.$toast.error(
-          "Please add at least 5 accounts before trying to upload to blockchain."
-        );
+      try {
+        if (!this.uploadAccounts || this.uploadAccounts.length < 5) {
+          return this.$toast.error(
+            "Please add at least 5 accounts before trying to upload to blockchain."
+          );
+        }
 
-      // try {
-      //   this.$store.commit("SET_GLOBAL_LOADING", true);
-      //   const hasKeyAlready = !!this.encryptionKey;
-      //   const { key } = await this.$store.dispatch(
-      //     "sendPasswordManagerAccountTxn",
-      //     this.mutableAccount
-      //   );
-      //   if (!hasKeyAlready) {
-      //     this.needsToWriteDownPrivateKey = true;
-      //     localStorage.mtgyPasswordManagerEncryptionKey = key;
-      //     this.$store.commit("SET_PASSWORD_MANAGER_ENCRYPTION_KEY", key);
-      //   }
-      //   await this.$store.dispatch("getPasswordManagerAccounts");
-      //   this.$toast.success(
-      //     `Successfully sent account info to blockchain and refreshed list!`
-      //   );
-      //   $(`#${this.$el.id}`).modal("hide");
-      // } catch (err) {
-      //   console.error("Error sending account to blockchain", err);
-      //   this.$toast.error(err.message);
-      // } finally {
-      //   this.$store.commit("SET_GLOBAL_LOADING", false);
-      // }
+        this.$store.commit("SET_GLOBAL_LOADING", true);
+        const hasKeyAlready = !!this.encryptionKey;
+        const { key } = await this.$store.dispatch(
+          "bulkUploadPasswordManagerAccountsTxn",
+          this.uploadAccounts
+        );
+        if (!hasKeyAlready) {
+          this.needsToWriteDownPrivateKey = true;
+          localStorage.mtgyPasswordManagerEncryptionKey = key;
+          this.$store.commit("SET_PASSWORD_MANAGER_ENCRYPTION_KEY", key);
+        }
+        await this.$store.dispatch("getPasswordManagerAccounts");
+        this.$toast.success(
+          `Successfully sent account info to blockchain and refreshed list!`
+        );
+        $(`#${this.$el.id}`).modal("hide");
+      } catch (err) {
+        console.error("Error sending account to blockchain", err);
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
+      }
     },
   },
 
