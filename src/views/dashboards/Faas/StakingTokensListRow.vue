@@ -131,7 +131,7 @@ export default {
     perBlockNumTokens() {
       return new BigNumber(this.tokensStakedPerBlock[0] || 0)
         .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
-        .toFormat(0);
+        .toFormat(2);
     },
 
     farmingTokenAddress() {
@@ -249,8 +249,8 @@ export default {
             .toFormat(2),
         ];
         this.tokensStakedPerBlock = [
-          pool.tokensStakedPerBlock,
-          new BigNumber(pool.tokensStakedPerBlock)
+          pool.perBlockNum,
+          new BigNumber(pool.perBlockNum)
             .div(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFormat(2),
         ];
