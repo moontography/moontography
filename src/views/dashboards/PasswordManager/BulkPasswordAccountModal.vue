@@ -13,13 +13,15 @@
             span(aria-hidden='true') &times;
         .modal-body
           div.text-center
-            p Upload a .csv of at least five accounts to add to Password Manager. #[b Format should follow table below:]
+            p.m-2 Upload a .csv of accounts or manually add below. 
+            a.clickable(@click="generateTemplate") Click  here for .csv template.
           form(@submit.prevent="sendAccountsToBlockchain")
             div
               div.text-center
                 input.form-control.input-block.mr-2(
                   :id="`bulk-upload-file-${uid}`"
                   type="file",
+                  accept=".csv",
                   @change="parseFile")
                 button.btn.btn-primary(
                   v-loading="globalLoading"
@@ -35,15 +37,49 @@
                       th Username
                       th Password
                       th Additional Info
+                      th
                   tbody
-                    tr(v-if="!uploadedAccounts || uploadedAccounts.length === 0")
+                    tr(v-if="!uploadAccounts || uploadAccounts.length === 0")
                       td(colspan="100%")
                         i No accounts uploaded yet...
-                    tr(v-for="account in uploadedAccounts")
+                    tr(v-for="(account, ind) in uploadAccounts")
                       td {{ account.name }}
                       td {{ account.username }}
                       td {{ account.password }}
                       td {{ account.info }}
+                      td.text-center
+                        button.btn.btn-sm.btn-danger(
+                          v-loading="globalLoading"
+                          :disabled="globalLoading"
+                          @click.prevent="removeAccount(ind)")
+                            | #[i.fa.fa-times-circle]
+                    tr  
+                      td
+                        fg-input(
+                          type="text"
+                          placeholder="Enter account name"
+                          v-model="newAccount.name")
+                      td
+                        fg-input(
+                          type="text"
+                          placeholder="Enter username"
+                          v-model="newAccount.username")
+                      td
+                        fg-input(
+                          type="password"
+                          placeholder="Enter password"
+                          v-model="newAccount.password")
+                      td
+                        fg-input(
+                          type="text"
+                          placeholder="Enter additional info"
+                          v-model="newAccount.info")
+                      td.text-center
+                        button.btn.btn-sm.btn-success(
+                          v-loading="globalLoading"
+                          :disabled="globalLoading"
+                          @click.prevent="addAccount(ind)")
+                            | #[i.fa.fa-plus-circle]
                 
               p.mt-2.text-center If all information looks correct above, click submit to store accounts on the blockchain!
 
@@ -54,7 +90,7 @@
                       v-if="!needsToWriteDownPrivateKey"
                       type="submit"
                       v-loading="globalLoading"
-                      :disabled="globalLoading") Submit
+                      :disabled="globalLoading || !minAccounts") Submit
                     template(v-else)
                       div
                         div
@@ -67,14 +103,15 @@
                         v-loading="globalLoading"
                         :disabled="globalLoading")
                           | I wrote down my key and want to store this password on the blockchain!
-                  div.text-danger(v-if="!accountId")
-                    small
-                      div
-                        | You will spend #[strong {{ cost || `CAN'T CALCULATE` }} MTGY]
-                        | to store this account on the blockchain. 
-                      div 
-                        | It will not cost anything to
-                        | read or update it in the future.
+              div.text-center.text-danger
+                small(v-if="!minAccounts") Please add at least 5 accounts to bulk upload.
+                small(v-else)
+                  div
+                    | You will spend #[strong {{ bulkCost || `CAN'T CALCULATE` }} MTGY]
+                    | to store these accounts on the blockchain. 
+                  div 
+                    | It will not cost anything to
+                    | read or update them in the future.
 </template>
 
 <script>
@@ -87,37 +124,75 @@ export default {
   data() {
     return {
       needsToWriteDownPrivateKey: false,
-      uploadedAccounts: [],
+      uploadAccounts: [],
+      newAccount: {},
     };
   },
 
-  computed: mapState({
-    cost: (state) => state.passwordManager.cost,
-    encryptionKey: (state) => state.passwordManager.encryptionKey,
-    globalLoading: (state) => state.globalLoading,
-  }),
+  computed: {
+    ...mapState({
+      cost: (state) => state.passwordManager.cost,
+      encryptionKey: (state) => state.passwordManager.encryptionKey,
+      globalLoading: (state) => state.globalLoading,
+    }),
+
+    bulkCost() {
+      return (this.cost * (this.uploadAccounts || []).length) / 2;
+    },
+
+    minAccounts() {
+      return this.uploadAccounts && this.uploadAccounts.length > 4;
+    },
+  },
 
   methods: {
     triggerFile() {
       document.getElementById(`bulk-upload-file-${this.uid}`).click();
     },
 
+    addAccount(account = this.newAccount) {
+      this.uploadAccounts.push(account);
+      this.newAccount = {};
+    },
+
+    removeAccount(index) {
+      this.uploadAccounts.splice(index, 1);
+    },
+
+    generateTemplate() {
+      const rows = [
+        ["account name", "username", "password", "info"],
+        [
+          "Example Account",
+          "example@gmail.com",
+          "pAsSwOrD",
+          "This is an example account for bulk upload.",
+        ],
+      ];
+
+      let csvContent =
+        "data:text/csv;charset=utf-8," +
+        rows.map((e) => e.join(",")).join("\n");
+
+      var encodedUri = encodeURI(csvContent);
+      window.open(encodedUri);
+    },
+
     async parseFile(evt) {
       try {
         const file = evt.target.files[0];
-        this.uploadedAccounts = await FileUtils.parseCsvFile(file);
-
+        let importedAccounts = await FileUtils.parseCsvFile(file);
         if (
-          this.uploadedAccounts[0] &&
-          this.uploadedAccounts[0][0] &&
-          (this.uploadedAccounts[0][0].toLowerCase() == "name" ||
-            this.uploadedAccounts[0][0].toLowerCase() == "account name")
+          importedAccounts[0] &&
+          importedAccounts[0][0] &&
+          (importedAccounts[0][0].toLowerCase() == "name" ||
+            importedAccounts[0][0].toLowerCase() == "account name")
         ) {
           // If first row looks like header, re-parse with `hasHeaders = true`
-          this.uploadedAccounts = await FileUtils.parseCsvFile(file, true);
+          importedAccounts = await FileUtils.parseCsvFile(file, true);
         } else {
           // Else map rows with expected account keys
-          this.uploadedAccounts = this.uploadedAccounts.map((a) => {
+          importedAccounts = importedAccounts.map((a) => {
             return {
               name: a[0],
               username: a[1],
@@ -126,7 +201,7 @@ export default {
             };
           });
         }
-
+        this.uploadAccounts = this.uploadAccounts.concat(importedAccounts);
         this.$toast.success(`Successfully parsed file.`);
       } catch (err) {
         this.$toast.error(`Failed to parse file - ${err}.`);
@@ -134,10 +209,9 @@ export default {
     },
 
     async sendAccountsToBlockchain() {
-      console.log(this.uploadedAccounts);
-      if (!this.uploadedAccounts || this.uploadedAccounts.length === 0)
+      if (!this.uploadAccounts || this.uploadAccounts.length < 5)
         return this.$toast.error(
-          "Please upload accounts before trying to upload to blockchain."
+          "Please add at least 5 accounts before trying to upload to blockchain."
         );
 
       // try {
