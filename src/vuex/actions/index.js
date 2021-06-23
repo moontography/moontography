@@ -1,4 +1,4 @@
-import farmingAsAService from "./farmingAsAService";
+import faas from "./faas";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
@@ -11,7 +11,7 @@ import MTGYDataUtils from "@/factories/MTGYDataUtils";
 const toast = useToast();
 
 export default {
-  ...farmingAsAService,
+  ...faas,
   ...passwordManager,
   ...trustedTimestamping,
 

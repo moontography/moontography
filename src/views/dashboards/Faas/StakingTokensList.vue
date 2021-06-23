@@ -38,7 +38,6 @@ export default {
     return {
       isLoadingLocal: false,
       showStakingTokens: false,
-      tokenStakingContracts: [],
     };
   },
 
@@ -51,8 +50,8 @@ export default {
   computed: {
     ...mapState({
       currentBlock: (state) => state.currentBlock,
-      faasAddy: (_, getters) => getters.activeNetwork.contracts.faas,
       selectedTokenAddress: (state) => state.selectedAddressInfo.address,
+      tokenStakingContracts: (state) => state.faas.tokenStakingContracts,
       web3: (state) => state.web3.instance,
     }),
 
@@ -78,73 +77,8 @@ export default {
   methods: {
     async lookUpTokenStakingContracts() {
       try {
-        let tokenAddresses;
         this.isLoadingLocal = true;
-        const contract = MTGYFaaS(this.web3, this.faasAddy);
-        if (this.isAddyValid && this.selectedTokenAddress) {
-          tokenAddresses = await contract.methods
-            .getTokensForStaking(this.selectedTokenAddress)
-            .call();
-        } else {
-          tokenAddresses = await contract.methods
-            .getAllFarmingContracts()
-            .call();
-        }
-
-        const stakingContracts = await Promise.all(
-          tokenAddresses.map(async (farmingTokenAddy) => {
-            try {
-              const farmingCont = MTGYFaaSToken(this.web3, farmingTokenAddy);
-              const [
-                tokenAddy,
-                rewardAddy,
-                lastStakableBlock,
-                farmingInfo,
-              ] = await Promise.all([
-                farmingCont.methods.stakedTokenAddress().call(),
-                farmingCont.methods.rewardsTokenAddress().call(),
-                farmingCont.methods.getLastStakableBlock().call(),
-                this.$store.dispatch("getErc20TokenInfo", farmingTokenAddy),
-              ]);
-              const {
-                name,
-                symbol,
-                decimals,
-                userBalance,
-              } = await this.$store.dispatch("getErc20TokenInfo", tokenAddy);
-              const {
-                name: rewardName,
-                symbol: rewardSymbol,
-                decimals: rewardDecimals,
-                userBalance: rewardUserBalance,
-              } = await this.$store.dispatch("getErc20TokenInfo", rewardAddy);
-              return {
-                farmingTokenAddy,
-                tokenAddy,
-                lastStakableBlock,
-                farmingTokenName: farmingInfo.name,
-                farmingTokenSymbol: farmingInfo.symbol,
-                farmingTokenDecimals: farmingInfo.decimals,
-                farmingTokenBalance: farmingInfo.userBalance,
-                currentTokenName: name,
-                currentTokenSymbol: symbol,
-                currentTokenDecimals: decimals,
-                currentTokenBalance: userBalance,
-                rewardAddy,
-                rewardTokenName: rewardName,
-                rewardTokenSymbol: rewardSymbol,
-                rewardTokenDecimals: rewardDecimals,
-                rewardTokenBalance: rewardUserBalance,
-              };
-            } catch (err) {
-              console.error(`error getting farming contract`, err);
-              return null;
-            }
-          })
-        );
-        return (this.tokenStakingContracts = stakingContracts.filter(
-          (c) => !!c
-        ));
+        await this.$store.dispatch("getAllStakingContracts");
       } catch (err) {
         this.$toast.error(err.message);
       } finally {

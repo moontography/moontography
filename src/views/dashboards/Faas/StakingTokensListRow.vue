@@ -214,10 +214,11 @@ export default {
     // },
 
     async init() {
-      this.tokenInfo = await this.$store.dispatch(
-        "getErc20TokenInfo",
-        this.tokenAddress
-      );
+      const [tokenInfo] = await Promise.all([
+        this.$store.dispatch("getErc20TokenInfo", this.tokenAddress),
+        this.$store.dispatch("getAllStakingContracts"),
+      ]);
+      this.tokenInfo = tokenInfo;
       await this.getUnharvestedTokens();
     },
 

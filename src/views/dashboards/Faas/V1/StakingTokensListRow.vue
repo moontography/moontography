@@ -64,7 +64,7 @@ add-remove-stake-modal(
   :id="`stake-modal-v1-${farmingTokenAddress}`"
   :is-expired="isFarmExpired"
   :farm-address="farmingTokenAddress"
-  @staked="getUnharvestedTokens")
+  @staked="reset")
 </template>
 
 <script>
@@ -255,6 +255,11 @@ export default {
         console.error(`V1 token list error getting harvest tokens`, err);
         true;
       }
+    },
+
+    async reset() {
+      await this.$store.dispatch("getAllStakingContracts");
+      await this.getUnharvestedTokens();
     },
   },
 

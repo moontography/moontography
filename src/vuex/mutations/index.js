@@ -1,7 +1,9 @@
+import faas from "./faas";
 import trustedTimestamping from "./trustedTimestamping";
 import passwordManager from "./passwordManager";
 
 export default {
+  ...faas,
   ...passwordManager,
   ...trustedTimestamping,
 
