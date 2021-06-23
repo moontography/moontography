@@ -12,9 +12,11 @@ import {
   TabPane,
   Table as NTable,
   TokenInput,
+  TokenInputStandalone,
   VeeInput,
 } from "./components";
 import {
+  ElDatePicker,
   ElInput,
   ElInputNumber,
   ElOption,
@@ -36,6 +38,7 @@ const GlobalComponents = {
     app.component("card", Card);
     app.component("checkbox", Checkbox);
     app.component("n-button", Button);
+    app.component(ElDatePicker.name, ElDatePicker);
     app.component(ElInput.name, ElInput);
     app.component(ElInputNumber.name, ElInputNumber);
     app.component(ElOption.name, ElOption);
@@ -50,6 +53,7 @@ const GlobalComponents = {
     app.component("tabs", Tabs);
     app.component("tab-pane", TabPane);
     app.component("token-input", TokenInput);
+    app.component("token-input-standalone", TokenInputStandalone);
     app.component("user-address", UserAddress);
     app.component("vee-input", VeeInput);
     app.use(ElTooltip);

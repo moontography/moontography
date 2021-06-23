@@ -1,7 +1,7 @@
 <template lang="pug">
 div
   div.alert.alert-danger(v-if="!isConnected")
-    | Make sure you connect to your wallet before searching for a contract.
+    | Make sure you connect to your wallet before searching for a token.
   div(v-else)
     div.px-3
       div.alert.alert-danger(v-if="localError")
@@ -12,8 +12,7 @@ div
     div.px-3
       input.form-control(
         placeholder="Token Contract"
-        v-model="insertedTokenAddy"
-        @update:modelValue="checkAndClear")
+        v-model="insertedTokenAddy")
     div.text-center
       n-button(
         type="primary"
@@ -21,18 +20,18 @@ div
         v-loading="globalLoading"
         :disabled="globalLoading"
         @click="selectAndGetToken") {{ btnText }}
-    template(v-if="selectedTokenSymbol")
+    template(v-if="modelValue && modelValue.address")
       hr
       div.row.pb-3
         div.col-4.text-center
           div.text-uppercase Symbol
-          h6.m-0 {{ selectedTokenSymbol }}
+          h6.m-0 {{ modelValue.symbol }}
         div.col-4.text-center
           div.text-uppercase Token
-          h6.m-0 {{ selectedTokenName }}
+          h6.m-0 {{ modelValue.name }}
         div.col-4.text-center
           div.text-uppercase Balance
-          h6.m-0 {{ selectedTokenUserBalance }}
+          h6.m-0 {{ tokenUserBalance }}
 </template>
 
 <script>
@@ -43,12 +42,12 @@ export default {
   name: "token-input",
 
   props: {
-    modelValue: { type: String, default: null },
+    modelValue: { type: Object, default: null },
     btnSize: { type: String, default: null },
     btnText: { type: String, default: "Get Token Info" },
   },
 
-  emits: ["clear", "update:modelValue"],
+  emits: ["update:modelValue"],
 
   data() {
     return {
@@ -60,37 +59,47 @@ export default {
     ...mapState({
       globalLoading: (state) => state.globalLoading,
       isConnected: (state) => state.web3.isConnected,
-      selectedTokenAddress: (state) => state.selectedAddressInfo.address,
-      selectedTokenUserBalance: (state) =>
-        new BigNumber(state.selectedAddressInfo.userBalance || 0).toFixed(3),
-      selectedTokenName: (state) => state.selectedAddressInfo.name,
-      selectedTokenSymbol: (state) => state.selectedAddressInfo.symbol,
+      web3: (state) => state.web3.instance,
     }),
 
     insertedTokenAddy: {
       get() {
-        return this.$store.state.selectedAddressInfo.address;
+        return this.modelValue && this.modelValue.address;
       },
 
-      set(newAddy) {
+      async set(newAddy) {
         this.localError = null;
-        this.$store.commit("SET_SELECTED_ADDRESS", newAddy);
+        if (!this.web3.utils.isAddress(newAddy))
+          return this.$emit("update:modelValue", { address: newAddy });
+        const newTokenInfo = await this.$store.dispatch(
+          "getErc20TokenInfo",
+          newAddy
+        );
+        this.$emit("update:modelValue", newTokenInfo);
       },
+    },
+
+    tokenUserBalance() {
+      return (
+        this.modelValue &&
+        this.modelValue.userBalance &&
+        new BigNumber(this.modelValue.userBalance)
+          .div(new BigNumber(10).pow(this.modelValue.decimals))
+          .toFormat(2)
+      );
     },
   },
 
   methods: {
-    async checkAndClear() {
-      // if (!this.insertedTokenAddy || this.insertedTokenAddy.length === 0)
-      //   await this.selectAndGetToken(true);
-    },
-
     async selectAndGetToken(allowCleared = false) {
       try {
         const tokenAddy = this.insertedTokenAddy;
         if (!tokenAddy && !allowCleared) return;
-        await this.$store.dispatch("setUserInfoForToken", tokenAddy);
-        this.$emit("update:modelValue", tokenAddy);
+        const newTokenInfo = await this.$store.dispatch(
+          "getErc20TokenInfo",
+          tokenAddy
+        );
+        this.$emit("update:modelValue", newTokenInfo);
       } catch (err) {
         this.localError = err;
       }
@@ -98,11 +107,9 @@ export default {
   },
 
   async mounted() {
-    if (this.modelValue)
-      this.$store.commit("SET_SELECTED_ADDRESS", this.modelValue);
     if (!this.isConnected) return;
     if (this.insertedTokenAddy) {
-      this.selectAndGetToken(this.insertedTokenAddy);
+      await this.selectAndGetToken(this.insertedTokenAddy);
     }
   },
 };
