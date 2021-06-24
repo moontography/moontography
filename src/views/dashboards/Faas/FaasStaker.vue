@@ -17,7 +17,7 @@
             div.card-body.table-full-width.py-0.border-top
               staking-tokens-list
 
-        card.mt-4
+        card.mt-4(v-if="faasAddyV1")
           template(v-slot:header='')
             h4.card-title.m-0
               | V1 Farms
@@ -55,6 +55,7 @@ export default {
 
   computed: {
     ...mapState({
+      faasAddyV1: (_, getters) => getters.activeNetwork.contracts.faas_V1,
       userAddy: (state) => state.web3.address,
       userStakingContracts: (state) => state.faas.userPools,
     }),

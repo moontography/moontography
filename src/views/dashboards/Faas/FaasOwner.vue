@@ -52,7 +52,7 @@
             div.row.mb-4
               label.col-4.col-md-2.col-form-label
                 | When should pool expire?
-              div.col-4.col-md-4
+              div.col-8.col-md-4
                 div.form-group
                   el-date-picker(
                     :disabled="!(rewardsTokenInfo && rawRewardsSupply)"
@@ -62,7 +62,7 @@
                     @update:modelValue="setRawPerBlockNum")
               label.col-4.col-md-2.col-form-label
                 | Rewards per block:
-              div.col-4.col-md-4
+              div.col-8.col-md-4
                 fg-input(
                   :disabled="!(rewardsTokenInfo && rawRewardsSupply)"
                   v-model="perBlockNumFormatted"
