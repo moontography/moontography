@@ -5,6 +5,8 @@ td
       strong {{ tokenName }}
   div.text-secondary
     small {{ stakedTokenSymbol }}
+  div.text-danger(v-if="timelockDays && timelockDays > 0")
+    b {{ timelockDays }} day time lock
 td
   div
     h6.m-0
@@ -111,6 +113,12 @@ export default {
         this.row.item.lastStakableBlock &&
         new BigNumber(this.row.item.lastStakableBlock).lte(this.currentBlock)
       );
+    },
+
+    timelockDays() {
+      const timelockSeconds = this.row.item.poolInfo.stakeTimeLockSec;
+      if (!timelockSeconds) return 0;
+      return new BigNumber(timelockSeconds).div(60).div(60).div(24).toFormat();
     },
 
     estimateExpirationTime() {

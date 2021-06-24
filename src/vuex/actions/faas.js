@@ -47,27 +47,32 @@ export default {
             tokenAddy,
             rewardAddy,
             lastStakableBlock,
+            poolInfo,
             farmingInfo,
           ] = await Promise.all([
             farmingCont.methods.stakedTokenAddress().call(),
             farmingCont.methods.rewardsTokenAddress().call(),
             farmingCont.methods.getLastStakableBlock().call(),
+            farmingCont.methods.pool().call(),
             dispatch("getErc20TokenInfo", farmingTokenAddy),
           ]);
-          const { name, symbol, decimals, userBalance } = await dispatch(
-            "getErc20TokenInfo",
-            tokenAddy
-          );
-          const {
-            name: rewardName,
-            symbol: rewardSymbol,
-            decimals: rewardDecimals,
-            userBalance: rewardUserBalance,
-          } = await dispatch("getErc20TokenInfo", rewardAddy);
+          const [
+            { name, symbol, decimals, userBalance },
+            {
+              name: rewardName,
+              symbol: rewardSymbol,
+              decimals: rewardDecimals,
+              userBalance: rewardUserBalance,
+            },
+          ] = await Promise.all([
+            dispatch("getErc20TokenInfo", tokenAddy),
+            dispatch("getErc20TokenInfo", rewardAddy),
+          ]);
           return {
             farmingTokenAddy,
             tokenAddy,
             lastStakableBlock,
+            poolInfo,
             farmingTokenName: farmingInfo.name,
             farmingTokenSymbol: farmingInfo.symbol,
             farmingTokenDecimals: farmingInfo.decimals,
@@ -103,6 +108,7 @@ export default {
       stakingContract,
       rewardsContract,
       poolInfo,
+      stakerInfo,
       lastBlock,
       currentBlock,
     ] = await Promise.all([
@@ -110,6 +116,7 @@ export default {
       faasToken.methods.stakedTokenAddress().call(),
       faasToken.methods.rewardsTokenAddress().call(),
       faasToken.methods.pool().call(),
+      faasToken.methods.stakers(userAddy).call(),
       faasToken.methods.getLastStakableBlock().call(),
       web3.eth.getBlockNumber(),
     ]);
@@ -121,6 +128,8 @@ export default {
     return {
       userStakingAmount,
       tokensRewardedPerBlock,
+      poolInfo,
+      stakerInfo,
       currentBlock,
       lastBlock,
       stakingTokenInfo,
@@ -211,11 +220,12 @@ export default {
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
+    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
     const faasAddy = getters.activeNetwork.contracts.faas;
     const faasToken = MTGYFaaS(web3, faasAddy);
     await dispatch("genericTokenApproval", {
       spendAmount: await faasToken.methods.mtgyServiceCost().call(),
-      tokenAddress: stakableToken,
+      tokenAddress: mtgyAddy,
       delegateAddress: faasAddy,
     });
     await dispatch("genericTokenApproval", {

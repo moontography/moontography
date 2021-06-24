@@ -51,25 +51,31 @@
                   v-loading="globalLoading"
                   :disabled="globalLoading"
                   @click="stakeTokens") Stake {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
-              div.d-flex.align-items-center.mt-4(v-if="hasStakedTokens")
-                a.clickable.text-danger(
-                  v-loading="globalLoading"
-                  @click="unstakeTokens()") Unstake Tokens Currently Staked
-                //- n-button.mt-4(
-                //-   type="danger"
-                //-   size="sm"
-                //-   v-loading="globalLoading"
-                //-   :disabled="globalLoading"
-                //-   @click="unstakeTokens") Unstake Tokens Currently Staked
-                div.ml-auto
-                  a.text-danger.clickable(
+              template(v-if="hasStakedTokens")
+                div.text-danger.mt-4(v-if="!isPastTimelock")
+                  b
+                    | This farm has a {{ timelockDays }} day timelock. You originally staked at {{ timeUserOriginallyStaked }}
+                    | and will be able to unstake your tokens after {{ timeUserCanUnstake }}.
+                div.d-flex.align-items-center.mt-4(v-else)
+                  a.clickable.text-danger(
                     v-loading="globalLoading"
-                    @click="unstakeTokens(false)")
-                      i.fa.fa-exclamation-triangle
+                    @click="unstakeTokens()") Unstake Tokens Currently Staked
+                  //- n-button.mt-4(
+                  //-   type="danger"
+                  //-   size="sm"
+                  //-   v-loading="globalLoading"
+                  //-   :disabled="globalLoading"
+                  //-   @click="unstakeTokens") Unstake Tokens Currently Staked
+                  div.ml-auto
+                    a.text-danger.clickable(
+                      v-loading="globalLoading"
+                      @click="unstakeTokens(false)")
+                        i.fa.fa-exclamation-triangle
 </template>
 
 <script>
 import $ from "jquery";
+import dayjs from "dayjs";
 import BigNumber from "bignumber.js";
 import Swal from "sweetalert2";
 import { mapState } from "vuex";
@@ -108,6 +114,48 @@ export default {
       // cost: (state) => state.passwordManager.cost,
       globalLoading: (state) => state.globalLoading,
     }),
+
+    isPastTimelock() {
+      if (!this.stakingInfo) return true;
+
+      const timelockSeconds = this.stakingInfo.poolInfo.stakeTimeLockSec;
+      if (!timelockSeconds) return true;
+
+      const userStakedTime =
+        this.stakingInfo.stakerInfo &&
+        this.stakingInfo.stakerInfo.timeOriginallyStaked;
+      if (!userStakedTime) return true;
+
+      const isPastTime = dayjs(
+        new BigNumber(userStakedTime).times(1e3).toNumber()
+      )
+        .add(timelockSeconds, "seconds")
+        .isBefore(dayjs());
+      if (isPastTime) return true;
+
+      return false;
+    },
+
+    timelockDays() {
+      const timelockSeconds = this.stakingInfo.poolInfo.stakeTimeLockSec;
+      if (!timelockSeconds) return 0;
+      return new BigNumber(timelockSeconds).div(60).div(60).div(24).toFormat();
+    },
+
+    timeUserOriginallyStaked() {
+      const userStakedTime = this.stakingInfo.stakerInfo.timeOriginallyStaked;
+      return dayjs(new BigNumber(userStakedTime).times(1e3).toNumber()).format(
+        "MMMM Do, YYYY hh:mm:ss"
+      );
+    },
+
+    timeUserCanUnstake() {
+      const timelockSeconds = this.stakingInfo.poolInfo.stakeTimeLockSec;
+      const userStakedTime = this.stakingInfo.stakerInfo.timeOriginallyStaked;
+      return dayjs(new BigNumber(userStakedTime).times(1e3).toNumber())
+        .add(timelockSeconds, "seconds")
+        .format("MMMM Do, YYYY hh:mm:ss");
+    },
 
     rawAmountToStake() {
       return new BigNumber(
