@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import MTGY from "../../factories/web3/MTGY";
 import MTGYFaaS from "../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
 import MTGYFaaSTokenV1 from "../../factories/web3/MTGYFaaSTokenV1";
@@ -222,9 +223,19 @@ export default {
     const userAddy = state.web3.address;
     const mtgyAddy = getters.activeNetwork.contracts.mtgy;
     const faasAddy = getters.activeNetwork.contracts.faas;
+    const mtgyCont = MTGY(web3, mtgyAddy);
     const faasToken = MTGYFaaS(web3, faasAddy);
+    const [mtgyBalance, serviceCost] = await Promise.all([
+      mtgyCont.methods.balanceOf(userAddy).call(),
+      faasToken.methods.mtgyServiceCost().call(),
+    ]);
+    if (new BigNumber(mtgyBalance).lt(serviceCost)) {
+      throw new Error(
+        `You do not have the amount of MTGY to cover the service cost. Please ensure you have enough MTGY in your wallet to cover the service fee and try again.`
+      );
+    }
     await dispatch("genericTokenApproval", {
-      spendAmount: await faasToken.methods.mtgyServiceCost().call(),
+      spendAmount: serviceCost,
       tokenAddress: mtgyAddy,
       delegateAddress: faasAddy,
     });

@@ -6,7 +6,7 @@ td
   div.text-secondary
     small {{ stakedTokenSymbol }}
   div.text-danger(v-if="timelockDays && timelockDays > 0")
-    b {{ timelockDays }} day time lock
+    b {{ timelockDays }} day timelock
 td
   div
     h6.m-0
