@@ -17,10 +17,18 @@
             div.card-body.table-full-width.py-0.border-top
               staking-tokens-list
 
+        card.mt-4(v-if="faasAddyV11")
+          template(v-slot:header='')
+            h4.card-title.m-0
+              | v1.1 Farms
+          template(v-slot:raw-content="")
+            div.card-body.table-full-width.py-0.mt-3.border-top
+              staking-tokens-list-v11
+        
         card.mt-4(v-if="faasAddyV1")
           template(v-slot:header='')
             h4.card-title.m-0
-              | V1 Farms
+              | c1 Farms
             div.text-danger.mt-2(style="line-height: 1;")
               small
                 i
@@ -34,11 +42,13 @@
 <script>
 import { mapState } from "vuex";
 import StakingTokensListV1 from "./V1/StakingTokensList.vue";
+import StakingTokensListV11 from "./V11/StakingTokensList.vue";
 import StakingTokensList from "./StakingTokensList.vue";
 
 export default {
   components: {
     StakingTokensListV1,
+    StakingTokensListV11,
     StakingTokensList,
   },
 
@@ -56,6 +66,7 @@ export default {
   computed: {
     ...mapState({
       faasAddyV1: (_, getters) => getters.activeNetwork.contracts.faas_V1,
+      faasAddyV11: (_, getters) => getters.activeNetwork.contracts.faas_V11,
       userAddy: (state) => state.web3.address,
       userStakingContracts: (state) => state.faas.userPools,
     }),
