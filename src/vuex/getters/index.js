@@ -14,4 +14,12 @@ export default {
       return `img/eth.png`;
     }
   },
+
+  activeNetworkExplorerUrl(_, getters) {
+    try {
+      return getters.activeNetwork.explorer_url;
+    } catch (err) {
+      return null;
+    }
+  },
 };

@@ -62,7 +62,7 @@ td.td-actions.text-right
       icon
       round
       data-toggle="modal"
-      :data-target="`#stake-modal-${farmingTokenAddress}`")
+      :data-target="`#stake-modal-v11-${farmingTokenAddress}`")
         i.fa.fa-play
     //- a.text-danger.clickable.mr-1(
     //-   v-if="isInFarm"
@@ -75,7 +75,7 @@ td.td-actions.text-right
     //-     i.fa.fa-2x.fa-plus-circle
 
 add-remove-stake-modal(
-  :id="`stake-modal-${farmingTokenAddress}`"
+  :id="`stake-modal-v11-${farmingTokenAddress}`"
   :is-expired="isFarmExpired"
   :farm-address="farmingTokenAddress"
   @staked="init")
@@ -88,7 +88,7 @@ import dayjs from "dayjs";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
+import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken";
 
 export default {
   props: {
@@ -107,6 +107,7 @@ export default {
       tokensStakedPerBlock: [],
       amountUnharvested: [],
       totalTokensStaked: [],
+      tokenInfo: null,
     };
   },
 
@@ -167,16 +168,8 @@ export default {
       return this.row.item.currentTokenName;
     },
 
-    tokenDecimals() {
-      return this.row.item.currentTokenDecimals;
-    },
-
     rewardsTokenAddress() {
       return this.row.item.rewardAddy;
-    },
-
-    rewardsTokenDecimals() {
-      return this.row.item.rewardTokenDecimals;
     },
 
     rewardsTokenName() {
@@ -247,7 +240,11 @@ export default {
     // },
 
     async init() {
-      await this.$store.dispatch("getAllStakingContracts");
+      const [tokenInfo] = await Promise.all([
+        this.$store.dispatch("getErc20TokenInfo", this.tokenAddress),
+        this.$store.dispatch("getAllStakingContracts"),
+      ]);
+      this.tokenInfo = tokenInfo;
       await this.getUnharvestedTokens();
     },
 
@@ -269,19 +266,19 @@ export default {
         this.amountUnharvested = [
           amountUnharvested,
           new BigNumber(amountUnharvested)
-            .div(new BigNumber(10).pow(this.rewardsTokenDecimals))
+            .div(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFormat(2),
         ];
         this.totalTokensStaked = [
           pool.totalTokensStaked,
           new BigNumber(pool.totalTokensStaked)
-            .div(new BigNumber(10).pow(this.tokenDecimals))
+            .div(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFormat(2),
         ];
         this.tokensStakedPerBlock = [
           pool.perBlockNum,
           new BigNumber(pool.perBlockNum)
-            .div(new BigNumber(10).pow(this.tokenDecimals))
+            .div(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFormat(2),
         ];
       } catch (err) {
@@ -295,12 +292,12 @@ export default {
     await this.init();
 
     // Modal appearing in table and below backgound on mobile
-    $(`#stake-modal-${this.farmingTokenAddress}`).appendTo("body");
+    $(`#stake-modal-v11-${this.farmingTokenAddress}`).appendTo("body");
   },
 
   beforeUnmount() {
     // See comments above as to why this needs to be here.
-    $(`#stake-modal-${this.farmingTokenAddress}`).remove();
+    $(`#stake-modal-v11-${this.farmingTokenAddress}`).remove();
   },
 };
 </script>

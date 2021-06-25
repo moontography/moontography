@@ -56,9 +56,8 @@
                   b
                     | This farm has a {{ timelockDays }} day timelock. You originally staked at {{ timeUserOriginallyStaked }}
                     | and will be able to unstake your tokens after {{ timeUserCanUnstake }}.
-                div.d-flex.align-items-center.mt-4
+                div.d-flex.align-items-center.mt-4(v-else)
                   a.clickable.text-danger(
-                    v-if="isPastTimelock"
                     v-loading="globalLoading"
                     @click="unstakeTokens()") Unstake Tokens Currently Staked
                   //- n-button.mt-4(
@@ -133,8 +132,6 @@ export default {
         .add(timelockSeconds, "seconds")
         .isBefore(dayjs());
       if (isPastTime) return true;
-
-      if (this.isExpired) return true;
 
       return false;
     },

@@ -125,7 +125,7 @@ export default {
       const secondsFromNow = new BigNumber(
         new BigNumber(lastBlock).minus(currentBlock)
       ).div(blocksPerSecond);
-      return dayjs().add(secondsFromNow, "seconds").format("MMM D, YYYY hh:mm");
+      return dayjs().add(secondsFromNow, "seconds").format("MMM D, YYYY HH:mm");
     },
 
     perBlockNumTokens() {

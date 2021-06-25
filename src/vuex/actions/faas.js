@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import MTGY from "../../factories/web3/MTGY";
 import MTGYFaaS from "../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
 import MTGYFaaSTokenV1 from "../../factories/web3/MTGYFaaSTokenV1";
@@ -16,10 +17,18 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasAddy = getters.activeNetwork.contracts.faas;
+    const faasAddyV11 = getters.activeNetwork.contracts.faas_V11;
     const contract = MTGYFaaS(web3, faasAddy);
-    const tokensUserIsTaking = await contract.methods
+    let tokensUserIsTaking = await contract.methods
       .getUserStakingContracts(userAddy)
       .call();
+    // if (faasAddyV11) {
+    //   const contractV11 = MTGYFaaS(web3, faasAddyV11);
+    //   const v11TokensUserIsTaking = await contractV11.methods
+    //     .getUserStakingContracts(userAddy)
+    //     .call();
+    //   tokensUserIsTaking = tokensUserIsTaking.concat(v11TokensUserIsTaking);
+    // }
     commit("SET_FAAS_USER_STAKING_CONTRACTS", tokensUserIsTaking);
   },
 
@@ -27,6 +36,7 @@ export default {
     const web3 = state.web3.instance;
     // const userAddy = state.web3.address;
     const faasAddy = getters.activeNetwork.contracts.faas;
+    const faasAddyV11 = getters.activeNetwork.contracts.faas_V11;
     const selectedTokenAddress = state.selectedAddressInfo.address;
 
     let tokenAddresses;
@@ -38,6 +48,15 @@ export default {
     } else {
       tokenAddresses = await contract.methods.getAllFarmingContracts().call();
     }
+
+    // if (faasAddyV11) {
+    //   const contractV11 = MTGYFaaS(web3, faasAddyV11);
+    //   tokenAddresses = tokenAddresses.concat(
+    //     await contractV11.methods
+    //       .getTokensForStaking(selectedTokenAddress)
+    //       .call()
+    //   );
+    // }
 
     const stakingContracts = await Promise.all(
       tokenAddresses.map(async (farmingTokenAddy) => {
@@ -222,9 +241,19 @@ export default {
     const userAddy = state.web3.address;
     const mtgyAddy = getters.activeNetwork.contracts.mtgy;
     const faasAddy = getters.activeNetwork.contracts.faas;
+    const mtgyCont = MTGY(web3, mtgyAddy);
     const faasToken = MTGYFaaS(web3, faasAddy);
+    const [mtgyBalance, serviceCost] = await Promise.all([
+      mtgyCont.methods.balanceOf(userAddy).call(),
+      faasToken.methods.mtgyServiceCost().call(),
+    ]);
+    if (new BigNumber(mtgyBalance).lt(serviceCost)) {
+      throw new Error(
+        `You do not have the amount of MTGY to cover the service cost. Please ensure you have enough MTGY in your wallet to cover the service fee and try again.`
+      );
+    }
     await dispatch("genericTokenApproval", {
-      spendAmount: await faasToken.methods.mtgyServiceCost().call(),
+      spendAmount: serviceCost,
       tokenAddress: mtgyAddy,
       delegateAddress: faasAddy,
     });

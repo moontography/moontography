@@ -265,6 +265,19 @@ const mtgyFaasAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
+        name: "_faasTokenAddy",
+        type: "address",
+      },
+    ],
+    name: "removeTokenContract",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "_addy",
         type: "address",
       },
