@@ -17,10 +17,18 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasAddy = getters.activeNetwork.contracts.faas;
+    const faasAddyV11 = getters.activeNetwork.contracts.faas_V11;
     const contract = MTGYFaaS(web3, faasAddy);
-    const tokensUserIsTaking = await contract.methods
+    let tokensUserIsTaking = await contract.methods
       .getUserStakingContracts(userAddy)
       .call();
+    // if (faasAddyV11) {
+    //   const contractV11 = MTGYFaaS(web3, faasAddyV11);
+    //   const v11TokensUserIsTaking = await contractV11.methods
+    //     .getUserStakingContracts(userAddy)
+    //     .call();
+    //   tokensUserIsTaking = tokensUserIsTaking.concat(v11TokensUserIsTaking);
+    // }
     commit("SET_FAAS_USER_STAKING_CONTRACTS", tokensUserIsTaking);
   },
 
@@ -28,6 +36,7 @@ export default {
     const web3 = state.web3.instance;
     // const userAddy = state.web3.address;
     const faasAddy = getters.activeNetwork.contracts.faas;
+    const faasAddyV11 = getters.activeNetwork.contracts.faas_V11;
     const selectedTokenAddress = state.selectedAddressInfo.address;
 
     let tokenAddresses;
@@ -39,6 +48,15 @@ export default {
     } else {
       tokenAddresses = await contract.methods.getAllFarmingContracts().call();
     }
+
+    // if (faasAddyV11) {
+    //   const contractV11 = MTGYFaaS(web3, faasAddyV11);
+    //   tokenAddresses = tokenAddresses.concat(
+    //     await contractV11.methods
+    //       .getTokensForStaking(selectedTokenAddress)
+    //       .call()
+    //   );
+    // }
 
     const stakingContracts = await Promise.all(
       tokenAddresses.map(async (farmingTokenAddy) => {

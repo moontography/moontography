@@ -2,30 +2,42 @@
 td
   div
     h6.m-0
-      strong {{ tokenName }}
+      strong
+        a(
+          :href="`${activeNetworkExplorerUrl}/token/${tokenAddress}`"
+          target="_blank"
+          rel="noopener noreferrer") {{ stakedTokenSymbol }}
   div.text-secondary
-    small {{ stakedTokenSymbol }}
+    small {{ tokenName }}
   div.text-danger(v-if="timelockDays && timelockDays > 0")
     b {{ timelockDays }} day timelock
 td
   div
     h6.m-0
-      strong {{ rewardsTokenName }}
+      strong
+        a(
+          :href="`${activeNetworkExplorerUrl}/token/${rewardsTokenAddress}`"
+          target="_blank"
+          rel="noopener noreferrer") {{ rewardTokenSymbol }}
   div.text-secondary
-    small {{ rewardTokenSymbol }}
+    small {{ rewardsTokenName }}
 td.text-left
   div
     h6.m-0
-      strong {{ stakedBalance }} {{ stakedTokenSymbol }} staked
+      strong
+        a(
+          :href="`${activeNetworkExplorerUrl}/token/${farmingTokenAddress}`"
+          target="_blank"
+          rel="noopener noreferrer") {{ stakedBalance }} {{ stakedTokenSymbol }} staked
   div.text-secondary
-    small {{ remainingTokenBalance }} balance
+    small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td
   div
-    strong {{ stakingApr || 0 }}%
+    strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}%` : 'Coming Soon' }}
   div
     small
-      | {{ totalTokensStaked[1] }} staked
-      | ({{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block)
+      div {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
+      div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} staked
 td
   div {{ row.item.lastStakableBlock }}
   div.text-secondary(v-if="estimateExpirationTime")
@@ -35,7 +47,7 @@ td
 td
   div.text-success.d-flex.align-items-center(v-if="isInFarm")
     i.text-success.fa.fa-check
-    div.ml-1 {{ amountUnharvested[1] }}
+    div.ml-1 {{ amountUnharvested[1] }} {{ rewardTokenSymbol }}
     a.clickable.ml-1(@click="getUnharvestedTokens")
       i.fa.fa-refresh
     //- button.ml-3.btn.btn-sm.btn-primary(
@@ -50,7 +62,7 @@ td.td-actions.text-right
       icon
       round
       data-toggle="modal"
-      :data-target="`#stake-modal-${farmingTokenAddress}`")
+      :data-target="`#stake-modal-v11-${farmingTokenAddress}`")
         i.fa.fa-play
     //- a.text-danger.clickable.mr-1(
     //-   v-if="isInFarm"
@@ -63,7 +75,7 @@ td.td-actions.text-right
     //-     i.fa.fa-2x.fa-plus-circle
 
 add-remove-stake-modal(
-  :id="`stake-modal-${farmingTokenAddress}`"
+  :id="`stake-modal-v11-${farmingTokenAddress}`"
   :is-expired="isFarmExpired"
   :farm-address="farmingTokenAddress"
   @staked="init")
@@ -101,6 +113,8 @@ export default {
 
   computed: {
     ...mapState({
+      activeNetworkExplorerUrl: (_, getters) =>
+        getters.activeNetworkExplorerUrl,
       blocksPerDay: (_, getters) => getters.activeNetwork.blocks_per_day,
       currentBlock: (state) => state.currentBlock,
       globalLoading: (state) => state.globalLoading,
@@ -133,7 +147,7 @@ export default {
       const secondsFromNow = new BigNumber(
         new BigNumber(lastBlock).minus(currentBlock)
       ).div(blocksPerSecond);
-      return dayjs().add(secondsFromNow, "seconds").format("MMM D, YYYY hh:mm");
+      return dayjs().add(secondsFromNow, "seconds").format("MMM D, YYYY HH:mm");
     },
 
     perBlockNumTokens() {
@@ -152,6 +166,10 @@ export default {
 
     tokenName() {
       return this.row.item.currentTokenName;
+    },
+
+    rewardsTokenAddress() {
+      return this.row.item.rewardAddy;
     },
 
     rewardsTokenName() {
@@ -274,12 +292,12 @@ export default {
     await this.init();
 
     // Modal appearing in table and below backgound on mobile
-    $(`#stake-modal-${this.farmingTokenAddress}`).appendTo("body");
+    $(`#stake-modal-v11-${this.farmingTokenAddress}`).appendTo("body");
   },
 
   beforeUnmount() {
     // See comments above as to why this needs to be here.
-    $(`#stake-modal-${this.farmingTokenAddress}`).remove();
+    $(`#stake-modal-v11-${this.farmingTokenAddress}`).remove();
   },
 };
 </script>

@@ -295,6 +295,19 @@ const mtgyFaasTokenAbi: AbiItem[] = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getLockedUntilDate",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -508,6 +521,19 @@ const mtgyFaasTokenAbi: AbiItem[] = [
   },
   {
     inputs: [],
+    name: "tokenOwner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "totalSupply",
     outputs: [
       {
@@ -586,6 +612,19 @@ const mtgyFaasTokenAbi: AbiItem[] = [
       },
     ],
     name: "unstakeTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_newSupply",
+        type: "uint256",
+      },
+    ],
+    name: "updateSupply",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

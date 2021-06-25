@@ -250,15 +250,17 @@ export default {
     },
   },
 
-  async created() {
-    try {
-      this.stakingInfo = await this.$store.dispatch(
-        "getFaasStakingInfo",
-        this.farmAddress
-      );
-    } finally {
-      this.isLoadingLocal = false;
-    }
+  async mounted() {
+    $(`#${this.$el.id}`).on("shown.bs.modal", async () => {
+      try {
+        this.stakingInfo = await this.$store.dispatch(
+          "getFaasStakingInfo",
+          this.farmAddress
+        );
+      } finally {
+        this.isLoadingLocal = false;
+      }
+    });
   },
 };
 </script>

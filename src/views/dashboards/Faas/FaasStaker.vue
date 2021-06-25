@@ -17,7 +17,7 @@
             div.card-body.table-full-width.py-0.border-top
               staking-tokens-list
 
-        card.mt-4(v-if="faasAddyV11")
+        card(v-if="faasAddyV11")
           template(v-slot:header='')
             h4.card-title.m-0
               | v1.1 Farms
@@ -25,10 +25,10 @@
             div.card-body.table-full-width.py-0.mt-3.border-top
               staking-tokens-list-v11
         
-        card.mt-4(v-if="faasAddyV1")
+        card(v-if="faasAddyV1")
           template(v-slot:header='')
             h4.card-title.m-0
-              | c1 Farms
+              | v1 Farms
             div.text-danger.mt-2(style="line-height: 1;")
               small
                 i
