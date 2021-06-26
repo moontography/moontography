@@ -283,6 +283,13 @@ const mtgyFaasTokenAbi: AbiItem[] = [
   },
   {
     inputs: [],
+    name: "emergencyUnstake",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getLastStakableBlock",
     outputs: [
       {
