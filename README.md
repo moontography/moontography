@@ -14,4 +14,5 @@ following instructions to deploy after changes are made.
 2. After changes are made, build files to `dist` directory
    - `npm run build`
 3. `aws s3 cp --recursive dist s3://app.moontography.com`
-4. Clear cloudfront distribution cache (via UI today, TODO instructions via CLI)
+4. Clear cloudfront distribution cache
+   - `aws cloudfront create-invalidation --distribution-id E2L1BGNWOUJYH7`

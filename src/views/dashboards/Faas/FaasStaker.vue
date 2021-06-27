@@ -17,6 +17,14 @@
             div.card-body.table-full-width.py-0.border-top
               staking-tokens-list
 
+        card(v-if="faasAddyV12")
+          template(v-slot:header='')
+            h4.card-title.m-0
+              | v1.2 Farms
+          template(v-slot:raw-content="")
+            div.card-body.table-full-width.py-0.mt-3.border-top
+              staking-tokens-list-v12
+
         card(v-if="faasAddyV11")
           template(v-slot:header='')
             h4.card-title.m-0
@@ -25,30 +33,32 @@
             div.card-body.table-full-width.py-0.mt-3.border-top
               staking-tokens-list-v11
         
-        card(v-if="faasAddyV1")
-          template(v-slot:header='')
-            h4.card-title.m-0
-              | v1 Farms
-            div.text-danger.mt-2(style="line-height: 1;")
-              small
-                i
-                  | YOU CAN ONLY UNSTAKE TOKENS YOU'VE STAKED FROM THESE POOLS. PLEASE
-                  | ONLY STAKE TOKENS IN THE NEW POOLS IN THE LIST ABOVE.
-          template(v-slot:raw-content="")
-            div.card-body.table-full-width.py-0.mt-3.border-top
-              staking-tokens-list-v1
+        //- card(v-if="faasAddyV1")
+        //-   template(v-slot:header='')
+        //-     h4.card-title.m-0
+        //-       | v1 Farms
+        //-     div.text-danger.mt-2(style="line-height: 1;")
+        //-       small
+        //-         i
+        //-           | YOU CAN ONLY UNSTAKE TOKENS YOU'VE STAKED FROM THESE POOLS. PLEASE
+        //-           | ONLY STAKE TOKENS IN THE NEW POOLS IN THE LIST ABOVE.
+        //-   template(v-slot:raw-content="")
+        //-     div.card-body.table-full-width.py-0.mt-3.border-top
+        //-       staking-tokens-list-v1
 
 </template>
 <script>
 import { mapState } from "vuex";
 import StakingTokensListV1 from "./V1/StakingTokensList.vue";
 import StakingTokensListV11 from "./V11/StakingTokensList.vue";
+import StakingTokensListV12 from "./V12/StakingTokensList.vue";
 import StakingTokensList from "./StakingTokensList.vue";
 
 export default {
   components: {
     StakingTokensListV1,
     StakingTokensListV11,
+    StakingTokensListV12,
     StakingTokensList,
   },
 
@@ -67,6 +77,7 @@ export default {
     ...mapState({
       faasAddyV1: (_, getters) => getters.activeNetwork.contracts.faas_V1,
       faasAddyV11: (_, getters) => getters.activeNetwork.contracts.faas_V11,
+      faasAddyV12: (_, getters) => getters.activeNetwork.contracts.faas_V12,
       userAddy: (state) => state.web3.address,
       userStakingContracts: (state) => state.faas.userPools,
     }),

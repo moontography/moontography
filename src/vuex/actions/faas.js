@@ -36,7 +36,6 @@ export default {
     const web3 = state.web3.instance;
     // const userAddy = state.web3.address;
     const faasAddy = getters.activeNetwork.contracts.faas;
-    const faasAddyV11 = getters.activeNetwork.contracts.faas_V11;
     const selectedTokenAddress = state.selectedAddressInfo.address;
 
     let tokenAddresses;
@@ -49,15 +48,6 @@ export default {
       tokenAddresses = await contract.methods.getAllFarmingContracts().call();
     }
 
-    // if (faasAddyV11) {
-    //   const contractV11 = MTGYFaaS(web3, faasAddyV11);
-    //   tokenAddresses = tokenAddresses.concat(
-    //     await contractV11.methods
-    //       .getTokensForStaking(selectedTokenAddress)
-    //       .call()
-    //   );
-    // }
-
     const stakingContracts = await Promise.all(
       tokenAddresses.map(async (farmingTokenAddy) => {
         try {
@@ -67,12 +57,14 @@ export default {
             rewardAddy,
             lastStakableBlock,
             poolInfo,
+            contractIsRemoved,
             farmingInfo,
           ] = await Promise.all([
             farmingCont.methods.stakedTokenAddress().call(),
             farmingCont.methods.rewardsTokenAddress().call(),
             farmingCont.methods.getLastStakableBlock().call(),
             farmingCont.methods.pool().call(),
+            farmingCont.methods.contractIsRemoved().call(),
             dispatch("getErc20TokenInfo", farmingTokenAddy),
           ]);
           const [
@@ -92,6 +84,7 @@ export default {
             tokenAddy,
             lastStakableBlock,
             poolInfo,
+            contractIsRemoved,
             farmingTokenName: farmingInfo.name,
             farmingTokenSymbol: farmingInfo.symbol,
             farmingTokenDecimals: farmingInfo.decimals,
@@ -127,6 +120,7 @@ export default {
       stakingContract,
       rewardsContract,
       poolInfo,
+      contractIsRemoved,
       stakerInfo,
       lastBlock,
       currentBlock,
@@ -135,6 +129,7 @@ export default {
       faasToken.methods.stakedTokenAddress().call(),
       faasToken.methods.rewardsTokenAddress().call(),
       faasToken.methods.pool().call(),
+      faasToken.methods.contractIsRemoved().call(),
       faasToken.methods.stakers(userAddy).call(),
       faasToken.methods.getLastStakableBlock().call(),
       web3.eth.getBlockNumber(),
@@ -148,6 +143,7 @@ export default {
       userStakingAmount,
       tokensRewardedPerBlock,
       poolInfo,
+      contractIsRemoved,
       stakerInfo,
       currentBlock,
       lastBlock,
@@ -220,6 +216,13 @@ export default {
         typeof harvestTokens === "boolean" ? harvestTokens : true
       )
       .send({ from: userAddy });
+  },
+
+  async faasEmergencyUnstake({ state }, { farmingContractAddress }) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
+    await faasToken.methods.emergencyUnstake().send({ from: userAddy });
   },
 
   async getFaasPoolCreationCost({ commit, getters, state }) {

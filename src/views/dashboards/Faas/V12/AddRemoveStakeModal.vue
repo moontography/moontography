@@ -224,22 +224,20 @@ export default {
       try {
         this.$store.commit("SET_GLOBAL_LOADING", true);
 
-        if (harvestAsWell === false) {
-          if (!this.contractIsRemoved) {
-            const { isConfirmed } = await this.emergencyUnstake.fire({
-              title: "<span class='text-danger'>Emergency Unstake!</span>",
-              html: `
-                <div>
-                  Are you sure you want to emergency unstake your tokens?
-                  You <b>WILL NOT</b> receive any unclaimed rewards.
-                </div>
-              `,
-              confirmButtonText: "Yes, I want to unstake without rewards!",
-              cancelButtonText: "Cancel, do not unstake.",
-              showCancelButton: true,
-            });
-            if (!isConfirmed) return;
-          }
+        if (harvestAsWell === false && !this.contractIsRemoved) {
+          const { isConfirmed } = await this.emergencyUnstake.fire({
+            title: "<span class='text-danger'>Emergency Unstake!</span>",
+            html: `
+          <div>
+            Are you sure you want to emergency unstake your tokens?
+            You <b>WILL NOT</b> receive any unclaimed rewards.
+          </div>
+        `,
+            confirmButtonText: "Yes, I want to unstake without rewards!",
+            cancelButtonText: "Cancel, do not unstake.",
+            showCancelButton: true,
+          });
+          if (!isConfirmed) return;
 
           await this.$store.dispatch("faasEmergencyUnstake", {
             farmingContractAddress: this.farmAddress,

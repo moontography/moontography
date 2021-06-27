@@ -52,7 +52,7 @@ export default {
   computed: {
     ...mapState({
       currentBlock: (state) => state.currentBlock,
-      faasAddy: (_, getters) => getters.activeNetwork.contracts.faas_V11,
+      faasAddy: (_, getters) => getters.activeNetwork.contracts.faas_V12,
       selectedTokenAddress: (state) => state.selectedAddressInfo.address,
       web3: (state) => state.web3.instance,
     }),
@@ -109,12 +109,14 @@ export default {
                 rewardAddy,
                 lastStakableBlock,
                 poolInfo,
+                contractIsRemoved,
                 farmingInfo,
               ] = await Promise.all([
                 farmingCont.methods.stakedTokenAddress().call(),
                 farmingCont.methods.rewardsTokenAddress().call(),
                 farmingCont.methods.getLastStakableBlock().call(),
                 farmingCont.methods.pool().call(),
+                farmingCont.methods.contractIsRemoved().call(),
                 this.$store.dispatch("getErc20TokenInfo", farmingTokenAddy),
               ]);
               const [
@@ -134,6 +136,7 @@ export default {
                 tokenAddy,
                 lastStakableBlock,
                 poolInfo,
+                contractIsRemoved,
                 farmingTokenName: farmingInfo.name,
                 farmingTokenSymbol: farmingInfo.symbol,
                 farmingTokenDecimals: farmingInfo.decimals,

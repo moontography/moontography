@@ -68,7 +68,9 @@ export default {
           mtgySpend: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
-          faas: "0x7c20DBf097bda344B6Fb8FCB5e7a96E2E8C0c51D",
+
+          // TODO: update contract before deploying token
+          faas: "0x207b1Ab683Ee9e29d76fa2690Be0C4e1391d3c39",
         },
       },
       // {
@@ -87,31 +89,31 @@ export default {
       //     balance: ""
       //   }
       // },
-      // {
-      //   name: "Ethereum Rinkeby",
-      //   short_name: "rin",
-      //   chain: "ETH",
-      //   network: "rinkeby",
-      //   chain_id: 4,
-      //   network_id: 4,
-      //   explorer_url: "https://rinkeby.etherscan.io",
-      //   rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
-      //   blocks_per_day: 6450,
-      //   native_currency: {
-      //     symbol: "ETH",
-      //     name: "Ethereum",
-      //     decimals: "18",
-      //     contractAddress: "",
-      //     balance: "",
-      //   },
-      //   contracts: {
-      //     mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
-      //     mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-      //     passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
-      //     trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-      //     faas: "0xe922A7dE0Ec592F48cd0944318e9ac7DaaF67FA4",
-      //   },
-      // },
+      {
+        name: "Ethereum Rinkeby",
+        short_name: "rin",
+        chain: "ETH",
+        network: "rinkeby",
+        chain_id: 4,
+        network_id: 4,
+        explorer_url: "https://rinkeby.etherscan.io",
+        rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
+        blocks_per_day: 6450,
+        native_currency: {
+          symbol: "ETH",
+          name: "Ethereum",
+          decimals: "18",
+          contractAddress: "",
+          balance: "",
+        },
+        contracts: {
+          mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
+          mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
+          passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
+          trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
+          faas: "0xe922A7dE0Ec592F48cd0944318e9ac7DaaF67FA4",
+        },
+      },
       // {
       //   name: "Ethereum Görli",
       //   short_name: "gor",
@@ -264,6 +266,7 @@ export default {
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           faas: "0x30F401b07b20f5F68e40858117e85A223D43d35E",
+          faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
           faas_V11: "0x1172476e8dbB8Dfe6EA0bD9d312F85C9Da20C94f",
           faas_V1: "0xaC2f4E214704791617f651Fd1090800C68426d56",
         },

@@ -51,7 +51,7 @@ td
       div.ml-1 {{ amountUnharvested[1] }} {{ rewardTokenSymbol }}
       a.clickable.ml-1(@click="getUnharvestedTokens")
         i.fa.fa-refresh
-    div.text-dark
+    div.text-dark(v-else)
       i Removed
     //- button.ml-3.btn.btn-sm.btn-primary(
     //-   v-loading="globalLoading"
@@ -91,7 +91,7 @@ import dayjs from "dayjs";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
+import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken";
 
 export default {
   props: {
