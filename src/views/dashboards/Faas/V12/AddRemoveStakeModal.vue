@@ -239,8 +239,10 @@ export default {
           });
           if (!isConfirmed) return;
 
-          await this.$store.dispatch("faasEmergencyUnstake", {
+          await this.$store.dispatch("faasUnstakeTokens", {
             farmingContractAddress: this.farmAddress,
+            // amountTokens: this.rawAmountToStake,
+            harvestTokens: harvestAsWell,
           });
         } else {
           await this.$store.dispatch("faasUnstakeTokens", {

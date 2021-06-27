@@ -208,7 +208,7 @@ export default {
         .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
         .times(
           new BigNumber(10).pow(
-            this.row.item.farmingTokenDecimals - this.rewardsTokenDecimals
+            this.row.item.farmingTokenDecimals - this.tokenDecimals
           )
         )
         .toFormat(0, BigNumber.ROUND_DOWN);
