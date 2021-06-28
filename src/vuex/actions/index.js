@@ -1,3 +1,4 @@
+import airdropper from "./airdropper";
 import faas from "./faas";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
@@ -11,6 +12,7 @@ import MTGYDataUtils from "@/factories/MTGYDataUtils";
 const toast = useToast();
 
 export default {
+  ...airdropper,
   ...faas,
   ...passwordManager,
   ...trustedTimestamping,
@@ -173,12 +175,14 @@ export default {
     commit("SET_MTGY_PRICE_USD", price);
   },
 
-  async getMTGYCirculatingSupply({ commit }) {
+  async getMTGYCirculatingSupply({ commit, state }, reset = false) {
+    if (state.mtgyCircSupply != "0" && !reset) return;
     const supply = await MTGYDataUtils.getCirculatingSupply();
     commit("SET_MTGY_CIRC_SUPPLY", supply);
   },
 
-  async getMTGYTotalSupply({ commit }) {
+  async getMTGYTotalSupply({ commit, state }, reset = false) {
+    if (state.mtgyTotSupply != "0" && !reset) return;
     const supply = await MTGYDataUtils.getTotalSupply();
     commit("SET_MTGY_TOT_SUPPLY", supply);
   },

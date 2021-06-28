@@ -33,7 +33,7 @@ td.text-left
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td
   div
-    strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}%` : 'Coming Soon' }}
+    strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}%` : 'APR Coming Soon' }}
   div
     small
       div {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block

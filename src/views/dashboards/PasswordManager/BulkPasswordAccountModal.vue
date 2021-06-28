@@ -87,7 +87,7 @@
                           :disabled="globalLoading"
                           @click.prevent="addAccount(ind)")
                             | #[i.fa.fa-plus-circle]
-                
+
               p.mt-2.text-center If all information looks correct above, click submit to store accounts on the blockchain!
 
               div.d-flex.mt-2

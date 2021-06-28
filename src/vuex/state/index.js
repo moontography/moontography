@@ -1,8 +1,10 @@
+import airdropper from "./airdropper";
 import faas from "./faas";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
 export default {
+  ...airdropper,
   ...faas,
   ...passwordManager,
   ...trustedTimestamping,
@@ -66,6 +68,7 @@ export default {
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
+          airdropper: "0x9E26185F07d890266E25AF6da810dd31Cef93902",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
 
@@ -89,31 +92,32 @@ export default {
       //     balance: ""
       //   }
       // },
-      {
-        name: "Ethereum Rinkeby",
-        short_name: "rin",
-        chain: "ETH",
-        network: "rinkeby",
-        chain_id: 4,
-        network_id: 4,
-        explorer_url: "https://rinkeby.etherscan.io",
-        rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
-        blocks_per_day: 6450,
-        native_currency: {
-          symbol: "ETH",
-          name: "Ethereum",
-          decimals: "18",
-          contractAddress: "",
-          balance: "",
-        },
-        contracts: {
-          mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
-          mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-          passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
-          trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-          faas: "0xe922A7dE0Ec592F48cd0944318e9ac7DaaF67FA4",
-        },
-      },
+      // {
+      //   name: "Ethereum Rinkeby",
+      //   short_name: "rin",
+      //   chain: "ETH",
+      //   network: "rinkeby",
+      //   chain_id: 4,
+      //   network_id: 4,
+      //   explorer_url: "https://rinkeby.etherscan.io",
+      //   rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
+      //   blocks_per_day: 6450,
+      //   native_currency: {
+      //     symbol: "ETH",
+      //     name: "Ethereum",
+      //     decimals: "18",
+      //     contractAddress: "",
+      //     balance: "",
+      //   },
+      //   contracts: {
+      //     mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
+      //     mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
+      //     airdropper: "0x5c3Be87e6383aa11E166506cfa08B874E40f2b45",
+      //     passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
+      //     trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
+      //     faas: "0xe922A7dE0Ec592F48cd0944318e9ac7DaaF67FA4",
+      //   },
+      // },
       // {
       //   name: "Ethereum Görli",
       //   short_name: "gor",
@@ -263,6 +267,7 @@ export default {
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
+          airdropper: "0x7Ae49b71ad3207b6D3F457bb095e1A2C829fFEAa",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           faas: "0x30F401b07b20f5F68e40858117e85A223D43d35E",

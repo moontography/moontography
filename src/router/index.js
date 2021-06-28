@@ -16,6 +16,7 @@ import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeade
 // Dashboard pages
 import ComingSoon from "../views/components/ComingSoon.vue";
 import Dashboard from "../views/dashboards/dashboard/Dashboard.vue";
+import Airdropper from "../views/dashboards/Airdropper/Airdropper.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
@@ -90,9 +91,9 @@ const routes = [
         ],
       },
       {
-        path: "bts",
+        path: "airdropper",
         name: "Airdropper",
-        components: { default: ComingSoon, header: AirdropperHeader },
+        components: { default: Airdropper, header: AirdropperHeader },
       },
       {
         path: "passwords",

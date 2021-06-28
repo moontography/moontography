@@ -59,7 +59,7 @@
                 div.d-flex.align-items-center.mt-4(v-else)
                   a.clickable.text-danger(
                     v-loading="globalLoading"
-                    @click="unstakeTokens()") Unstake Tokens Currently Staked
+                    @click="unstakeTokens(false)") Unstake Tokens Currently Staked
                   //- n-button.mt-4(
                   //-   type="danger"
                   //-   size="sm"
@@ -217,21 +217,21 @@ export default {
       try {
         this.$store.commit("SET_GLOBAL_LOADING", true);
 
-        if (harvestAsWell === false) {
-          const { isConfirmed } = await this.emergencyUnstake.fire({
-            title: "<span class='text-danger'>Emergency Unstake!</span>",
-            html: `
-          <div>
-            Are you sure you want to emergency unstake your tokens?
-            You <b>WILL NOT</b> receive any unclaimed rewards.
-          </div>
-        `,
-            confirmButtonText: "Yes, I want to unstake without rewards!",
-            cancelButtonText: "Cancel, do not unstake.",
-            showCancelButton: true,
-          });
-          if (!isConfirmed) return;
-        }
+        // if (harvestAsWell === false) {
+        //   const { isConfirmed } = await this.emergencyUnstake.fire({
+        //     title: "<span class='text-danger'>Emergency Unstake!</span>",
+        //     html: `
+        //   <div>
+        //     Are you sure you want to emergency unstake your tokens?
+        //     You <b>WILL NOT</b> receive any unclaimed rewards.
+        //   </div>
+        // `,
+        //     confirmButtonText: "Yes, I want to unstake without rewards!",
+        //     cancelButtonText: "Cancel, do not unstake.",
+        //     showCancelButton: true,
+        //   });
+        //   if (!isConfirmed) return;
+        // }
 
         await this.$store.dispatch("faasUnstakeTokens", {
           farmingContractAddress: this.farmAddress,

@@ -1,8 +1,10 @@
+import airdropper from "./airdropper";
 import faas from "./faas";
 import trustedTimestamping from "./trustedTimestamping";
 import passwordManager from "./passwordManager";
 
 export default {
+  ...airdropper,
   ...faas,
   ...passwordManager,
   ...trustedTimestamping,

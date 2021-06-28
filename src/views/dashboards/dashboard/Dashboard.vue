@@ -116,7 +116,7 @@ div
     .col-lg-4
       card
         .card-body.text-center
-          a(href="#/bts")
+          a(href="#/airdropper")
             .statistics
               .info
                 .icon.icon-warning

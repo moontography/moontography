@@ -35,7 +35,7 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
         :link=`{
           name: 'Airdropper',
           icon: 'now-ui-icons objects_spaceship',
-          path: '/bts',
+          path: '/airdropper',
         }`
       )
       sidebar-item(

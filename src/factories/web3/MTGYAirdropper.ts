@@ -52,9 +52,46 @@ const mtgyBtsAbi: AbiItem[] = [
         type: "tuple[]",
       },
     ],
-    name: "bulkSendTokens",
-    outputs: [],
+    name: "bulkSendErc20Tokens",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "userAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amountToReceive",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct MTGYAirdropper.Receiver[]",
+        name: "_addressesAndAmounts",
+        type: "tuple[]",
+      },
+    ],
+    name: "bulkSendMainTokens",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "payable",
     type: "function",
   },
   {

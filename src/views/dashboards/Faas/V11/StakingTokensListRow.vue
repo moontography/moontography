@@ -33,7 +33,7 @@ td.text-left
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td
   div
-    strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}%` : 'Coming Soon' }}
+    strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}%` : 'APR Coming Soon' }}
   div
     small
       div {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
@@ -46,14 +46,17 @@ td
     b EXPIRED FARM
 td
   div.text-success.d-flex.align-items-center(v-if="isInFarm")
-    i.text-success.fa.fa-check
-    div.ml-1 {{ amountUnharvested[1] }} {{ rewardTokenSymbol }}
-    a.clickable.ml-1(@click="getUnharvestedTokens")
-      i.fa.fa-refresh
-    //- button.ml-3.btn.btn-sm.btn-primary(
-    //-   v-loading="globalLoading"
-    //-   :disabled="globalLoading"
-    //-   @click="claimTokens") Claim
+    div(v-if="farmingTokenAddress == '0x30Cc4e35aeC728B1e0ACFbf24298534007a1425C'")
+      i.text-dark Rewards Removed
+    div.d-flex.align-items-center(v-else)
+      i.text-success.fa.fa-check
+      div.ml-1 {{ amountUnharvested[1] }} {{ rewardTokenSymbol }}
+      a.clickable.ml-1(@click="getUnharvestedTokens")
+        i.fa.fa-refresh
+      //- button.ml-3.btn.btn-sm.btn-primary(
+      //-   v-loading="globalLoading"
+      //-   :disabled="globalLoading"
+      //-   @click="claimTokens") Claim
   div(v-else) ---
 td.td-actions.text-right
   small
