@@ -65,7 +65,7 @@ td.td-actions.text-right
       icon
       round
       data-toggle="modal"
-      :data-target="`#stake-modal-${farmingTokenAddress}`")
+      :data-target="`#disclaimer-modal-${farmingTokenAddress}`")
         i.fa.fa-play
     //- a.text-danger.clickable.mr-1(
     //-   v-if="isInFarm"
@@ -76,6 +76,11 @@ td.td-actions.text-right
     //-   data-toggle="modal"
     //-   data-target="")
     //-     i.fa.fa-2x.fa-plus-circle
+
+disclaimer-modal(
+  :id="`disclaimer-modal-${farmingTokenAddress}`"
+  @confirm="showAddRemoveModal"
+)
 
 add-remove-stake-modal(
   :id="`stake-modal-${farmingTokenAddress}`"
@@ -89,6 +94,7 @@ import $ from "jquery";
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import { mapState } from "vuex";
+import DisclaimerModal from "@/components/DisclaimerModal";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken";
@@ -100,6 +106,7 @@ export default {
 
   components: {
     AddRemoveStakeModal,
+    DisclaimerModal,
   },
 
   emits: ["harvested"],
@@ -246,6 +253,10 @@ export default {
   },
 
   methods: {
+    showAddRemoveModal() {
+      $(`#stake-modal-${this.farmingTokenAddress}`).modal("show");
+    },
+
     // async claimTokens() {
     //   try {
     //     this.$store.commit("SET_GLOBAL_LOADING", true);
