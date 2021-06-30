@@ -38,7 +38,7 @@
                 @click.prevent="triggerFile")
                   | #[i.now-ui-icons.arrows-1_share-66] Upload Spreadsheet (.csv or .xlsx)
 
-            div.mt-2.table-responsive
+            div.mt-2
               table.table.table-striped.table-bordered.m-0
                 thead
                   tr

@@ -66,19 +66,21 @@ export default {
     },
 
     filteredStakingContracts() {
-      return this.tokenStakingContracts.slice(0).filter((c) => {
-        return (
-          (c.lastStakableBlock &&
-            new BigNumber(c.lastStakableBlock).gt(this.currentBlock)) ||
-          new BigNumber(c.farmingTokenBalance).gt(0)
+      return this.tokenStakingContracts
+        .slice(0)
+        .filter((c) => {
+          return (
+            (c.lastStakableBlock &&
+              new BigNumber(c.lastStakableBlock).gt(this.currentBlock)) ||
+            new BigNumber(c.farmingTokenBalance).gt(0)
+          );
+        })
+        .filter(
+          (c) =>
+            c.farmingTokenAddy !==
+              "0x982f78bb82ab50ebd975E9B0003b93AD2d62A226" &&
+            c.farmingTokenAddy !== "0x7580A314a0727EdfD9309a8A7664975Ab436e583"
         );
-      });
-      // .filter(
-      //   (c) =>
-      //     c.farmingTokenAddy !==
-      //       "0x982f78bb82ab50ebd975E9B0003b93AD2d62A226" &&
-      //     c.farmingTokenAddy !== "0x7580A314a0727EdfD9309a8A7664975Ab436e583"
-      // );
     },
   },
 
