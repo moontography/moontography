@@ -42,7 +42,7 @@ export default {
     },
 
     walletMtgyBalance() {
-      return new BigNumber(this.userMtgyBalance).toFormat(
+      return new BigNumber(this.userMtgyBalance || 0).toFormat(
         2,
         BigNumber.ROUND_DOWN
       );
@@ -50,7 +50,7 @@ export default {
 
     walletUsdValue() {
       return new BigNumber(this.mtgyPrice)
-        .times(this.userMtgyBalance)
+        .times(this.userMtgyBalance || 0)
         .toFormat(2, BigNumber.ROUND_DOWN);
     },
   },
