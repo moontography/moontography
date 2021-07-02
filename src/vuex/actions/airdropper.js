@@ -1,6 +1,9 @@
 import BigNumber from "bignumber.js";
 import MTGY from "../../factories/web3/MTGY";
 import MTGYAirdropper from "../../factories/web3/MTGYAirdropper";
+import TxnToast from "@/components/TxnToast";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 export default {
   async getAirdropperCost({ commit, getters, state }) {
@@ -63,8 +66,17 @@ export default {
       tokenAddress: tokenAddress,
       delegateAddress: airdropAddy,
     });
-    await airdropContract.methods
+    const tx = await airdropContract.methods
       .bulkSendErc20Tokens(tokenAddress, addressesFormatted)
       .send({ from: userAddy });
+
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
   },
 };

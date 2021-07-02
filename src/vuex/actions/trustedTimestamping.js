@@ -1,6 +1,9 @@
 import BigNumber from "bignumber.js";
-import MTGY from "../../factories/web3/MTGY";
+// import MTGY from "../../factories/web3/MTGY";
 import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
+import TxnToast from "@/components/TxnToast";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 export default {
   async trustedTimestampingInit({ dispatch }) {
@@ -30,9 +33,17 @@ export default {
     });
 
     // store the hash if we haven't bombed out yet
-    await ttCont.methods
+    const tx = await ttCont.methods
       .storeHash(hash, fileName, fileSize)
       .send({ from: userAddy });
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
   },
 
   async getTimestampingHashes({ commit, state, getters }) {
