@@ -8,16 +8,38 @@ div
       | Please connect to a supported network or contact an administrator
       | for more information.
   router-view(v-else)
+
+  disclaimer-modal#disclaimer-modal(
+    @confirm="confirmDisclaimer"
+  )
 </template>
 
 <script>
+import $ from "jquery";
 import { mapState } from "vuex";
+import DisclaimerModal from "@/components/DisclaimerModal";
+
 export default {
+  components: {
+    DisclaimerModal,
+  },
+
   computed: mapState({
     isInitLoading: (state) => state.initLoading,
     isConnected: (_, getters) => getters.isConnected,
     hasFaasContract: (_, getters) =>
       getters.activeNetwork && getters.activeNetwork.contracts.faas,
   }),
+
+  methods: {
+    confirmDisclaimer() {
+      localStorage.faasDisclaimerAcknowlegded = true;
+    },
+  },
+
+  mounted() {
+    if (!localStorage.faasDisclaimerAcknowlegded)
+      $(`#disclaimer-modal`).modal("show");
+  },
 };
 </script>
