@@ -14,14 +14,17 @@
           //-   span(aria-hidden='true') &times;
         .modal-body
           div.ml-4
-            | Moontography is a decentralized software tool. Anyone can create their own token.
+            | Moontography is a decentralized suite of applications that anyone can leverage.
             br
-            | Tokens can be clones and can have the same name as existing coins. 
+            | Anyone can create their own token.
+            br
+            | Tokens can be clones and can have the same name as existing tokens.
             br
             | Token creators can pretend to be owners of the real project. 
             br
             | Please do your own research and examine every project to avoid scams.
-
+            | We are not responsible for loss while using our platform because of lack of
+            | due diligence or research conducted.
           div.d-flex.align-items-center.justify-content-center.mt-4
             checkbox(v-model="disclaimerAccepted") 
               b.text-danger I understand that I am responsible for doing my own research!
@@ -33,7 +36,7 @@
             v-loading="globalLoading"
             :disabled="!disclaimerAccepted"
             data-dismiss='modal'
-            @click="$emit('confirm')") Confrim
+            @click="$emit('confirm')") Confirm
             
 </template>
 

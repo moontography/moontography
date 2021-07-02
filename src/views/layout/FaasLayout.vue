@@ -9,9 +9,7 @@ div
       | for more information.
   router-view(v-else)
 
-  disclaimer-modal#disclaimer-modal(
-    @confirm="confirmDisclaimer"
-  )
+  disclaimer-modal#disclaimer-modal(@confirm="confirmDisclaimer")
 </template>
 
 <script>
@@ -38,8 +36,9 @@ export default {
   },
 
   mounted() {
-    if (!localStorage.faasDisclaimerAcknowlegded)
+    if (!localStorage.faasDisclaimerAcknowlegded) {
       $(`#disclaimer-modal`).modal("show");
+    }
   },
 };
 </script>
