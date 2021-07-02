@@ -5,23 +5,6 @@ div.row.d-flex.justify-content-center
   div.col-md-12
     time-line
       time-line-item(
-        badge-type="warning" 
-        badge-icon="now-ui-icons objects_spaceship")
-      
-        template(v-slot:header)
-          span.badge.badge-warning Airdropper
-
-        template(v-slot:content)
-          p
-            | Airdrop or send tokens in bulk to multiple wallets from
-            | any token contract.
-
-        template(v-slot:footer)
-          h6
-            i.ti-time Coming Soon
-      
-      time-line-item(
-        inverted
         badge-type="danger" 
         badge-icon="now-ui-icons education_agenda-bookmark")
       
@@ -36,6 +19,7 @@ div.row.d-flex.justify-content-center
             i.ti-time Coming Soon
 
       time-line-item(
+        inverted
         badge-type="default" 
         badge-icon="now-ui-icons objects_spaceship")
       
@@ -50,7 +34,6 @@ div.row.d-flex.justify-content-center
             i.ti-time Coming Soon
 
       time-line-item(
-        inverted
         badge-type="info"
         badge-icon="now-ui-icons business_money-coins"
       )
