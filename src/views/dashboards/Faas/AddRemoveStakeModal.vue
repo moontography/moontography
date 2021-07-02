@@ -60,7 +60,7 @@
                   a.clickable.text-danger(
                     v-if="isPastTimelock"
                     v-loading="globalLoading"
-                    @click="unstakeTokens(!contractIsRemoved)") Unstake Tokens Currently Staked
+                    @click="unstakeTokens(!contractIsRemoved)") Unstake and Claim Rewards
                   //- n-button.mt-4(
                   //-   type="danger"
                   //-   size="sm"
@@ -71,7 +71,8 @@
                     a.text-danger.clickable(
                       v-loading="globalLoading"
                       @click="unstakeTokens(false)")
-                        i.fa.fa-exclamation-triangle
+                        i.fa.fa-exclamation-triangle.mr-1
+                        span Emergency Unstake!
 </template>
 
 <script>
@@ -234,7 +235,7 @@ export default {
                   You <b>WILL NOT</b> receive any unclaimed rewards.
                 </div>
               `,
-              confirmButtonText: "Yes, I want to unstake without rewards!",
+              confirmButtonText: "Yes, unstake WITHOUT rewards!",
               cancelButtonText: "Cancel, do not unstake.",
               showCancelButton: true,
             });
@@ -245,6 +246,20 @@ export default {
             farmingContractAddress: this.farmAddress,
           });
         } else {
+          const { isConfirmed } = await this.emergencyUnstake.fire({
+            title: "<span class='text-danger'>Unstake Tokens</span>",
+            html: `
+              <div>
+                Are you sure you want to unstake your tokens?
+                <b>You will also receive any unclaimed rewards.</b>
+              </div>
+            `,
+            confirmButtonText: "Yes, unstake!",
+            cancelButtonText: "Cancel, do not unstake.",
+            showCancelButton: true,
+          });
+          if (!isConfirmed) return;
+
           await this.$store.dispatch("faasUnstakeTokens", {
             farmingContractAddress: this.farmAddress,
             // amountTokens: this.rawAmountToStake,
