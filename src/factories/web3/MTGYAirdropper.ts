@@ -30,11 +30,6 @@ const mtgyBtsAbi: AbiItem[] = [
         type: "address",
       },
       {
-        internalType: "uint256",
-        name: "_totalAmount",
-        type: "uint256",
-      },
-      {
         components: [
           {
             internalType: "address",
