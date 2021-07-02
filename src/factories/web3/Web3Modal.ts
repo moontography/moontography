@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 interface IWeb3 {
   provider?: any;
@@ -13,6 +14,7 @@ const NOOP = () => {};
 export default {
   provider: null,
   web3: null,
+  web3Modal: null,
 
   async connect(options: any) {
     if (this.provider && this.web3)
@@ -21,6 +23,14 @@ export default {
     const providerOptions = {
       /* See Provider Options Section */
       ...options,
+
+      // https://infura.io/dashboard/ethereum
+      walletconnect: {
+        package: WalletConnectProvider,
+        options: {
+          infuraId: "ecfafabdcff44308ac6a993e5225b790",
+        },
+      },
     };
 
     const web3Modal = new Web3Modal({
@@ -33,6 +43,7 @@ export default {
 
     this.provider = provider;
     this.web3 = new Web3(provider);
+    this.web3Modal = web3Modal;
     return { provider: this.provider, web3: this.web3 };
   },
 
@@ -69,6 +80,11 @@ export default {
     this.provider.on("accountsChanged", accountsChanged || NOOP);
     this.provider.on("chainChanged", chainChanged || NOOP);
     this.provider.on("connect", connect || NOOP);
-    this.provider.on("accountsChanged", disconnect || NOOP);
+    this.provider.on("disconnect", disconnect || NOOP);
+  },
+
+  // Clear cached provider for Web3Modal
+  clearCachedProvider() {
+    this.web3Modal.clearCachedProvider();
   },
 } as IWeb3;

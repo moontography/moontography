@@ -108,7 +108,7 @@ div
             .statistics
               .info
                 .icon.icon-success
-                  i.now-ui-icons.objects_spaceship
+                  i.now-ui-icons.ui-1_lock-circle-open
                 h3.info-title
                   | Password Manager
                 h6.stats-title.text-success Live Now!
@@ -120,7 +120,7 @@ div
             .statistics
               .info
                 .icon.icon-success
-                  i.now-ui-icons.business_money-coins
+                  i.now-ui-icons.objects_spaceship
                 h3.info-title
                   | Airdropper
                 h6.stats-title.text-success Live Now!
@@ -128,26 +128,26 @@ div
     .col-lg-4
       card
         .card-body.text-center
-          a(href="#/paas")
-            .statistics
-              .info
-                .icon.icon-danger
-                  i.now-ui-icons.business_money-coins
-                h3.info-title
-                  | Polling as a Service
-                h6.stats-title.text-danger Coming Soon..
-
-    .col-lg-4
-      card
-        .card-body.text-center
           a(href="#/asaas")
             .statistics
               .info
                 .icon.icon-warning
-                  i.now-ui-icons.business_money-coins
+                  i.now-ui-icons.arrows-1_refresh-69
                 h3.info-title
                   | Atomic Swapping Service
                 h6.stats-title.text-warning Coming Soon..
+
+    .col-lg-4
+      card
+        .card-body.text-center
+          a(href="#/paas")
+            .statistics
+              .info
+                .icon.icon-danger
+                  i.now-ui-icons.business_chart-bar-32
+                h3.info-title
+                  | Polling as a Service
+                h6.stats-title.text-danger Coming Soon..
 
     .col-lg-4
       card

@@ -10,7 +10,7 @@ export default {
 
   async getTokenChart(
     tokenId: string,
-    days: number = 7,
+    days: number = 14,
     interval: string = "daily"
   ) {
     const {
