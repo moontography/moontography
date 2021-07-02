@@ -64,7 +64,7 @@ export default {
       delegateAddress: airdropAddy,
     });
     await airdropContract.methods
-      .bulkSendErc20Tokens(tokenAddress, totalAmount, addressesFormatted)
+      .bulkSendErc20Tokens(tokenAddress, addressesFormatted)
       .send({ from: userAddy });
   },
 };
