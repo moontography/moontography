@@ -5,14 +5,14 @@ div.row.d-flex.justify-content-center
   div.col-md-12
     time-line
       time-line-item(
-        badge-type="danger" 
-        badge-icon="now-ui-icons education_agenda-bookmark")
+        badge-type="warning" 
+        badge-icon="now-ui-icons arrows-1_refresh-69")
       
         template(v-slot:header)
-          span.badge.badge-danger Polling as a Service (Paas)
+          span.badge.badge-warning Atomic Swap as a Service
 
         template(v-slot:content)
-          p Create anonymous polls that can be weighted by token balances.
+          p Allows swapping pegged tokens across blockchains seamlessly.
 
         template(v-slot:footer)
           h6
@@ -20,14 +20,14 @@ div.row.d-flex.justify-content-center
 
       time-line-item(
         inverted
-        badge-type="default" 
-        badge-icon="now-ui-icons objects_spaceship")
+        badge-type="danger" 
+        badge-icon="now-ui-icons business_chart-bar-32")
       
         template(v-slot:header)
-          span.badge.badge-default Atomic Swap as a Service
+          span.badge.badge-danger Polling as a Service (Paas)
 
         template(v-slot:content)
-          p Allows swapping pegged tokens across blockchains seamlessly.
+          p Create anonymous polls that can be weighted by token balances.
 
         template(v-slot:footer)
           h6

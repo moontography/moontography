@@ -37,18 +37,23 @@ export default {
         return commit(
           "SET_GLOBAL_ERROR",
           new Error(
-            `Make sure you using a web3 enabled browser like Metamask, TrustWallet etc.`
+            "Make sure you using a web3 enabled browser like Metamask, TrustWallet etc."
           )
         );
       }
       if (state.web3 && state.web3.isConnected && !reset) return;
       if (state.activeNetwork === "xlm") return;
 
+      // Remove loader to connect wallet
+      commit("SET_INIT_LOADING", false);
+
       const { provider, web3 } = await Web3Modal.connect();
       commit("SET_WEB3_PROVIDER", provider);
       commit("SET_WEB3_INSTANCE", web3);
-
       commit("SET_WEB3_IS_CONNECTED", true);
+
+      // Add loader back
+      commit("SET_INIT_LOADING", true);
 
       const resetConnection = async () => {
         dispatch("disconnect");
@@ -74,7 +79,7 @@ export default {
       await dispatch("refreshable");
     } catch (err) {
       toast.error(err.message || err);
-      commit("SET_GLOBAL_ERROR", err);
+      commit("SET_GLOBAL_ERROR", new Error(err));
     } finally {
       commit("SET_INIT_LOADING", false);
     }
@@ -116,6 +121,9 @@ export default {
     commit("SET_WEB3_CHAIN_ID", null);
     commit("SET_WEB3_USER_ADDRESS", "");
     commit("SET_TRUSTED_TIMESTAMPING_HASHES", []);
+
+    // Clear cached provider to be able to switch between providers when disconnecting wallet
+    Web3Modal.clearCachedProvider();
   },
 
   // async ethCheckApprovalStatusForTokenContract({ getters, state, commit }) {
