@@ -66,13 +66,21 @@ export default {
     },
 
     filteredStakingContracts() {
-      return this.tokenStakingContracts.slice(0).filter((c) => {
-        return (
-          (c.lastStakableBlock &&
-            new BigNumber(c.lastStakableBlock).gt(this.currentBlock)) ||
-          new BigNumber(c.farmingTokenBalance).gt(0)
+      return this.tokenStakingContracts
+        .slice(0)
+        .filter((c) => {
+          return (
+            (c.lastStakableBlock &&
+              new BigNumber(c.lastStakableBlock).gt(this.currentBlock)) ||
+            new BigNumber(c.farmingTokenBalance).gt(0)
+          );
+        })
+        .filter(
+          (c) =>
+            !(
+              c.contractIsRemoved && new BigNumber(c.farmingTokenBalance).lte(0)
+            )
         );
-      });
     },
   },
 
