@@ -270,8 +270,6 @@ export default {
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           faas: "0x30F401b07b20f5F68e40858117e85A223D43d35E",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
-          faas_V11: "0x1172476e8dbB8Dfe6EA0bD9d312F85C9Da20C94f",
-          faas_V1: "0xaC2f4E214704791617f651Fd1090800C68426d56",
         },
       },
     ],
