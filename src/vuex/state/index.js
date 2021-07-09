@@ -71,9 +71,7 @@ export default {
           airdropper: "0x8f70517bc8d336db91f5f3f8abb4b58e61786b83",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
-
-          // TODO: update contract before deploying token
-          faas: "0x207b1Ab683Ee9e29d76fa2690Be0C4e1391d3c39",
+          faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
         },
       },
       // {

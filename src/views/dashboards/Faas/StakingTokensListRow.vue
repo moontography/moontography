@@ -51,7 +51,7 @@ td
       div.ml-1 {{ amountUnharvested[1] }} {{ rewardTokenSymbol }}
       a.clickable.ml-1(@click="getUnharvestedTokens")
         i.fa.fa-refresh
-    div.text-dark
+    div.text-dark(v-else)
       i Removed
     //- button.ml-3.btn.btn-sm.btn-primary(
     //-   v-loading="globalLoading"

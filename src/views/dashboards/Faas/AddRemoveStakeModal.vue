@@ -36,9 +36,9 @@
                 | You can stake up to #[strong {{ userStakingBalance }}]
                 | {{ stakingInfo.stakingTokenInfo.symbol }}
               div.row(v-if="!isExpired")
-                div.col-9
+                div.col-md-9
                   slider(v-model="percAmountToStake")
-                div.col-3
+                div.col-md-3
                   fg-input(
                     addon-right-icon="fa fa-percent"
                     v-model="percAmountToStake")
@@ -246,20 +246,6 @@ export default {
             farmingContractAddress: this.farmAddress,
           });
         } else {
-          const { isConfirmed } = await this.emergencyUnstake.fire({
-            title: "<span class='text-danger'>Unstake Tokens</span>",
-            html: `
-              <div>
-                Are you sure you want to unstake your tokens?
-                <b>You will also receive any unclaimed rewards.</b>
-              </div>
-            `,
-            confirmButtonText: "Yes, unstake!",
-            cancelButtonText: "Cancel, do not unstake.",
-            showCancelButton: true,
-          });
-          if (!isConfirmed) return;
-
           await this.$store.dispatch("faasUnstakeTokens", {
             farmingContractAddress: this.farmAddress,
             // amountTokens: this.rawAmountToStake,
