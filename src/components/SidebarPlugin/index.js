@@ -1,5 +1,6 @@
-import Sidebar from "./SideBar.vue";
+import Sidebar from "./Sidebar.vue";
 import SidebarItem from "./SidebarItem.vue";
+import SidebarFooter from "./SidebarFooter.vue";
 import { reactive } from "vue";
 
 const SidebarStore = reactive({
@@ -34,6 +35,7 @@ const SidebarPlugin = {
     app.config.globalProperties.$sidebar = SidebarStore;
     app.component("side-bar", Sidebar);
     app.component("sidebar-item", SidebarItem);
+    app.component("sidebar-footer", SidebarFooter);
   },
 };
 

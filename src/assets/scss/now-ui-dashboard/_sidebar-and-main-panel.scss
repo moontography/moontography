@@ -21,9 +21,16 @@
   box-shadow: $sidebar-box-shadow;
   text-align: left;
 
+  .sidebar-footer {
+    position: fixed;
+    overflow: auto;
+    width: 260px;
+    z-index: 4;
+  }
+
   .sidebar-wrapper {
     position: relative;
-    height: calc(100vh - 75px);
+    height: calc(100vh - 100px);
     overflow: auto;
     width: 260px;
     z-index: 4;
