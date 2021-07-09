@@ -4,7 +4,7 @@
     div.alert.alert-danger(v-if="localError")
       | | {{ localError.message }}
     div.row
-      div.col-lg-12.mx-auto
+      div.col-lg-10.mx-auto
         card
           template(v-slot:header='')
             h4.card-title

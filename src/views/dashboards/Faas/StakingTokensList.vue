@@ -13,7 +13,7 @@ div
       | No staking contracts available {{ isAddyValid ? 'for this token' : '' }} yet.
   div.table-full-width.table-responsive.pb-0(v-else)
     n-table.mb-0(
-      :columns="['Staked Token', 'Rewards Token', 'Balances', 'Rewards APR', 'Expiration Block', 'Rewards', '']"
+      :columns="['Staked Token', 'Balances', 'Rewards', 'Expiration Block', 'Rewards', '']"
       :data='filteredStakingContracts')
         template(v-slot:columns)
         template(v-slot:default='row')

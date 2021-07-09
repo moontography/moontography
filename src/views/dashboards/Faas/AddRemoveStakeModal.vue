@@ -153,7 +153,7 @@ export default {
     timeUserOriginallyStaked() {
       const userStakedTime = this.stakingInfo.stakerInfo.timeOriginallyStaked;
       return dayjs(new BigNumber(userStakedTime).times(1e3).toNumber()).format(
-        "MMMM Do, YYYY hh:mm:ss"
+        "MMMM Do, YYYY HH:mm:ss"
       );
     },
 
@@ -162,7 +162,7 @@ export default {
       const userStakedTime = this.stakingInfo.stakerInfo.timeOriginallyStaked;
       return dayjs(new BigNumber(userStakedTime).times(1e3).toNumber())
         .add(timelockSeconds, "seconds")
-        .format("MMMM Do, YYYY hh:mm:ss");
+        .format("MMMM Do, YYYY HH:mm:ss");
     },
 
     rawAmountToStake() {
