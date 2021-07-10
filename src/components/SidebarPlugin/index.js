@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar.vue";
+import Sidebar from "./SideBar.vue";
 import SidebarItem from "./SidebarItem.vue";
 import SidebarFooter from "./SidebarFooter.vue";
 import { reactive } from "vue";
