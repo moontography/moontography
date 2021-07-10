@@ -51,7 +51,6 @@ export default {
       {
         name: "Ethereum Mainnet",
         short_name: "eth",
-        img: "eth.png",
         chain: "ETH",
         network: "mainnet",
         chain_id: 1,
@@ -248,7 +247,6 @@ export default {
       {
         name: "Binance Smart Chain",
         short_name: "bsc",
-        img: "bsc.png",
         chain: "smartchain",
         network: "mainnet",
         chain_id: 56,

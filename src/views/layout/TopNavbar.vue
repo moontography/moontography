@@ -108,26 +108,25 @@ navbar#navigation(:show-navbar="showNavbar")
               style="max-height: 20px"
               src="img/pancakeswap-logo.png")
             span.ml-2 PancakeSwap
-      drop-down(
+      drop-down.d-none.d-xl-block(
         tag="li"
         position="right"
         class="nav-item"
-        :title="activeNetwork.name || 'Switch Network'"
-      )
-        a.dropdown-item.clickable(
-          v-for="network in allNetworks"
-          @click="switchNetwork(network)")
-            img(
-              style="max-height: 20px"
-              :src="`img/${network.img}`")
-            span.ml-2 {{ network.name }}
+        :title="activeNetwork.name || 'Switch Network'")
+          a.dropdown-item.clickable(
+            v-for="network in allNetworks"
+            @click="switchNetwork(network)")
+              img(
+                style="max-height: 20px"
+                :src="network.logo || 'img/eth.png'")
+              span.ml-2 {{ network.name }}
       li.nav-item
         a.nav-link.no-hover
           | Block: {{ currentBlock }}
       li.nav-item
         a.nav-link.no-hover
           | 1 MTGY = ${{ mtgyPriceUsd }} USD
-      li.nav-item
+      li.nav-item.d-none.d-xl-block
         a.nav-link.clickable(
           @click="addMtgyToMetaMask")
             img(
@@ -223,7 +222,6 @@ export default {
             },
           ],
         });
-        this.$toast.success(`Swtiched to ${network.name}!`);
       } catch (error) {
         this.$toast.error(error.message);
       }
