@@ -182,7 +182,7 @@ export default {
 
       // https://docs.metamask.io/guide/registering-your-token.html#code-free-example
       try {
-        const wasAdded = await window.ethereum.request({
+        /* const wasAdded = */ await window.ethereum.request({
           method: "wallet_watchAsset",
           params: {
             type: "ERC20",
@@ -194,11 +194,11 @@ export default {
           },
         });
 
-        if (wasAdded) {
-          this.$toast.success("Token contract added to MetaMask wallet!");
-        } else {
-          this.$toast.error("Token contract was not added to MetaMask wallet.");
-        }
+        // if (wasAdded) {
+        //   this.$toast.success("Token contract added to MetaMask wallet!");
+        // } else {
+        //   this.$toast.error("Token contract was not added to MetaMask wallet.");
+        // }
       } catch (error) {
         this.$toast.error(error.message);
       }
