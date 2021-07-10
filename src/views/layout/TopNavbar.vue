@@ -114,20 +114,6 @@ navbar#navigation(:show-navbar="showNavbar")
       li.nav-item
         a.nav-link.no-hover
           | 1 MTGY = ${{ mtgyPriceUsd }} USD
-
-      drop-down(
-        tag="li"
-        position="right"
-        class="nav-item"
-        :title="activeNetwork.name || 'Switch Network'"
-      )
-        a.dropdown-item.clickable(
-          v-for="network in allNetworks"
-          @click="switchNetwork(network)")
-            img(
-              style="max-height: 20px"
-              :src="`img/${network.img}`")
-            span.ml-2 {{ network.name }}
 </template>
 <script>
 import BigNumber from "bignumber.js";
@@ -141,8 +127,6 @@ export default {
   },
   computed: {
     ...mapState({
-      activeNetwork: (_, getters) => getters.activeNetwork || {},
-      allNetworks: (state) => state.eth.networks || [],
       currentBlock: (state) => state.currentBlock,
       mtgyPriceUsd: (state) => new BigNumber(state.mtgyPriceUsd).toFixed(6),
     }),
@@ -176,56 +160,6 @@ export default {
     },
     hideSidebar() {
       this.$sidebar.displaySidebar(false);
-    },
-
-    async switchNetwork(network) {
-      if (network.chain_id == this.activeNetwork.chain_id) return;
-
-      if (!window.ethereum)
-        return this.$toast.error(
-          "Make sure you using a web3 enabled browser like Metamask, TrustWallet etc."
-        );
-
-      const hexId = network.chain_id.toString(16);
-      const chainId = `0x${hexId}`;
-      const chainName = network.name;
-      const nativeCurrency = {
-        name: network.native_currency.name,
-        symbol: network.native_currency.symbol,
-        decimals: network.native_currency.decimals,
-      };
-      const rpcUrls = [network.rpc_url];
-      const blockExplorerUrls = [network.explorer_url];
-
-      try {
-        // If not mainnet, try to add network first
-        if (network.chain_id != 1)
-          await window.ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId,
-                chainName,
-                nativeCurrency,
-                rpcUrls,
-                blockExplorerUrls,
-              },
-            ],
-          });
-
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [
-            {
-              chainId,
-            },
-          ],
-        });
-
-        this.$toast.success(`Swtiched to ${network.name}!`);
-      } catch (error) {
-        this.$toast.error(error.message);
-      }
     },
   },
 };
