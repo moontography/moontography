@@ -114,6 +114,13 @@ navbar#navigation(:show-navbar="showNavbar")
       li.nav-item
         a.nav-link.no-hover
           | 1 MTGY = ${{ mtgyPriceUsd }} USD
+      li.nav-item
+        a.nav-link.clickable(
+          @click="addMtgyToMetaMask")
+            img(
+              style="max-height: 18px"
+              src="img/metamask.png") 
+            span.ml-2 Add MTGY to MetaMask
 </template>
 <script>
 import BigNumber from "bignumber.js";
@@ -160,6 +167,40 @@ export default {
     },
     hideSidebar() {
       this.$sidebar.displaySidebar(false);
+    },
+
+    async addMtgyToMetaMask() {
+      const tokenAddress = this.activeNetwork.contracts.mtgy;
+      const tokenSymbol = "MTGY";
+      const tokenDecimals = 18;
+
+      if (!window.ethereum)
+        return this.$toast.error(
+          "Make sure you using a web3 enabled browser like Metamask, TrustWallet etc."
+        );
+
+      // https://docs.metamask.io/guide/registering-your-token.html#code-free-example
+      try {
+        const wasAdded = await window.ethereum.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+            },
+          },
+        });
+
+        if (wasAdded) {
+          this.$toast.success("Token contract added to MetaMask wallet!");
+        } else {
+          this.$toast.error("Token contract was not added to MetaMask wallet.");
+        }
+      } catch (error) {
+        this.$toast.error(error.message);
+      }
     },
   },
 };
