@@ -134,6 +134,7 @@ export default {
   },
   computed: {
     ...mapState({
+      activeNetwork: (_, getters) => getters.activeNetwork || {},
       currentBlock: (state) => state.currentBlock,
       mtgyPriceUsd: (state) => new BigNumber(state.mtgyPriceUsd).toFixed(6),
     }),
