@@ -15,7 +15,7 @@
       slot(name='links')
         sidebar-item(v-for='(link, index) in sidebarLinks' :key='link.name + index' :link='link')
           sidebar-item(v-for='(subLink, index) in link.children' :key='subLink.name + index' :link='subLink')
-  .sidebar-footer
+  .sidebar-footer.d-block.d-lg-none
     sidebar-footer
 
 </template>
