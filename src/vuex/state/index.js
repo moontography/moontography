@@ -62,7 +62,7 @@ export default {
         native_currency: {
           symbol: "ETH",
           name: "Ethereum",
-          decimals: "18",
+          decimals: 18,
           contractAddress: "",
           balance: "",
         },
@@ -254,12 +254,12 @@ export default {
         chain_id: 56,
         network_id: 56,
         explorer_url: "https://bscscan.com",
-        rpc_url: "https://bsc-dataseed1.defibit.io/",
+        rpc_url: "https://bsc-dataseed.binance.org/",
         blocks_per_day: 28800,
         native_currency: {
           symbol: "BNB",
           name: "BNB",
-          decimals: "18",
+          decimals: 18,
           contractAddress: "",
           balance: "",
         },
