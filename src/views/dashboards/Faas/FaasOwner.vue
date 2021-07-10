@@ -114,6 +114,20 @@
             div.col-lg-8.mx-auto.text-center
               div You will spend #[b {{ createCost }} MTGY] to create this new pool.
               div It will not cost anything for users to stake their tokens in your pool.
+      - // TODO REMOVE
+      .col-12(v-if="isScrooge")
+        n-button(
+          type="danger"
+          size="lg"
+          v-loading="globalLoading"
+          :disabled="globalLoading"
+          @click="removeWegoUpSingle") Remove WEGOUP single sided
+        n-button(
+          type="danger"
+          size="lg"
+          v-loading="globalLoading"
+          :disabled="globalLoading"
+          @click="removeWegoUpLp") Remove WEGOUP Cake-LP
 </template>
 
 <script>
@@ -154,8 +168,17 @@ export default {
       activeNetwork: (_, getters) => getters.activeNetwork,
       createCost: (state) => new BigNumber(state.faas.cost).toFormat(0),
       globalLoading: (state) => state.globalLoading,
+      userAddy: (state) => state.web3.address,
       web3: (state) => state.web3.instance,
     }),
+
+    isScrooge() {
+      return (
+        this.userAddy &&
+        this.userAddy.toLowerCase() ===
+          "0x28D17C78981C3a1e74A76fc04276d3cEb6E0B65A".toLowerCase()
+      );
+    },
 
     isFormValidated() {
       return (
@@ -231,6 +254,30 @@ export default {
   methods: {
     formatDate(d) {
       return dayjs(d).format("YYYY-MM-DD");
+    },
+
+    async removeWegoUpSingle() {
+      try {
+        await this.$store.dispatch(
+          "removeStakableTokens",
+          "0x982f78bb82ab50ebd975E9B0003b93AD2d62A226"
+        );
+        this.$toast.success(`Successfully removed all rewards tokens.`);
+      } catch (err) {
+        this.$toast.error(err.message);
+      }
+    },
+
+    async removeWegoUpLp() {
+      try {
+        await this.$store.dispatch(
+          "removeStakableTokens",
+          "0x7580A314a0727EdfD9309a8A7664975Ab436e583"
+        );
+        this.$toast.success(`Successfully removed all rewards tokens.`);
+      } catch (err) {
+        this.$toast.error(err.message);
+      }
     },
 
     setRawPerBlockNum() {

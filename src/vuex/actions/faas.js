@@ -2,7 +2,6 @@ import BigNumber from "bignumber.js";
 import MTGY from "../../factories/web3/MTGY";
 import MTGYFaaS from "../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
-import MTGYFaaSTokenV1 from "../../factories/web3/MTGYFaaSTokenV1";
 
 export default {
   // async faasHarvestTokens({ state }, tokenAddy) {
@@ -152,39 +151,6 @@ export default {
     };
   },
 
-  async getFaasStakingInfoV1({ dispatch, state }, farmingAddy) {
-    const web3 = state.web3.instance;
-    const userAddy = state.web3.address;
-    const faasToken = MTGYFaaSTokenV1(web3, farmingAddy);
-    const [
-      userStakingAmount,
-      stakingContract,
-      rewardsContract,
-      tokensRewardedPerBlock,
-      lastBlock,
-      currentBlock,
-    ] = await Promise.all([
-      faasToken.methods.balanceOf(userAddy).call(),
-      faasToken.methods.stakedTokenAddress().call(),
-      faasToken.methods.rewardsTokenAddress().call(),
-      faasToken.methods.perBlockNum().call(),
-      faasToken.methods.getLastStakableBlock().call(),
-      web3.eth.getBlockNumber(),
-    ]);
-    const [stakingTokenInfo, rewardsTokenInfo] = await Promise.all([
-      dispatch("getErc20TokenInfo", stakingContract),
-      dispatch("getErc20TokenInfo", rewardsContract),
-    ]);
-    return {
-      userStakingAmount,
-      tokensRewardedPerBlock,
-      currentBlock,
-      lastBlock,
-      stakingTokenInfo,
-      rewardsTokenInfo,
-    };
-  },
-
   async faasStakeTokens(
     { dispatch, state },
     { farmingContractAddress, stakingContractAddress, amountTokens }
@@ -274,6 +240,21 @@ export default {
         0,
         timelockSeconds
       )
+      .send({ from: userAddy });
+  },
+
+  async removeStakableTokens({ state }, farmContractAddress) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const stakingContract = MTGYFaaSToken(web3, farmContractAddress);
+    const pool = await stakingContract.methods.pool().call();
+    if (!pool || pool.tokenOwner.toLowerCase() !== userAddy.toLowerCase()) {
+      throw new Error(
+        `You are not the original token owner who set up this pool.`
+      );
+    }
+    await stakingContract.methods
+      .removeStakeableTokens()
       .send({ from: userAddy });
   },
 };

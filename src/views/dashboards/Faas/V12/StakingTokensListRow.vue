@@ -11,16 +11,16 @@ td
     small {{ tokenName }}
   div.text-danger(v-if="timelockDays && timelockDays > 0")
     b {{ timelockDays }} day timelock
-td
-  div
-    h6.m-0
-      strong
-        a(
-          :href="`${activeNetworkExplorerUrl}/token/${rewardsTokenAddress}`"
-          target="_blank"
-          rel="noopener noreferrer") {{ rewardTokenSymbol }}
-  div.text-secondary
-    small {{ rewardsTokenName }}
+//- td
+//-   div
+//-     h6.m-0
+//-       strong
+//-         a(
+//-           :href="`${activeNetworkExplorerUrl}/token/${rewardsTokenAddress}`"
+//-           target="_blank"
+//-           rel="noopener noreferrer") {{ rewardTokenSymbol }}
+//-   div.text-secondary
+//-     small {{ rewardsTokenName }}
 td.text-left
   div
     h6.m-0
@@ -33,15 +33,19 @@ td.text-left
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td
   div
-    strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}%` : 'APR Coming Soon' }}
-  div
+    strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}% APR` : 'APR Coming Soon' }}
+  div.text-secondary
     small
-      div {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
+      div
+        a(
+          :href="`${activeNetworkExplorerUrl}/token/${rewardsTokenAddress}`"
+          target="_blank"
+          rel="noopener noreferrer") {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
       div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} staked
 td
   div {{ row.item.lastStakableBlock }}
   div.text-secondary(v-if="estimateExpirationTime")
-    small Estimated: {{ estimateExpirationTime }}
+    small Est: {{ estimateExpirationTime }}
   div.text-danger(v-if="isFarmExpired")
     b EXPIRED FARM
 td
