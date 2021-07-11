@@ -1,50 +1,23 @@
-<template>
-  <div class="sidebar" :data-color="backgroundColor">
-    <div class="logo">
-      <a href="/" class="simple-text logo-mini">
-        <div class="logo-image">
-          <img :src="logo" />
-        </div>
-      </a>
+<template lang="pug">
+.sidebar(:data-color='backgroundColor')
+  .logo
+    a.simple-text.logo-mini(href='/')
+      .logo-image
+        img(:src='logo')
+    a.simple-text.logo-normal(href='/')
+      | {{ title }}
+    .navbar-minimize
+      button#minimizeSidebar.btn.btn-outline-white.btn-icon.btn-round(@click='minimizeSidebar')
+        i.now-ui-icons.text_align-center.visible-on-sidebar-regular
+        i.now-ui-icons.design_bullet-list-67.visible-on-sidebar-mini
+  .sidebar-wrapper
+    ul.mt-2.nav
+      slot(name='links')
+        sidebar-item(v-for='(link, index) in sidebarLinks' :key='link.name + index' :link='link')
+          sidebar-item(v-for='(subLink, index) in link.children' :key='subLink.name + index' :link='subLink')
+  .sidebar-footer.d-block.d-lg-none
+    sidebar-footer
 
-      <a href="/" class="simple-text logo-normal">
-        {{ title }}
-      </a>
-      <div class="navbar-minimize">
-        <button
-          id="minimizeSidebar"
-          class="btn btn-outline-white btn-icon btn-round"
-          @click="minimizeSidebar"
-        >
-          <i
-            class="now-ui-icons text_align-center visible-on-sidebar-regular"
-          ></i>
-          <i
-            class="now-ui-icons design_bullet-list-67 visible-on-sidebar-mini"
-          ></i>
-        </button>
-      </div>
-    </div>
-
-    <div class="sidebar-wrapper">
-      <ul class="mt-2 nav">
-        <slot name="links">
-          <sidebar-item
-            v-for="(link, index) in sidebarLinks"
-            :key="link.name + index"
-            :link="link"
-          >
-            <sidebar-item
-              v-for="(subLink, index) in link.children"
-              :key="subLink.name + index"
-              :link="subLink"
-            >
-            </sidebar-item>
-          </sidebar-item>
-        </slot>
-      </ul>
-    </div>
-  </div>
 </template>
 <script>
 export default {

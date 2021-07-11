@@ -4,21 +4,21 @@ td
     h6.m-0
       strong
         a(
-          :href="`${activeNetworkExplorerUrl}/token/${tokenAddress}`"
+          :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${tokenAddress}`"
           target="_blank"
           rel="noopener noreferrer") {{ stakedTokenSymbol }}
   div.text-secondary
     small {{ tokenName }}
   div.text-danger(v-if="timelockDays && timelockDays > 0")
     b {{ timelockDays }} day timelock
-td
-  div
-    h6.m-0
-      strong
-        a(
-          :href="`${activeNetworkExplorerUrl}/token/${rewardsTokenAddress}`"
-          target="_blank"
-          rel="noopener noreferrer") {{ rewardTokenSymbol }}
+//- td
+//-   div
+//-     h6.m-0
+//-       strong
+//-         a(
+//-           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${rewardsTokenAddress}`"
+//-           target="_blank"
+//-           rel="noopener noreferrer") {{ rewardTokenSymbol }}
   div.text-secondary
     small {{ rewardsTokenName }}
 td.text-left
@@ -26,22 +26,27 @@ td.text-left
     h6.m-0
       strong
         a(
-          :href="`${activeNetworkExplorerUrl}/token/${farmingTokenAddress}`"
+          :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${farmingTokenAddress}`"
           target="_blank"
           rel="noopener noreferrer") {{ stakedBalance }} {{ stakedTokenSymbol }} staked
   div.text-secondary
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td
   div
-    strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}%` : 'APR Coming Soon' }}
-  div
+    strong
+      | {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}% APR` : 'APR Coming Soon' }}
+  div.text-secondary
     small
-      div {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
+      div
+        a(
+          :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${rewardsTokenAddress}`"
+          target="_blank"
+          rel="noopener noreferrer") {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
       div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} staked
 td
   div {{ row.item.lastStakableBlock }}
   div.text-secondary(v-if="estimateExpirationTime")
-    small Estimated: {{ estimateExpirationTime }}
+    small Est: {{ estimateExpirationTime }}
   div.text-danger(v-if="isFarmExpired")
     b EXPIRED FARM
 td
@@ -123,6 +128,12 @@ export default {
       userAddy: (state) => state.web3.address,
       web3: (state) => state.web3.instance,
     }),
+
+    tokenRoute() {
+      return this.activeNetworkExplorerUrl === "https://explorer.kcc.io/en"
+        ? "tokentxns"
+        : "token";
+    },
 
     isFarmExpired() {
       return (
@@ -321,3 +332,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.table {
+  small {
+    font-weight: 600 !important;
+  }
+}
+</style>

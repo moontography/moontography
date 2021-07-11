@@ -7,6 +7,7 @@ import TxnToast from "@/components/TxnToast";
 import { useToast } from "vue-toastification";
 const toast = useToast();
 
+
 export default {
   // async faasHarvestTokens({ state }, tokenAddy) {
   //   const userAddy = state.web3.address;
@@ -155,39 +156,6 @@ export default {
     };
   },
 
-  async getFaasStakingInfoV1({ dispatch, state }, farmingAddy) {
-    const web3 = state.web3.instance;
-    const userAddy = state.web3.address;
-    const faasToken = MTGYFaaSTokenV1(web3, farmingAddy);
-    const [
-      userStakingAmount,
-      stakingContract,
-      rewardsContract,
-      tokensRewardedPerBlock,
-      lastBlock,
-      currentBlock,
-    ] = await Promise.all([
-      faasToken.methods.balanceOf(userAddy).call(),
-      faasToken.methods.stakedTokenAddress().call(),
-      faasToken.methods.rewardsTokenAddress().call(),
-      faasToken.methods.perBlockNum().call(),
-      faasToken.methods.getLastStakableBlock().call(),
-      web3.eth.getBlockNumber(),
-    ]);
-    const [stakingTokenInfo, rewardsTokenInfo] = await Promise.all([
-      dispatch("getErc20TokenInfo", stakingContract),
-      dispatch("getErc20TokenInfo", rewardsContract),
-    ]);
-    return {
-      userStakingAmount,
-      tokensRewardedPerBlock,
-      currentBlock,
-      lastBlock,
-      stakingTokenInfo,
-      rewardsTokenInfo,
-    };
-  },
-
   async faasStakeTokens(
     { dispatch, state, getters },
     { farmingContractAddress, stakingContractAddress, amountTokens }
@@ -314,5 +282,20 @@ export default {
       },
     };
     toast.success(content, { timeout: 10000 });
+  },
+
+  async removeStakableTokens({ state }, farmContractAddress) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const stakingContract = MTGYFaaSToken(web3, farmContractAddress);
+    const pool = await stakingContract.methods.pool().call();
+    if (!pool || pool.tokenOwner.toLowerCase() !== userAddy.toLowerCase()) {
+      throw new Error(
+        `You are not the original token owner who set up this pool.`
+      );
+    }
+    await stakingContract.methods
+      .removeStakeableTokens()
+      .send({ from: userAddy });
   },
 };
