@@ -77,7 +77,7 @@ export default {
           link:
             "https://app.uniswap.org/#/swap?outputCurrency=0x025c9f1146d4d94f8f369b9d98104300a3c8ca23",
           img: "img/uniswap.png",
-          text: "Buy on Uniswap",
+          text: "Uniswap",
         },
       },
       // {
@@ -281,7 +281,7 @@ export default {
           link:
             "https://exchange.pancakeswap.finance/#/swap?inputCurrency=0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c&outputCurrency=0x025c9f1146d4d94f8f369b9d98104300a3c8ca23",
           img: "img/pancakeswap.png",
-          text: "Buy on PancakeSwap",
+          text: "PancakeSwap",
         },
       },
       {
@@ -313,7 +313,7 @@ export default {
         buy: {
           link: "https://koffeeswap.exchange/#/pro",
           img: "img/koffeeswap.png",
-          text: "Buy on KoffeeSwap",
+          text: "KoffeeSwap",
         },
       },
     ],

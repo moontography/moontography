@@ -143,7 +143,7 @@ navbar#navigation(:show-navbar="showNavbar")
             img(
               style="max-height: 18px"
               :src="activeNetwork.buy.img") 
-            span.ml-2 {{ activeNetwork.buy.text }}
+            span.ml-2 Buy on {{ activeNetwork.buy.text }}
 </template>
 <script>
 import BigNumber from "bignumber.js";
