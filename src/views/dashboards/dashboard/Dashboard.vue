@@ -134,7 +134,7 @@ div
                 .icon.icon-warning
                   i.now-ui-icons.arrows-1_refresh-69
                 h3.info-title
-                  | Atomic Swapping Service
+                  | Atomic Swapping as a Service
                 h6.stats-title.text-warning Coming Soon..
 
     .col-lg-4

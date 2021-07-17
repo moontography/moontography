@@ -56,36 +56,36 @@ const routes = [
         children: [
           {
             path: "",
-            name: "Timestamping",
+            name: "Trusted Timestamping",
             component: TrustedTimestamping,
           },
         ],
       },
       {
         path: "faas",
-        name: "Faas",
+        name: "Farming as a Service",
         components: { default: FaasLayout, header: FaasHeader },
         children: [
           {
             path: "owner",
-            name: "Faas Owner",
+            name: "Farm Owner",
             component: FaasOwner,
           },
           {
             path: "owner/:tokenAddress",
-            name: "Faas Owner Token",
+            name: "Farm Owner Token",
             component: FaasOwner,
             props: true,
           },
           {
             path: ":tokenAddress",
-            name: "Faas Staker Token",
+            name: "Farm Staker Token",
             component: FaasStaker,
             props: true,
           },
           {
             path: "",
-            name: "Faas Staker",
+            name: "Farm Staker",
             component: FaasStaker,
           },
         ],
@@ -118,7 +118,7 @@ const routes = [
       },
       {
         path: "paas",
-        name: "Polling as a Service",
+        name: "Polling",
         components: { default: ComingSoon, header: PaasHeader },
       },
       {

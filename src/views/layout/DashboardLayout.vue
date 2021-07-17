@@ -19,7 +19,7 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Farm Your Tokens (FaaS)',
+          name: 'Farming',
           icon: 'now-ui-icons sport_trophy',
           path: '/faas',
         }`
@@ -47,14 +47,14 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Polling as a Service (PaaS)',
+          name: 'Polling',
           icon: 'now-ui-icons business_chart-bar-32',
           path: '/paas',
         }`
       )
       sidebar-item(
         :link=`{
-          name: 'Decentralized Tax Reporting',
+          name: 'Tax Reporting',
           icon: 'now-ui-icons business_money-coins',
           path: '/dtax',
         }`
