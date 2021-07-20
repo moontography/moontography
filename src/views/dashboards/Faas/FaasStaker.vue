@@ -2,8 +2,8 @@
 .row
   .col-md-12.mx-auto
     div.alert.alert-danger(v-if="localError")
-      | | {{ localError.message }}
-    div.row
+      | {{ localError.message }}
+    div.row(v-else)
       div.col-xl-10.mx-auto
         card
           template(v-slot:header='')

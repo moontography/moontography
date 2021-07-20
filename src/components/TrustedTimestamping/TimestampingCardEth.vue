@@ -67,7 +67,7 @@ export default {
       timestampingCost: (state) => state.trustedTimestamping.cost,
       timestampingHashes: (state) => state.trustedTimestamping.hashes || [],
       globalLoading: (state) => state.globalLoading,
-      activeNetwork: (_, getters) => getters.activeNetwork,
+      activeNetwork: (_, getters) => getters.activeNetwork || {},
     }),
 
     fileHashString() {

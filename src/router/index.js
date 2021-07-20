@@ -22,6 +22,7 @@ import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
 import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager.vue";
 import PasswordManagerLayout from "../views/layout/PasswordManagerLayout.vue";
+import SwapsListView from "../views/dashboards/ASaaS/SwapsListView.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
 import TrustedTimestampingLayout from "../views/layout/TrustedTimestampingLayout.vue";
 
@@ -44,7 +45,7 @@ const routes = [
       {
         path: "asaas",
         name: "Atomic Swapping",
-        components: { default: ComingSoon, header: AsaasHeader },
+        components: { default: SwapsListView, header: AsaasHeader },
       },
       {
         path: "timestamping",
