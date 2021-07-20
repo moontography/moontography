@@ -25,9 +25,9 @@ export default {
     return data;
   },
 
-  async sendTokens({ sourceNetwork, sourceContract, sourceSwapId }: any) {
+  async sendTokens({ targetNetwork, targetContract, targetSwapId }: any) {
     const { data } = await this.client.post(
-      `/send/${sourceNetwork}/${sourceContract}/${sourceSwapId}`
+      `/send/${targetNetwork}/${targetContract}/${targetSwapId}`
     );
     return data;
   },

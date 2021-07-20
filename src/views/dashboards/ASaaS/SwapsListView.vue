@@ -45,6 +45,17 @@ export default {
     },
   },
 
+  watch: {
+    activeNetwork: {
+      async handler() {
+        this.$store.commit("SET_INIT_LOADING", true);
+        await this.$store.dispatch("getAllSwapContracts");
+        this.$store.commit("SET_INIT_LOADING", false);
+      },
+      deep: true,
+    },
+  },
+
   methods: {
     isTargetZero(addy) {
       return new BigNumber(addy).eq(0);

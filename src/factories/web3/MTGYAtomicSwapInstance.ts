@@ -270,6 +270,11 @@ const atomicSwapInstAbi: AbiItem[] = [
     name: "lastUserSwap",
     outputs: [
       {
+        internalType: "bytes32",
+        name: "id",
+        type: "bytes32",
+      },
+      {
         internalType: "uint256",
         name: "origTimestamp",
         type: "uint256",
@@ -465,6 +470,11 @@ const atomicSwapInstAbi: AbiItem[] = [
     name: "swaps",
     outputs: [
       {
+        internalType: "bytes32",
+        name: "id",
+        type: "bytes32",
+      },
+      {
         internalType: "uint256",
         name: "origTimestamp",
         type: "uint256",
@@ -530,6 +540,19 @@ const atomicSwapInstAbi: AbiItem[] = [
       },
     ],
     name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_addy",
+        type: "address",
+      },
+    ],
+    name: "unsetLastUserSwap",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

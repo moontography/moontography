@@ -18,8 +18,14 @@
           div.text-center(v-else)
             div.mb-4
               div.mb-4
-                | Creating a new atomic swap, or "bridge", using the moontography platform allows for your users
-                | to swap tokens 1-to-1 between supported networks.
+                div.mb-2
+                  | Creating a new atomic swap, or "bridge", using the moontography platform allows for your users
+                  | to swap tokens 1-to-1 between supported networks.
+                div.text-danger
+                  //- strong
+                  | If your token has special tokenomics that takes out taxes/fees on transfer, ensure you either
+                  | exclude your new atomic swap contract (it's available once created) from these fees or
+                  | ensure your users know they will be taken out when swapping.
               div.text-left
                 small 
                   div The process to create an atomic swap is as follows:
@@ -66,7 +72,7 @@
 
               div
                 div.text-danger
-                  | You still spend #[strong {{ costFormatted }}] MTGY on both sides to create your atomic swap bridge.
+                  | You will spend #[strong {{ costFormatted }}] MTGY on both sides to create your atomic swap bridge.
                 n-button(
                   type="success"
                   size="lg"
@@ -118,6 +124,7 @@ export default {
       targetNetwork: null,
       timestamp: null,
       contractAddress: null,
+      isContractCached: false,
       createdFirstAlready: false,
     };
   },
@@ -197,6 +204,10 @@ export default {
         });
         this.timestamp = localStorage.mtgyAsaasTimestamp = timestamp;
         this.contractAddress = localStorage.mtgyAsaasContract = sourceContract;
+        if (this.isContractCached) {
+          delete localStorage.mtgyAsaasTimestamp;
+          delete localStorage.mtgyAsaasContract;
+        }
 
         this.$toast.success(`Successfully created your new swap!`);
         await this.$store.dispatch("getAllSwapContracts");
@@ -213,6 +224,7 @@ export default {
   async mounted() {
     this.timestamp = localStorage.mtgyAsaasTimestamp;
     this.contractAddress = localStorage.mtgyAsaasContract;
+    if (this.contractAddress) this.isContractCached = true;
     if (this.activeNetwork && this.activeNetwork.contracts) await this.init();
   },
 };

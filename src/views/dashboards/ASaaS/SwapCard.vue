@@ -1,5 +1,5 @@
 <template lang="pug">
-card.card-pricing(no-footer-line='' :category="activeNetwork.name")
+card.card-pricing(no-footer-line='' :category="swap.sourceContract")
   .card-icon.icon-primary.p-0
     //- i.now-ui-icons.objects_diamond
     img.img-fluid(
@@ -9,7 +9,6 @@ card.card-pricing(no-footer-line='' :category="activeNetwork.name")
   div.text-secondary.mb-3
     small {{ swap.token.name }}
   ul
-    //- li {{ swap.sourceContract }}
     li
       div
         strong Your Balance
@@ -24,16 +23,19 @@ card.card-pricing(no-footer-line='' :category="activeNetwork.name")
         small {{ swap.targetToken.targetTokenName }}
   template(v-slot:footer='')
     div.d-flex.align-items-center.justify-content-center
-      div.mr-2
+      div
         n-button(
           type='primary'
           round=''
           data-toggle="modal"
-          :data-target="`#swap-send-modal-${swap.sourceContract}`") Send Tokens to Swap
-      div
+          :data-target="`#swap-send-modal-${swap.sourceContract}`") Initiate New Swap
+      //- div.ml-2(v-if="hasUnclaimedTokens")
+      div.ml-2
         n-button(
           type='success'
-          round='') Claim Tokens
+          round=''
+          data-toggle="modal"
+          :data-target="`#claim-tokens-modal-${swap.sourceContract}`") Claim Tokens
 
 .modal.fade(
   :id="`swap-send-modal-${swap.sourceContract}`"
@@ -42,7 +44,7 @@ card.card-pricing(no-footer-line='' :category="activeNetwork.name")
   aria-labelledby='asaas-send-tokens-modal'
   aria-hidden='true'
   v-loading="globalLoading")
-    .modal-dialog
+    .modal-dialog.modal-lg
       .modal-content
         .modal-header.border-bottom.pb-3
           h3.modal-title.d-flex.align-items-center
@@ -65,15 +67,34 @@ card.card-pricing(no-footer-line='' :category="activeNetwork.name")
               :disabled="globalLoading"
               v-loading="globalLoading"
               @click="sendTokensToSwap") Send Tokens Now
+          div.text-danger.text-center.mt-2
+            small 
+              | You will spend #[strong {{ costFormatted }}] MTGY to use this atomic swap service.
+          div.alert.alert-danger.mt-4(v-if="latestSwap")
+            div
+              strong
+                | Please write the following information down as you'll need them to claim your
+                | tokens on the target swap network and contract.
+            ul
+              li Swap ID: #[strong {{ latestSwap.id }}]
+              li Unique Identifier: #[strong {{ latestSwap.origTimestamp }}]
+              li Amount to Send: #[strong {{ numTokensSending }}]
+
+claim-tokens-modal(
+  :id="`claim-tokens-modal-${swap.sourceContract}`"
+  :swap="swap")
 </template>
 
 <script>
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
+import ClaimTokensModal from "./ClaimTokensModal";
 export default {
   props: {
     swap: { type: Object },
   },
+
+  components: { ClaimTokensModal },
 
   data() {
     return {
@@ -91,11 +112,32 @@ export default {
       instanceGasCost(state) {
         return state.asaas.instanceGasCost[this.swap.sourceContract];
       },
+      mtgyServiceCost: (state) => state.asaas.instanceServiceCost,
       web3: (state) => state.web3.instance,
     }),
 
+    costFormatted() {
+      return new BigNumber(this.mtgyServiceCost || 0)
+        .div(new BigNumber(10).pow(18))
+        .toFormat(0);
+    },
+
+    hasUnclaimedTokens() {
+      return (
+        this.swap.hasUnclaimedTokens &&
+        new BigNumber(this.swap.hasUnclaimedTokens.amount).gt(0) &&
+        !this.swap.hasUnclaimedTokens.isComplete
+      );
+    },
+
     instanceGasCostEther() {
       return this.web3.utils.fromWei(this.instanceGasCost || "0", "ether");
+    },
+
+    numTokensSending() {
+      return new BigNumber(this.latestSwap.amount)
+        .div(new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals))
+        .toFormat(4);
     },
   },
 
@@ -134,7 +176,6 @@ export default {
           "asaasGetLatestUserSwap",
           this.swap.sourceContract
         );
-        console.log("LATEST", this.latestSwap);
       } catch (err) {
         this.$toast.error(err.message);
       } finally {
