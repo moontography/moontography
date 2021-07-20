@@ -4,6 +4,8 @@ import faas from "./faas";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
+import router from "../../router";
+
 import BigNumber from "bignumber.js";
 import DexUtils from "../../factories/DexUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
@@ -59,6 +61,9 @@ export default {
 
       const resetConnection = async () => {
         dispatch("disconnect");
+        // const currentRoute = state.route;
+        // router.push("/redirecting");
+        // router.push(currentRoute);
         await dispatch("init", true);
       };
       Web3Modal.bindProviderEvents({

@@ -23,6 +23,10 @@ export default {
     state.initLoading = isLoading;
   },
 
+  SET_ROUTE(state, to) {
+    state.route = to;
+  },
+
   SET_SELECTED_ADDRESS(state, address) {
     state.selectedAddressInfo.address = address;
   },

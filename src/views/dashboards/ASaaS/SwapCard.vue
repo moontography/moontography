@@ -10,9 +10,13 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
     small {{ swap.token.name }}
   ul
     li
-      div
-        strong Your Balance
-      div {{ userBalance(swap.token) }}
+      small 
+        div
+          strong Your Balance
+        div {{ userBalance(swap.token) }}
+        div
+          strong Swap Contract Balance
+        div {{ contractBalance(swap.token) }}
     li
       img.img-fluid(
         style="max-width: 30px; height: auto"
@@ -49,11 +53,16 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
         .modal-header.border-bottom.pb-3
           h3.modal-title.d-flex.align-items-center
             | #[i.now-ui-icons.users_circle-08.mr-2]
-            | Send Tokens
+            | Initiate New Swap
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
-          label How many tokens do you want to swap?
+          h5.mb-4.text-center
+            | You're sending tokens from {{ activeNetwork.name }}
+            | and will claim them on {{ targetNetworkName(swap.targetNetwork) }}
+          label
+            | How many #[strong {{ swap.token.symbol }}] do you want to swap? After they are sent
+            | here, you can claim the same amount at that point by switching to the target network.
           fg-input(
             type="number"
             v-model="sendTokenAmount")
@@ -71,10 +80,11 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
             small 
               | You will spend #[strong {{ costFormatted }}] MTGY to use this atomic swap service.
           div.alert.alert-danger.mt-4(v-if="latestSwap")
+            h4.text-center.m-0 Attention!
             div
-              strong
-                | Please write the following information down as you'll need them to claim your
-                | tokens on the target swap network and contract.
+              | Please write the following information down as you'll need it to claim your
+              | tokens on the target swap network and contract. After you write this down, you
+              | can toggle over to the target network to claim your tokens there.
             ul
               li Swap ID: #[strong {{ latestSwap.id }}]
               li Unique Identifier: #[strong {{ latestSwap.origTimestamp }}]
@@ -131,13 +141,17 @@ export default {
     },
 
     instanceGasCostEther() {
-      return this.web3.utils.fromWei(this.instanceGasCost || "0", "ether");
+      try {
+        return this.web3.utils.fromWei(this.instanceGasCost || "0", "ether");
+      } catch (err) {
+        return "0";
+      }
     },
 
     numTokensSending() {
       return new BigNumber(this.latestSwap.amount)
         .div(new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals))
-        .toFormat(4);
+        .toFormat(2);
     },
   },
 
@@ -154,21 +168,35 @@ export default {
       return this.targetNetworkObj(networkShortName).logo || `img/eth.png`;
     },
 
+    contractBalance(tokenInfo) {
+      return new BigNumber(tokenInfo.contractBalance)
+        .div(new BigNumber(10).pow(tokenInfo.decimals))
+        .toFormat(2);
+    },
+
     userBalance(tokenInfo) {
       return new BigNumber(tokenInfo.userBalance)
         .div(new BigNumber(10).pow(tokenInfo.decimals))
-        .toFormat(4);
+        .toFormat(2);
     },
 
     async sendTokensToSwap() {
       try {
         if (!this.sendTokenAmount) return;
+        const correctSendTokenAmount = new BigNumber(this.sendTokenAmount)
+          .times(new BigNumber(10).pow(this.swap.token.decimals))
+          .toFixed(0);
+        if (
+          new BigNumber(this.swap.token.contractBalance).lt(
+            correctSendTokenAmount
+          )
+        ) {
+          throw new Error(`You can't send more than the contract has in it.`);
+        }
         this.$store.commit("SET_GLOBAL_LOADING", true);
         const decimals = this.swap.token.decimals;
         await this.$store.dispatch("sendTokensToSwap", {
-          amount: new BigNumber(this.sendTokenAmount)
-            .times(new BigNumber(10).pow(decimals))
-            .toFixed(0),
+          amount: correctSendTokenAmount,
           sourceContract: this.swap.sourceContract,
           tokenContract: this.swap.token.address,
         });

@@ -3,6 +3,7 @@
 import AtomicSwapOracle from "../../factories/AtomicSwapOracle";
 import MTGYAtomicSwapInstance from "@/factories/web3/MTGYAtomicSwapInstance";
 import MTGYAtomicSwap from "../../factories/web3/MTGYAtomicSwap";
+import ERC20 from "@/factories/web3/ERC20";
 
 export default {
   async asaasCosts({ commit, getters, state }) {
@@ -56,10 +57,17 @@ export default {
           }),
           sourceSwapInst.methods.lastUserSwap(userAddy).call(),
         ]);
+        const token = await dispatch("getErc20TokenInfo", swapTokenAddy);
+        const tokenCont = ERC20(web3, token.address);
         return {
           hasUnclaimedTokens,
-          token: await dispatch("getErc20TokenInfo", swapTokenAddy),
           targetToken,
+          token: {
+            ...token,
+            contractBalance: await tokenCont.methods
+              .balanceOf(swap.sourceContract)
+              .call(),
+          },
           ...swap,
         };
       })

@@ -1,6 +1,9 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
+import store from "../vuex/store";
+
 import DashboardLayout from "../views/layout/DashboardLayout.vue";
+import GlobalLoader from "../views/layout/GlobalLoader";
 
 // Page Headers
 // import DefaultHeader from "../views/headers/DefaultHeader";
@@ -127,6 +130,11 @@ const routes = [
         name: "Dtax",
         components: { default: ComingSoon, header: DtaxHeader },
       },
+      {
+        path: "redirecting",
+        name: "Redirecting",
+        components: { default: GlobalLoader, header: GlobalLoader },
+      },
     ],
   },
   { path: "/:pathMatch(.*)*", redirect: "/" },
@@ -136,6 +144,11 @@ const router = createRouter({
   history: createWebHashHistory(),
   linkActiveClass: "active",
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  store.commit("SET_ROUTE", to.fullPath);
+  next();
 });
 
 export default router;

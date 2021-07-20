@@ -3,6 +3,7 @@
   .col-md-12.mx-auto
     div.alert.alert-danger(v-if="localError")
       | {{ localError.message }}
+    loading-panel(v-else-if="localLoading")
     div.row(v-else-if="swaps.length === 0")
       div.col-xl-8.mx-auto
         card
@@ -27,6 +28,7 @@ export default {
   data() {
     return {
       localError: null,
+      localLoading: true,
     };
   },
 
@@ -47,10 +49,15 @@ export default {
 
   watch: {
     activeNetwork: {
-      async handler() {
-        this.$store.commit("SET_INIT_LOADING", true);
-        await this.$store.dispatch("getAllSwapContracts");
-        this.$store.commit("SET_INIT_LOADING", false);
+      async handler(newNet) {
+        try {
+          this.localLoading = true;
+          if (newNet) {
+            await this.$store.dispatch("getAllSwapContracts");
+          }
+        } finally {
+          this.localLoading = false;
+        }
       },
       deep: true,
     },
@@ -75,6 +82,8 @@ export default {
       await this.$store.dispatch("getAllSwapContracts");
     } catch (err) {
       this.localError = err;
+    } finally {
+      this.localLoading = false;
     }
   },
 };

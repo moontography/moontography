@@ -14,6 +14,9 @@
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
+          div.mb-4
+            | Once you initiate a swap and send tokens on one side of the bridge, you can come here
+            | to enter your swap information below that was given to you to claim the tokens on the receiving side.
           //- label Please enter your swap information here to claim your tokens
           label Swap ID
           fg-input(
@@ -63,7 +66,7 @@ export default {
       createSwapCost: (state) => state.asaas.createSwapCost,
       globalLoading: (state) => state.globalLoading,
       gasRequirement: (state) => state.asaas.gas,
-      web3: (state) => state.web3.instance,
+      web3: (state) => state.web3.instance || {},
       instanceGasCost(state) {
         return state.asaas.instanceGasCost[this.swap.sourceContract];
       },

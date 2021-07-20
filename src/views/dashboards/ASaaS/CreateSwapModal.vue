@@ -19,12 +19,12 @@
             div.mb-4
               div.mb-4
                 div.mb-2
-                  | Creating a new atomic swap, or "bridge", using the moontography platform allows for your users
+                  | Creating a new atomic swap bridge using the moontography platform allows for your users
                   | to swap tokens 1-to-1 between supported networks.
                 div.text-danger
                   //- strong
                   | If your token has special tokenomics that takes out taxes/fees on transfer, ensure you either
-                  | exclude your new atomic swap contract (it's available once created) from these fees or
+                  | exclude your new atomic swap contract from these fees or
                   | ensure your users know they will be taken out when swapping.
               div.text-left
                 small 
@@ -40,7 +40,7 @@
             div
               token-input-standalone.mb-4(
                 v-model="tokenInfo"
-                btn-text="Get Token from Contract Address")
+                :btn-text="`Token Contract Address on ${activeNetwork.name}`")
               div.text-left
                 label Number of tokens for your swap contract to hold:
               fg-input(
@@ -53,6 +53,10 @@
                 type="number"
                 placeholder="Maximum number of tokens to swap"
                 v-model="maxSwap")
+              div.text-left
+                label.m-0 Current bridge network:
+              div.text-left.mb-3
+                strong {{ activeNetwork.name }}
               div.text-left
                 label.m-0 Target bridge network:
               network-selector.mb-4(v-model="targetNetwork")
@@ -81,12 +85,13 @@
                   @click="createSwap") Create {{ tokenInfo && tokenInfo.symbol || 'Token' }} Swap
 
               div.mt-3(v-if="contractAddress")
-                div.alert.alert-info.text-center
-                  div.mb-2
-                    | Your atomic swap contract was created successfully! Please write the following down as you'll need it
+                div.alert.alert-danger.text-center
+                  h4.m-0 Attention: Write Down the Following Info
+                  div.mb-4
+                    | Your atomic swap contract was created successfully! You will need to copy the following in order
                     | to link your atomic swap contracts together.
                   div.mb-4
-                    | After you write these down you will need to switch networks to the target network where you will
+                    | After you write these down, switch networks to the target network where you will
                     | create the final swap contract.
                   div Contract address: #[strong {{ contractAddress }}]
                   div Unique identifier: #[strong {{ timestamp }}]
@@ -109,8 +114,11 @@ export default {
   emits: ["staked"],
 
   watch: {
-    async activeNetwork(val) {
-      if (val && val.contracts) await this.init();
+    activeNetwork: {
+      async handler(val) {
+        if (val && val.contracts) await this.init();
+      },
+      deep: true,
     },
   },
 
@@ -164,6 +172,7 @@ export default {
     async init() {
       try {
         if (this.activeNetwork) await this.$store.dispatch("asaasCosts");
+        if (this.contractAddress) this.isContractCached = true;
       } catch (err) {
         this.$toast.error(err.message);
       } finally {
@@ -224,7 +233,6 @@ export default {
   async mounted() {
     this.timestamp = localStorage.mtgyAsaasTimestamp;
     this.contractAddress = localStorage.mtgyAsaasContract;
-    if (this.contractAddress) this.isContractCached = true;
     if (this.activeNetwork && this.activeNetwork.contracts) await this.init();
   },
 };
