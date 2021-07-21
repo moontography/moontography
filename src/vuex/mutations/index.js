@@ -1,10 +1,12 @@
 import airdropper from "./airdropper";
+import asaas from "./asaas";
 import faas from "./faas";
 import trustedTimestamping from "./trustedTimestamping";
 import passwordManager from "./passwordManager";
 
 export default {
   ...airdropper,
+  ...asaas,
   ...faas,
   ...passwordManager,
   ...trustedTimestamping,
@@ -19,6 +21,10 @@ export default {
 
   SET_INIT_LOADING(state, isLoading) {
     state.initLoading = isLoading;
+  },
+
+  SET_ROUTE(state, to) {
+    state.route = to;
   },
 
   SET_SELECTED_ADDRESS(state, address) {

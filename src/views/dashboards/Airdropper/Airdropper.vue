@@ -125,7 +125,7 @@ export default {
 
   computed: {
     ...mapState({
-      activeNetwork: (_, getters) => getters.activeNetwork,
+      activeNetwork: (_, getters) => getters.activeNetwork || {},
       airdropCost: (state) => new BigNumber(state.airdropper.cost).toFormat(0),
       globalLoading: (state) => state.globalLoading,
       web3: (state) => state.web3.instance,

@@ -1,7 +1,10 @@
 import airdropper from "./airdropper";
+import asaas from "./asaas";
 import faas from "./faas";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
+
+import router from "../../router";
 
 import BigNumber from "bignumber.js";
 import DexUtils from "../../factories/DexUtils";
@@ -13,6 +16,7 @@ const toast = useToast();
 
 export default {
   ...airdropper,
+  ...asaas,
   ...faas,
   ...passwordManager,
   ...trustedTimestamping,
@@ -57,6 +61,9 @@ export default {
 
       const resetConnection = async () => {
         dispatch("disconnect");
+        // const currentRoute = state.route;
+        // router.push("/redirecting");
+        // router.push(currentRoute);
         await dispatch("init", true);
       };
       Web3Modal.bindProviderEvents({
@@ -229,7 +236,7 @@ export default {
       contract.methods.balanceOf(userAddy).call(),
       contract.methods.allowance(userAddy, delegateAddress).call(),
     ]);
-    if (new BigNumber(currentAllowance).lt(spendAmount)) {
+    if (new BigNumber(currentAllowance).lte(spendAmount || 0)) {
       await contract.methods
         .approve(delegateAddress, userBalance)
         .send({ from: userAddy });

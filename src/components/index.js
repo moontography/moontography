@@ -12,6 +12,7 @@ import Pagination from "./Pagination";
 import Modal from "./Modal";
 import Navbar from "./Navbar/Navbar";
 import NavbarToggleButton from "./Navbar/NavbarToggleButton";
+import NetworkSelector from "./NetworkSelector";
 import Notification from "./Notification";
 import Progress from "./Progress";
 import Radio from "./Inputs/Radio";
@@ -41,6 +42,7 @@ export {
   Modal,
   Navbar,
   NavbarToggleButton,
+  NetworkSelector,
   Notification,
   Progress,
   Radio,

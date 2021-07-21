@@ -1,10 +1,12 @@
 import airdropper from "./airdropper";
+import asaas from "./asaas";
 import faas from "./faas";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
 export default {
   ...airdropper,
+  ...asaas,
   ...faas,
   ...passwordManager,
   ...trustedTimestamping,
@@ -13,6 +15,8 @@ export default {
   globalLoading: false,
   initLoading: true,
   refreshableInterval: null,
+  route: null,
+  zeroAddy: "0x0000000000000000000000000000000000000000",
 
   activeNetwork: localStorage.activeNetwork || "eth",
   mtgyCircSupply: "0",
@@ -69,6 +73,7 @@ export default {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
           airdropper: "0x8f70517bc8d336db91f5f3f8abb4b58e61786b83",
+          atomicSwap: "0x478c18a363bda6b415c13cb5599e2f110f0523d7",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
           faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
@@ -117,6 +122,7 @@ export default {
       //     mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
       //     mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
       //     airdropper: "0x7A4C2Fb27CE63985197F5cCbA281532a1F49B373",
+      //     atomicSwap: "0xD392EE048577a53566e91796024c479EB30731f0",
       //     passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
       //     trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
       //     faas: "0xe922A7dE0Ec592F48cd0944318e9ac7DaaF67FA4",
@@ -272,6 +278,7 @@ export default {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
           airdropper: "0xeFD47d675683c2788f8171Fede12A1505D07c2B2",
+          atomicSwap: "0xA5b65A5E77cbdefcB554c2e6f391b6E4f45Eabce",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           faas: "0x30F401b07b20f5F68e40858117e85A223D43d35E",
@@ -306,6 +313,7 @@ export default {
           mtgy: "0xee00ef5a7ec4fdbd04eee39d60fe11c0ded65e73",
           mtgySpend: "0x2060539895f6ef746336471001cEC66BfBf591d9",
           airdropper: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+          atomicSwap: "0xb9E1C1044794c1C22e78A2026bF857592B34957a",
           passwordManager: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
           trustedTimestamping: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           faas: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",

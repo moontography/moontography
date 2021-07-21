@@ -165,7 +165,7 @@ export default {
 
   computed: {
     ...mapState({
-      activeNetwork: (_, getters) => getters.activeNetwork,
+      activeNetwork: (_, getters) => getters.activeNetwork || {},
       createCost: (state) => new BigNumber(state.faas.cost).toFormat(0),
       globalLoading: (state) => state.globalLoading,
       userAddy: (state) => state.web3.address,
