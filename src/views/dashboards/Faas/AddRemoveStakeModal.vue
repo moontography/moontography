@@ -10,7 +10,7 @@
         .modal-header.border-bottom.pb-3
           h3.modal-title.d-flex.align-items-center
             | #[i.now-ui-icons.users_circle-08.mr-2]
-            | Add/Remove to your Staked Tokens
+            | Add/Remove Staked Tokens
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body

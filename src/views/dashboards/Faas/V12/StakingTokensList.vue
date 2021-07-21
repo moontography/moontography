@@ -14,7 +14,7 @@ div
       | No staking contracts available {{ isAddyValid ? 'for this token' : '' }} yet.
   div.table-full-width.table-responsive.pb-0(v-else)
     n-table.mb-0(
-      :columns="['Staked Token', 'Balances', 'Rewards', 'Expiration Block', 'Rewards', '']"
+      :columns="columns"
       :data='filteredStakingContracts')
         template(v-slot:columns)
         template(v-slot:default='row')
@@ -40,6 +40,32 @@ export default {
       isLoadingLocal: false,
       showStakingTokens: false,
       tokenStakingContracts: [],
+
+      columns: [
+        { value: "staked", text: "Staked", classes: "" },
+
+        {
+          value: "balances",
+          text: "Balances",
+          classes: "d-none d-lg-table-cell",
+        },
+
+        {
+          value: "rewards",
+          text: "Rewards",
+          classes: "d-none d-lg-table-cell",
+        },
+
+        {
+          value: "expiration",
+          text: "Expiration",
+          classes: "d-none d-lg-table-cell",
+        },
+
+        { value: "earned", text: "Earned", classes: "" },
+
+        { value: "empty", text: "", classes: "" },
+      ],
     };
   },
 

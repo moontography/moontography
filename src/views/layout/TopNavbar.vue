@@ -4,7 +4,6 @@ navbar#navigation(:show-navbar="showNavbar")
     div.navbar-toggle(:class="{ toggled: $sidebar.showSidebar }")
       navbar-toggle-button(@click="toggleSidebar")
     router-link.navbar-brand(to="/") {{ $route.name }}
-  
   //- button(
   //-   @click="toggleNavbar"
   //-   class="navbar-toggler"
