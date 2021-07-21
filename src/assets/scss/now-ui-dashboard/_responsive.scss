@@ -266,7 +266,7 @@
 }
 
 @media screen and (min-width: 992px) {
-  .navbar-collapse :not(.navbar-always-show) {
+  .navbar-collapse :not(.navbar-always-show, .dropdown-menu) {
     background: none !important;
   }
 
