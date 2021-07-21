@@ -45,7 +45,7 @@
 </template>
 
 <script>
-// import $ from "jquery";
+import $ from "jquery";
 // import dayjs from "dayjs";
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
@@ -87,14 +87,16 @@ export default {
           instContract: this.swap.sourceContract,
           id: this.swapId,
           timestamp: this.timestamp,
-          amount: new BigNumber(this.amountTokens).times(
-            new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals)
-          ),
+          amount: new BigNumber(this.amountTokens)
+            .times(
+              new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals)
+            )
+            .toFixed(),
         });
 
         this.$toast.success(`Successfully claimed your tokens!`);
         await this.$store.dispatch("getAllSwapContracts");
-        // $(`#${this.$el.id}`).modal("hide");
+        $(`#${this.$el.id}`).modal("hide");
       } catch (err) {
         console.error("Error staking tokens", err);
         this.$toast.error(err.message);
@@ -102,6 +104,28 @@ export default {
         this.$store.commit("SET_GLOBAL_LOADING", false);
       }
     },
+  },
+
+  mounted() {
+    $(`#${this.$el.id}`).on("shown.bs.modal", async () => {
+      if (localStorage.mtgyAsaasLatestSwapId) {
+        this.swapId = localStorage.mtgyAsaasLatestSwapId;
+        this.timestamp = localStorage.mtgyAsaasLatestSwapTimestamp;
+        this.amountTokens = localStorage.mtgyAsaasLatestSwapNumTokens
+          ? new BigNumber(
+              localStorage.mtgyAsaasLatestSwapNumTokens.replace(/,/g, "")
+            ).toNumber()
+          : null;
+
+        localStorage.removeItem("mtgyAsaasLatestSwapId");
+        localStorage.removeItem("mtgyAsaasLatestSwapTimestamp");
+        localStorage.removeItem("mtgyAsaasLatestSwapNumTokens");
+      }
+    });
+  },
+
+  beforeUnmount() {
+    $(`#${this.$el.id}`).remove();
   },
 };
 </script>

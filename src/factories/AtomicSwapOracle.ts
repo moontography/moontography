@@ -7,10 +7,10 @@ export default {
   }),
 
   async getSwap({ userAddress, sourceNetwork, sourceContract }: any) {
-    const { data } = await this.client.get(
+    return await this.request(
+      "get",
       `/swap/get/target/${userAddress}/${sourceNetwork}/${sourceContract}`
     );
-    return data;
   },
 
   async createSwap({
@@ -20,16 +20,33 @@ export default {
     targetTimestamp,
     targetContract,
   }: any) {
-    const { data } = await this.client.post(
+    return await this.request(
+      "post",
       `/swap/create/${sourceTimestamp}/${sourceNetwork}/${sourceContract}/${targetTimestamp}/${targetContract}`
     );
-    return data;
   },
 
   async sendTokens({ targetNetwork, targetContract, targetSwapId }: any) {
-    const { data } = await this.client.post(
+    return await this.request(
+      "post",
       `/send/${targetNetwork}/${targetContract}/${targetSwapId}`
     );
-    return data;
+  },
+
+  async request(
+    verb: "get" | "post" | "delete",
+    url: string,
+    params?: any,
+    body?: any
+  ) {
+    try {
+      const { data } = await this.client[verb](url, { params, body });
+      return data;
+    } catch (err) {
+      if (err.response) {
+        throw new Error(err.response.data.error);
+      }
+      throw err;
+    }
   },
 };

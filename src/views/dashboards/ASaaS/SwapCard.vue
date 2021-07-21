@@ -66,20 +66,19 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
           fg-input(
             type="number"
             v-model="sendTokenAmount")
-          div.mt-3
-            | When you send your tokens you will also send #[strong {{ instanceGasCostEther }} {{ (activeNetwork.native_currency || {}).symbol || 'ETH' }}]
-            | to fund the oracle that is
-            | executing the token swap.
-          div.mt-3.d-flex.align-items-center.justify-content-center
+          div.text-warning.text-center
+            div.mt-3
+              | When you send your tokens you will also send #[strong {{ instanceGasCostEther }} {{ (activeNetwork.native_currency || {}).symbol || 'ETH' }}]
+              | to fund the oracle that executes the swap.
+            div(v-if="mtgyServiceCost > 0")
+              | You will also send #[strong {{ costFormatted }}] MTGY to use this atomic swap service.
+          div.mt-3.d-flex.align-items-center.justify-content-center(v-if="!latestSwap")
             n-button(
               type="primary"
               :disabled="globalLoading"
               v-loading="globalLoading"
               @click="sendTokensToSwap") Send Tokens Now
-          div.text-danger.text-center.mt-2
-            small 
-              | You will spend #[strong {{ costFormatted }}] MTGY to use this atomic swap service.
-          div.alert.alert-danger.mt-4(v-if="latestSwap")
+          div.alert.alert-danger.mt-4(v-else)
             h4.text-center.m-0 Attention!
             div
               | Please write the following information down as you'll need it to claim your
@@ -96,6 +95,7 @@ claim-tokens-modal(
 </template>
 
 <script>
+import $ from "jquery";
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 import ClaimTokensModal from "./ClaimTokensModal";
@@ -204,6 +204,9 @@ export default {
           "asaasGetLatestUserSwap",
           this.swap.sourceContract
         );
+        localStorage.mtgyAsaasLatestSwapId = this.latestSwap.id;
+        localStorage.mtgyAsaasLatestSwapTimestamp = this.latestSwap.origTimestamp;
+        localStorage.mtgyAsaasLatestSwapNumTokens = this.numTokensSending;
       } catch (err) {
         this.$toast.error(err.message);
       } finally {
@@ -217,6 +220,10 @@ export default {
       "asaasInstanceGasCost",
       this.swap.sourceContract
     );
+  },
+
+  beforeUnmount() {
+    $(`#claim-tokens-modal-${this.swap.sourceContract}`).remove();
   },
 };
 </script>

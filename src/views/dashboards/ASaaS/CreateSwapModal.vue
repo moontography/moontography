@@ -98,7 +98,7 @@
 </template>
 
 <script>
-// import $ from "jquery";
+import $ from "jquery";
 // import dayjs from "dayjs";
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
@@ -214,8 +214,8 @@ export default {
         this.timestamp = localStorage.mtgyAsaasTimestamp = timestamp;
         this.contractAddress = localStorage.mtgyAsaasContract = sourceContract;
         if (this.isContractCached) {
-          delete localStorage.mtgyAsaasTimestamp;
-          delete localStorage.mtgyAsaasContract;
+          localStorage.removeItem("mtgyAsaasTimestamp");
+          localStorage.removeItem("mtgyAsaasContract");
         }
 
         this.$toast.success(`Successfully created your new swap!`);
@@ -234,6 +234,10 @@ export default {
     this.timestamp = localStorage.mtgyAsaasTimestamp;
     this.contractAddress = localStorage.mtgyAsaasContract;
     if (this.activeNetwork && this.activeNetwork.contracts) await this.init();
+  },
+
+  beforeUnmount() {
+    $(`#${this.$el.id}`).remove();
   },
 };
 </script>
