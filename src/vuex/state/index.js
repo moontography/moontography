@@ -73,6 +73,12 @@ export default {
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
           faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
         },
+        buy: {
+          link:
+            "https://app.uniswap.org/#/swap?outputCurrency=0x025c9f1146d4d94f8f369b9d98104300a3c8ca23",
+          img: "img/uniswap.png",
+          text: "Uniswap",
+        },
       },
       // {
       //   name: "Ethereum Ropsten",
@@ -271,6 +277,12 @@ export default {
           faas: "0x30F401b07b20f5F68e40858117e85A223D43d35E",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
         },
+        buy: {
+          link:
+            "https://exchange.pancakeswap.finance/#/swap?inputCurrency=0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c&outputCurrency=0x025c9f1146d4d94f8f369b9d98104300a3c8ca23",
+          img: "img/pancakeswap.png",
+          text: "PancakeSwap",
+        },
       },
       {
         name: "Kucoin Mainnet",
@@ -297,6 +309,11 @@ export default {
           passwordManager: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
           trustedTimestamping: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           faas: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
+        },
+        buy: {
+          link: "https://koffeeswap.exchange/#/pro",
+          img: "img/koffeeswap.png",
+          text: "KoffeeSwap",
         },
       },
     ],
