@@ -132,7 +132,9 @@ export default {
     }),
 
     airdropCont() {
-      return this.activeNetwork.contracts.airdropper;
+      return (
+        this.activeNetwork.contracts && this.activeNetwork.contracts.airdropper
+      );
     },
 
     isFormValidated() {

@@ -8,17 +8,18 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
   h3.card-title.mb-0 {{ swap.token.symbol }}
   div.text-secondary.mb-3
     small {{ swap.token.name }}
-  ul
+  ul.mb-0
     li
       small 
         div
           strong Your Balance
-        div {{ userBalance(swap.token) }}
+        div {{ userBalanceFormatted(swap.token) }}
         div
           strong Swap Contract Balance
         div {{ contractBalance(swap.token) }}
     li
-      img.img-fluid(
+      div.mb-4.text-secondary(style="font-size: 0.7142em") {{ swap.targetContract }}
+      img.mb-4.img-fluid(
         style="max-width: 30px; height: auto"
         :src="targetNetworkImg(swap.targetNetwork)")
       div {{ targetNetworkName(swap.targetNetwork) }} token
@@ -63,9 +64,12 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
           label
             | How many #[strong {{ swap.token.symbol }}] do you want to swap? After they are sent
             | here, you can claim the same amount at that point by switching to the target network.
-          fg-input(
-            type="number"
-            v-model="sendTokenAmount")
+          
+          div.text-center.mt-3
+            strong
+              div You can swap up to {{ userBalanceFormatted(swap.token) }} {{ swap.token.symbol }}.
+              div Use the slider/percent box below to set the amount to swap.
+          slider-input-percent(v-model="percAmountToSend")
           div.text-warning.text-center
             div.mt-3
               | When you send your tokens you will also send #[strong {{ instanceGasCostEther }} {{ (activeNetwork.native_currency || {}).symbol || 'ETH' }}]
@@ -74,10 +78,11 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
               | You will also send #[strong {{ costFormatted }}] MTGY to use this atomic swap service.
           div.mt-3.d-flex.align-items-center.justify-content-center(v-if="!latestSwap")
             n-button(
+              v-if="sendTokenAmount && sendTokenAmount > 0"
               type="primary"
               :disabled="globalLoading"
               v-loading="globalLoading"
-              @click="sendTokensToSwap") Send Tokens Now
+              @click="sendTokensToSwap") Send {{ SendTokenAmountFormatted }} Tokens Now
           div.alert.alert-danger.mt-4(v-else)
             h4.text-center.m-0 Attention!
             div
@@ -108,7 +113,7 @@ export default {
 
   data() {
     return {
-      sendTokenAmount: null,
+      percAmountToSend: 0,
       latestSwap: null,
     };
   },
@@ -153,6 +158,16 @@ export default {
         .div(new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals))
         .toFormat(2);
     },
+
+    sendTokenAmount() {
+      return new BigNumber(this.userBalanceRawWithDecimals(this.swap.token))
+        .times(new BigNumber(this.percAmountToSend).div(100))
+        .toFixed();
+    },
+
+    SendTokenAmountFormatted() {
+      return new BigNumber(this.sendTokenAmount).toFormat();
+    },
   },
 
   methods: {
@@ -174,7 +189,13 @@ export default {
         .toFormat(2);
     },
 
-    userBalance(tokenInfo) {
+    userBalanceRawWithDecimals(tokenInfo) {
+      return new BigNumber(tokenInfo.userBalance)
+        .div(new BigNumber(10).pow(tokenInfo.decimals))
+        .toFixed();
+    },
+
+    userBalanceFormatted(tokenInfo) {
       return new BigNumber(tokenInfo.userBalance)
         .div(new BigNumber(10).pow(tokenInfo.decimals))
         .toFormat(2);
@@ -194,7 +215,6 @@ export default {
           throw new Error(`You can't send more than the contract has in it.`);
         }
         this.$store.commit("SET_GLOBAL_LOADING", true);
-        const decimals = this.swap.token.decimals;
         await this.$store.dispatch("sendTokensToSwap", {
           amount: correctSendTokenAmount,
           sourceContract: this.swap.sourceContract,

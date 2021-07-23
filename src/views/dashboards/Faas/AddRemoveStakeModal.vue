@@ -35,13 +35,7 @@
               div(v-if="!isExpired")
                 | You can stake up to #[strong {{ userStakingBalance }}]
                 | {{ stakingInfo.stakingTokenInfo.symbol }}
-              div.row(v-if="!isExpired")
-                div.col-md-9
-                  slider(v-model="percAmountToStake")
-                div.col-md-3
-                  fg-input(
-                    addon-right-icon="fa fa-percent"
-                    v-model="percAmountToStake")
+              slider-input-percent(v-model="percAmountToStake")
               //- div {{ formattedAmountToStake }}
               div
                 n-button(
@@ -49,7 +43,7 @@
                   type="success"
                   size="lg"
                   v-loading="globalLoading"
-                  :disabled="globalLoading"
+                  :disabled="globalLoading || this.percAmountToStake <= 0"
                   @click="stakeTokens") Stake {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
               template(v-if="hasStakedTokens")
                 div.text-danger.mt-4(v-if="!isPastTimelock")

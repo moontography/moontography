@@ -9,6 +9,7 @@ import {
   LoadingPanel,
   NetworkSelector,
   Slider,
+  SliderInputPercent,
   Tabs,
   TabPane,
   Table as NTable,
@@ -52,6 +53,7 @@ const GlobalComponents = {
     app.component("n-table", NTable);
     app.component("network-selector", NetworkSelector);
     app.component("slider", Slider);
+    app.component("slider-input-percent", SliderInputPercent);
     app.component("tabs", Tabs);
     app.component("tab-pane", TabPane);
     app.component("token-input", TokenInput);

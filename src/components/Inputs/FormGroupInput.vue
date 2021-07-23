@@ -123,4 +123,14 @@ export default {
   },
 };
 </script>
-<style></style>
+<style lang="scss" scoped>
+input {
+  background-color: #ffffff;
+
+  &:focus {
+    ~ .input-group-addon {
+      background-color: #ffffff;
+    }
+  }
+}
+</style>

@@ -18,6 +18,7 @@ import Progress from "./Progress";
 import Radio from "./Inputs/Radio";
 import SidebarPlugin from "./SidebarPlugin";
 import Slider from "./Slider";
+import SliderInputPercent from "./SliderInputPercent";
 import StatsCard from "./Cards/StatsCard";
 import Switch from "./Switch";
 import Table from "./Table";
@@ -48,6 +49,7 @@ export {
   Radio,
   SidebarPlugin,
   Slider,
+  SliderInputPercent,
   StatsCard,
   Switch,
   Table,

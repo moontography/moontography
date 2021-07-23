@@ -1,9 +1,9 @@
-// import BigNumber from "bignumber.js";
+import BigNumber from "bignumber.js";
 // import MTGY from "../../factories/web3/MTGY";
 import AtomicSwapOracle from "../../factories/AtomicSwapOracle";
+import ERC20 from "@/factories/web3/ERC20";
 import MTGYAtomicSwapInstance from "@/factories/web3/MTGYAtomicSwapInstance";
 import MTGYAtomicSwap from "../../factories/web3/MTGYAtomicSwap";
-import ERC20 from "@/factories/web3/ERC20";
 
 export default {
   async asaasCosts({ commit, getters, state }) {
@@ -92,8 +92,35 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const mtgyAddy = getters.activeNetwork.contracts.mtgy;
+    const mtgyCont = ERC20(web3, mtgyAddy);
     const contract = MTGYAtomicSwapInstance(web3, sourceContract);
-    const instanceServiceCost = await contract.methods.mtgyServiceCost().call();
+    const [instanceServiceCost, userMtgyBal] = await Promise.all([
+      contract.methods.mtgyServiceCost().call(),
+      mtgyCont.methods.balanceOf(userAddy).call(),
+    ]);
+
+    // validate amount is valid
+    const servCostHumanReadable = new BigNumber(instanceServiceCost)
+      .div(new BigNumber(10).pow(18))
+      .toFormat();
+    if (new BigNumber(instanceServiceCost).gt(userMtgyBal)) {
+      throw new Error(
+        `You need to make sure you have at least ${servCostHumanReadable} MTGY to spend to use this service.`
+      );
+    } else if (tokenContract.toLowerCase() === mtgyAddy.toLowerCase()) {
+      // need to make sure the send amount is less than the
+      // user's balance and mtgyServiceCost
+      if (
+        new BigNumber(userMtgyBal).lt(
+          new BigNumber(instanceServiceCost).plus(amount)
+        )
+      ) {
+        throw new Error(
+          `You need to make sure the amount you swap leaves you with at least ${servCostHumanReadable} MTGY to cover the service cost.`
+        );
+      }
+    }
+
     await dispatch("genericTokenApproval", {
       spendAmount: instanceServiceCost,
       tokenAddress: mtgyAddy,

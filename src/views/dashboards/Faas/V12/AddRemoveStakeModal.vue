@@ -49,7 +49,7 @@
                   type="success"
                   size="lg"
                   v-loading="globalLoading"
-                  :disabled="globalLoading"
+                  :disabled="globalLoading || this.percAmountToStake <= 0"
                   @click="stakeTokens") Stake {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
               template(v-if="hasStakedTokens")
                 div.text-danger.mt-4(v-if="!isPastTimelock")
