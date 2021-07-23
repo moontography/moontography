@@ -82,7 +82,7 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
               type="primary"
               :disabled="globalLoading"
               v-loading="globalLoading"
-              @click="sendTokensToSwap") Send {{ SendTokenAmountFormatted }} Tokens Now
+              @click="sendTokensToSwap") Send {{ sendTokenAmountFormatted }} Tokens Now
           div.alert.alert-danger.mt-4(v-else)
             h4.text-center.m-0 Attention!
             div
@@ -157,17 +157,17 @@ export default {
 
     numTokensSending() {
       return new BigNumber(this.latestSwap.amount)
-        .div(new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals))
-        .toFormat(2);
+        .div(new BigNumber(10).pow(this.swap.token.decimals))
+        .toFormat();
     },
 
     sendTokenAmount() {
       return new BigNumber(this.userBalanceRawWithDecimals(this.swap.token))
         .times(new BigNumber(this.percAmountToSend).div(100))
-        .toFixed();
+        .toFixed(Number(this.swap.token.decimals));
     },
 
-    SendTokenAmountFormatted() {
+    sendTokenAmountFormatted() {
       return new BigNumber(this.sendTokenAmount).toFormat();
     },
   },
@@ -228,7 +228,11 @@ export default {
         );
         localStorage.mtgyAsaasLatestSwapId = this.latestSwap.id;
         localStorage.mtgyAsaasLatestSwapTimestamp = this.latestSwap.origTimestamp;
-        localStorage.mtgyAsaasLatestSwapNumTokens = this.numTokensSending;
+        localStorage.mtgyAsaasLatestSwapNumTokens = new BigNumber(
+          correctSendTokenAmount
+        )
+          .div(new BigNumber(10).pow(this.swap.token.decimals))
+          .toFormat();
       } catch (err) {
         this.$toast.error(err.message);
       } finally {

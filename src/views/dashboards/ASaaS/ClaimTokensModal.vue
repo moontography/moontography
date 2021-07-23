@@ -30,7 +30,7 @@
             v-model="timestamp")
           label Amount of Tokens Your Swapping
           fg-input(
-            type="number"
+            type="text"
             plceholder="Amount Tokens"
             v-model="amountTokens")
           div.mt-3
@@ -87,7 +87,7 @@ export default {
           instContract: this.swap.sourceContract,
           id: this.swapId,
           timestamp: this.timestamp,
-          amount: new BigNumber(this.amountTokens)
+          amount: new BigNumber(this.amountTokens.replace(/,/g, ""))
             .times(
               new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals)
             )
@@ -95,10 +95,13 @@ export default {
         });
 
         this.$toast.success(`Successfully claimed your tokens!`);
+        localStorage.removeItem("mtgyAsaasLatestSwapId");
+        localStorage.removeItem("mtgyAsaasLatestSwapTimestamp");
+        localStorage.removeItem("mtgyAsaasLatestSwapNumTokens");
         await this.$store.dispatch("getAllSwapContracts");
         $(`#${this.$el.id}`).modal("hide");
       } catch (err) {
-        console.error("Error staking tokens", err);
+        console.error("Error claiming tokens", err);
         this.$toast.error(err.message);
       } finally {
         this.$store.commit("SET_GLOBAL_LOADING", false);
@@ -111,15 +114,7 @@ export default {
       if (localStorage.mtgyAsaasLatestSwapId) {
         this.swapId = localStorage.mtgyAsaasLatestSwapId;
         this.timestamp = localStorage.mtgyAsaasLatestSwapTimestamp;
-        this.amountTokens = localStorage.mtgyAsaasLatestSwapNumTokens
-          ? new BigNumber(
-              localStorage.mtgyAsaasLatestSwapNumTokens.replace(/,/g, "")
-            ).toNumber()
-          : null;
-
-        localStorage.removeItem("mtgyAsaasLatestSwapId");
-        localStorage.removeItem("mtgyAsaasLatestSwapTimestamp");
-        localStorage.removeItem("mtgyAsaasLatestSwapNumTokens");
+        this.amountTokens = localStorage.mtgyAsaasLatestSwapNumTokens;
       }
     });
   },

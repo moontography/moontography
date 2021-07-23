@@ -203,12 +203,12 @@ export default {
           isActive,
         } = await this.$store.dispatch("asaasCreateSwap", {
           tokenAddress: this.tokenInfo.address,
-          tokenSupply: new BigNumber(this.numberTokens).times(
-            new BigNumber(10).pow(this.tokenInfo.decimals)
-          ),
-          maxSwapAmount: new BigNumber(this.maxSwap).times(
-            new BigNumber(10).pow(this.tokenInfo.decimals)
-          ),
+          tokenSupply: new BigNumber(this.numberTokens)
+            .times(new BigNumber(10).pow(this.tokenInfo.decimals))
+            .toFixed(),
+          maxSwapAmount: new BigNumber(this.maxSwap)
+            .times(new BigNumber(10).pow(this.tokenInfo.decimals))
+            .toFixed(),
           targetNetwork: this.targetNetwork,
           targetContract: localStorage.mtgyAsaasContract || this.zeroAddy,
         });
@@ -230,7 +230,7 @@ export default {
         await this.$store.dispatch("getAllSwapContracts");
         // $(`#${this.$el.id}`).modal("hide");
       } catch (err) {
-        console.error("Error staking tokens", err);
+        console.error("Error creating swap", err);
         this.$toast.error(err.message);
       } finally {
         this.$store.commit("SET_GLOBAL_LOADING", false);

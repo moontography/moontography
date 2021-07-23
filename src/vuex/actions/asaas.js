@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import sleep from "../../factories/Sleep";
 // import MTGY from "../../factories/web3/MTGY";
 import AtomicSwapOracle from "../../factories/AtomicSwapOracle";
 import ERC20 from "@/factories/web3/ERC20";
@@ -35,46 +36,57 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const activeNetwork = getters.activeNetwork;
+    if (!activeNetwork) {
+      await sleep(500);
+      return await dispatch("getAllSwapContracts");
+    }
     const asaasAddy = activeNetwork.contracts.atomicSwap;
     const contract = MTGYAtomicSwap(web3, asaasAddy);
     const allSwaps = await contract.methods.getAllSwapContracts().call();
     const mappedSwaps = await Promise.all(
-      allSwaps.map(async (swap) => {
-        const sourceSwapInst = MTGYAtomicSwapInstance(
-          web3,
-          swap.sourceContract
-        );
-        const [
-          swapTokenAddy,
-          targetToken,
-          hasUnclaimedTokens,
-        ] = await Promise.all([
-          sourceSwapInst.methods.getSwapTokenAddress().call(),
-          AtomicSwapOracle.getSwap({
-            userAddress: userAddy,
-            sourceNetwork: activeNetwork.short_name,
-            sourceContract: swap.sourceContract,
-          }),
-          sourceSwapInst.methods.lastUserSwap(userAddy).call(),
-        ]);
-        const token = await dispatch("getErc20TokenInfo", swapTokenAddy);
-        const tokenCont = ERC20(web3, token.address);
-        return {
-          hasUnclaimedTokens,
-          targetToken,
-          token: {
-            ...token,
-            contractBalance: await tokenCont.methods
-              .balanceOf(swap.sourceContract)
-              .call(),
-          },
-          ...swap,
-        };
-      })
+      allSwaps
+        .filter((s) => s.isActive)
+        .map(async (swap) => {
+          try {
+            const sourceSwapInst = MTGYAtomicSwapInstance(
+              web3,
+              swap.sourceContract
+            );
+            const [
+              swapTokenAddy,
+              targetToken,
+              hasUnclaimedTokens,
+            ] = await Promise.all([
+              sourceSwapInst.methods.getSwapTokenAddress().call(),
+              AtomicSwapOracle.getSwap({
+                userAddress: userAddy,
+                sourceNetwork: activeNetwork.short_name,
+                sourceContract: swap.sourceContract,
+              }),
+              sourceSwapInst.methods.lastUserSwap(userAddy).call(),
+            ]);
+            const token = await dispatch("getErc20TokenInfo", swapTokenAddy);
+            const tokenCont = ERC20(web3, token.address);
+            return {
+              hasUnclaimedTokens,
+              targetToken,
+              token: {
+                ...token,
+                contractBalance: await tokenCont.methods
+                  .balanceOf(swap.sourceContract)
+                  .call(),
+              },
+              ...swap,
+            };
+          } catch (err) {
+            console.error(`Error get swap`, err);
+            return null;
+          }
+        })
     );
     commit(
       "SET_ASAAS_SWAPS",
-      mappedSwaps.filter((s) => s.isActive)
+      mappedSwaps.filter((s) => !!s)
     );
   },
 
