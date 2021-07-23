@@ -28,7 +28,7 @@ export default {
       contract.methods.mtgyServiceCost().call(),
     ]);
     commit("SET_ASAAS_INSTANCE_GAS_COST", { contractAddress, instanceGasCost });
-    commit("SET_ASAAS_INSTANCE_SERVICE_COST", serviceCost);
+    commit("SET_ASAAS_INSTANCE_SERVICE_COST", { contractAddress, serviceCost });
   },
 
   async getAllSwapContracts({ commit, dispatch, getters, state }) {
@@ -153,6 +153,11 @@ export default {
     await dispatch("genericTokenApproval", {
       spendAmount: mtgyServiceCost,
       tokenAddress: mtgyAddy,
+      delegateAddress: asaasAddy,
+    });
+    await dispatch("genericTokenApproval", {
+      spendAmount: tokenSupply,
+      tokenAddress: tokenAddress,
       delegateAddress: asaasAddy,
     });
     await contract.methods

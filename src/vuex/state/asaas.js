@@ -3,6 +3,7 @@ export default {
     createSwapCost: null,
     swapCost: null,
     instanceGasCost: {},
+    instanceServiceCost: {},
     gas: null,
     swaps: [],
   },

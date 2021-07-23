@@ -182,7 +182,15 @@ export default {
 
     async createSwap() {
       try {
-        if (this.rawAmountToStake <= 0) return;
+        if (
+          !(
+            this.numberTokens &&
+            typeof this.maxSwap === "number" &&
+            this.targetNetwork
+          )
+        ) {
+          throw new Error("Please fill out ALL fields to create your bridge.");
+        }
         this.$store.commit("SET_GLOBAL_LOADING", true);
         const {
           id,

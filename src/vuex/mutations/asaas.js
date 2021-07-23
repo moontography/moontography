@@ -11,8 +11,11 @@ export default {
     };
   },
 
-  SET_ASAAS_INSTANCE_SERVICE_COST(state, serviceCost) {
-    state.asaas.instanceServiceCost = serviceCost;
+  SET_ASAAS_INSTANCE_SERVICE_COST(state, { contractAddress, serviceCost }) {
+    state.asaas.instanceServiceCost = {
+      ...state.asaas.instanceServiceCost,
+      [contractAddress]: serviceCost,
+    };
   },
 
   SET_ASAAS_SWAPS(state, contracts) {

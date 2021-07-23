@@ -127,7 +127,9 @@ export default {
       instanceGasCost(state) {
         return state.asaas.instanceGasCost[this.swap.sourceContract];
       },
-      mtgyServiceCost: (state) => state.asaas.instanceServiceCost,
+      mtgyServiceCost(state) {
+        return state.asaas.instanceServiceCost[this.swap.sourceContract];
+      },
       web3: (state) => state.web3.instance,
     }),
 
