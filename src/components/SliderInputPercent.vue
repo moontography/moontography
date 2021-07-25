@@ -1,14 +1,20 @@
 <template lang="pug">
-div.row
-  div.col-md-9
+div.row.small-gutters
+  div.col-md-7
     slider(
       v-model="mutableModel"
-      @update:modelValue="updateModel")
+      @update:modelValue="updateModel()")
   div.col-md-3
     fg-input(
       addon-right-icon="fa fa-percent"
       v-model="mutableModel"
-      @update:modelValue="updateModel")
+      @update:modelValue="updateModel()")
+  div.col-md-2
+    n-button.m-0.skinny-btn.w-100(
+      type="primary"
+      round
+      @click="updateModel(100)")
+        span MAX
 </template>
 <script>
 export default {
@@ -27,8 +33,8 @@ export default {
     },
   },
   methods: {
-    updateModel(newVal) {
-      this.$emit("update:modelValue", this.mutableModel);
+    updateModel(newVal = null) {
+      this.$emit("update:modelValue", newVal || this.mutableModel);
     },
   },
   created() {
@@ -36,4 +42,20 @@ export default {
   },
 };
 </script>
-<style></style>
+<style lang="scss">
+.skinny-btn {
+  padding-left: 11px !important;
+  padding-right: 11px !important;
+}
+
+.small-gutters {
+  margin-right: -7px;
+  margin-left: -7px;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+}
+</style>

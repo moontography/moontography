@@ -66,7 +66,7 @@ export default {
     this.createSlider();
   },
   watch: {
-    value(newValue, oldValue) {
+    modelValue(newValue, oldValue) {
       const slider = this.$el.noUiSlider;
       const sliderValue = slider.get();
       if (newValue !== oldValue && sliderValue !== newValue) {

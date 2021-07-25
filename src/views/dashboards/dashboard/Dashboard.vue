@@ -113,7 +113,7 @@ div
                   | Password Manager
                 h6.stats-title.text-success Live Now!
     
-    .col-lg-12
+    .col-lg-6
       card
         .card-body.text-center
           a(href="#/airdropper")
@@ -125,19 +125,19 @@ div
                   | Airdropper
                 h6.stats-title.text-success Live Now!
     
-    .col-lg-4
+    .col-lg-6
       card
         .card-body.text-center
           a(href="#/asaas")
             .statistics
               .info
-                .icon.icon-warning
+                .icon.icon-success
                   i.now-ui-icons.arrows-1_refresh-69
                 h3.info-title
                   | Atomic Swapping as a Service
-                h6.stats-title.text-warning Coming Soon..
+                h6.stats-title.text-success Live Now!
 
-    .col-lg-4
+    .col-lg-6
       card
         .card-body.text-center
           a(href="#/paas")
@@ -149,7 +149,7 @@ div
                   | Polling as a Service
                 h6.stats-title.text-danger Coming Soon..
 
-    .col-lg-4
+    .col-lg-6
       card
         .card-body.text-center
           a(href="#/dtax")

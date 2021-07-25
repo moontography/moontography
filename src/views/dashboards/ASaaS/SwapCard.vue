@@ -27,6 +27,25 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
       div
         small {{ swap.targetToken.targetTokenName }}
   template(v-slot:footer='')
+    div.alert.alert-danger.text-left(
+      v-if="hasUnclaimedSentFromTarget"
+      style="font-size: 0.8rem")
+        div.mb-3 The following is unclaimed swap info you can use to claim tokens now.
+        div
+          div
+            small Swap ID
+          div.mb-1
+            strong {{ swap.unclaimedSentFromTarget.id }}
+        div
+          div
+            small Unique Identifier
+          div.mb-1
+            strong {{ swap.unclaimedSentFromTarget.origTimestamp }}
+        div 
+          div
+            small Amount
+          div
+            strong {{ formatUnclaimedFromTargetAmount(swap.unclaimedSentFromTarget.amount) }}
     div.d-flex.align-items-center.justify-content-center
       div
         n-button(
@@ -34,7 +53,7 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
           round=''
           data-toggle="modal"
           :data-target="`#swap-send-modal-${swap.sourceContract}`") Initiate New Swap
-      //- div.ml-2(v-if="hasUnclaimedTokens")
+      //- div.ml-2(v-if="hasUnclaimedSentFromSource")
       div.ml-2
         n-button(
           type='success'
@@ -58,6 +77,8 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
+          div.text-center.mb-2
+            small The contract balance is: {{ contractBalance(swap.token) }} {{ swap.token.symbol }}
           h5.mb-4.text-center
             | You're sending tokens from {{ activeNetwork.name }}
             | and will claim them on {{ targetNetworkName(swap.targetNetwork) }}
@@ -96,6 +117,7 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
 
 claim-tokens-modal(
   :id="`claim-tokens-modal-${swap.sourceContract}`"
+  :contract-balance="contractBalance(swap.token)"
   :swap="swap")
 </template>
 
@@ -139,11 +161,19 @@ export default {
         .toFormat(0);
     },
 
-    hasUnclaimedTokens() {
+    hasUnclaimedSentFromSource() {
       return (
-        this.swap.hasUnclaimedTokens &&
-        new BigNumber(this.swap.hasUnclaimedTokens.amount).gt(0) &&
-        !this.swap.hasUnclaimedTokens.isComplete
+        this.swap.unclaimedSentFromSource &&
+        new BigNumber(this.swap.unclaimedSentFromSource.amount).gt(0) &&
+        !this.swap.unclaimedSentFromSource.isComplete
+      );
+    },
+
+    hasUnclaimedSentFromTarget() {
+      return (
+        this.swap.unclaimedSentFromTarget &&
+        new BigNumber(this.swap.unclaimedSentFromTarget.amount).gt(0) &&
+        !this.swap.unclaimedSentFromTarget.isComplete
       );
     },
 
@@ -189,6 +219,12 @@ export default {
       return new BigNumber(tokenInfo.contractBalance)
         .div(new BigNumber(10).pow(tokenInfo.decimals))
         .toFormat(2);
+    },
+
+    formatUnclaimedFromTargetAmount(amount) {
+      return new BigNumber(amount)
+        .div(new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals))
+        .toFormat();
     },
 
     userBalanceRawWithDecimals(tokenInfo) {

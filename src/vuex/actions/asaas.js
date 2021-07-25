@@ -55,7 +55,8 @@ export default {
             const [
               swapTokenAddy,
               targetToken,
-              hasUnclaimedTokens,
+              unclaimedSentFromSource,
+              { swap: unclaimedSentFromTarget },
             ] = await Promise.all([
               sourceSwapInst.methods.getSwapTokenAddress().call(),
               AtomicSwapOracle.getSwap({
@@ -64,11 +65,17 @@ export default {
                 sourceContract: swap.sourceContract,
               }),
               sourceSwapInst.methods.lastUserSwap(userAddy).call(),
+              AtomicSwapOracle.getLastUserSwap(
+                swap.targetNetwork,
+                userAddy,
+                swap.targetContract
+              ),
             ]);
             const token = await dispatch("getErc20TokenInfo", swapTokenAddy);
             const tokenCont = ERC20(web3, token.address);
             return {
-              hasUnclaimedTokens,
+              unclaimedSentFromSource,
+              unclaimedSentFromTarget,
               targetToken,
               token: {
                 ...token,
@@ -133,11 +140,13 @@ export default {
       }
     }
 
-    await dispatch("genericTokenApproval", {
-      spendAmount: instanceServiceCost,
-      tokenAddress: mtgyAddy,
-      delegateAddress: sourceContract,
-    });
+    if (new BigNumber(instanceServiceCost).gt(0)) {
+      await dispatch("genericTokenApproval", {
+        spendAmount: instanceServiceCost,
+        tokenAddress: mtgyAddy,
+        delegateAddress: sourceContract,
+      });
+    }
     await dispatch("genericTokenApproval", {
       spendAmount: amount,
       tokenAddress: tokenContract,
@@ -162,11 +171,13 @@ export default {
       contract.methods.mtgyServiceCost().call(),
       contract.methods.swapCreationGasLoadAmount().call(),
     ]);
-    await dispatch("genericTokenApproval", {
-      spendAmount: mtgyServiceCost,
-      tokenAddress: mtgyAddy,
-      delegateAddress: asaasAddy,
-    });
+    if (new BigNumber(mtgyServiceCost).gt(0)) {
+      await dispatch("genericTokenApproval", {
+        spendAmount: mtgyServiceCost,
+        tokenAddress: mtgyAddy,
+        delegateAddress: asaasAddy,
+      });
+    }
     await dispatch("genericTokenApproval", {
       spendAmount: tokenSupply,
       tokenAddress: tokenAddress,
@@ -201,10 +212,38 @@ export default {
         .fundSendToDestinationGas(id, timestamp, amount)
         .send({ from: userAddy, value: valueToSend });
     }
-    return await AtomicSwapOracle.sendTokens({
+    await AtomicSwapOracle.sendTokens({
       targetNetwork: activeNetwork.short_name,
       targetContract: instContract,
       targetSwapId: id,
     });
+
+    // poll for completion status to handle txns taking longer than
+    // the 30 second HTTP limit (some chains can be deathly slow/congested)
+    let isComplete = false;
+    let tries = 0;
+    let waitIntervalSec = 5;
+    let numTotalTries = (2 * 60) / 5; // 2 min of tries
+    while (!isComplete && tries < numTotalTries) {
+      const { source, target } = await AtomicSwapOracle.sendTokens({
+        checkOnly: true,
+        targetNetwork: activeNetwork.short_name,
+        targetContract: instContract,
+        targetSwapId: id,
+      });
+      // If 'source' is complete it means the user received their tokens
+      // which is all they care about anyway, so only check source for now
+      // isComplete = source && target;
+      isComplete = source;
+      if (!isComplete) {
+        await sleep(waitIntervalSec * 1e3);
+      }
+      tries++;
+    }
+    if (tries >= numTotalTries) {
+      throw new Error(
+        `Please check and confirm your tokens have landed in your wallet. If not please try clicking the claim button one more time. If you see this message again, please contract support to claim your tokens.`
+      );
+    }
   },
 };

@@ -83,6 +83,9 @@ export default {
         if (!(this.swapId && this.timestamp && this.amountTokens)) return;
         this.$store.commit("SET_GLOBAL_LOADING", true);
 
+        this.$toast.info(
+          `We're claiming your tokens now. Please be patient as this could take up to several minutes to complete!`
+        );
         await this.$store.dispatch("fundAndClaimTokens", {
           instContract: this.swap.sourceContract,
           id: this.swapId,

@@ -5,20 +5,6 @@ div.row.d-flex.justify-content-center
   div.col-md-12
     time-line
       time-line-item(
-        badge-type="warning" 
-        badge-icon="now-ui-icons arrows-1_refresh-69")
-      
-        template(v-slot:header)
-          span.badge.badge-warning Atomic Swap as a Service
-
-        template(v-slot:content)
-          p Allows swapping pegged tokens across blockchains seamlessly.
-
-        template(v-slot:footer)
-          h6
-            i.ti-time Coming Soon
-
-      time-line-item(
         inverted
         badge-type="danger" 
         badge-icon="now-ui-icons business_chart-bar-32")

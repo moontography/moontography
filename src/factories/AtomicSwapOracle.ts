@@ -26,10 +26,28 @@ export default {
     );
   },
 
-  async sendTokens({ targetNetwork, targetContract, targetSwapId }: any) {
+  async sendTokens({
+    checkOnly,
+    targetNetwork,
+    targetContract,
+    targetSwapId,
+  }: any) {
     return await this.request(
       "post",
-      `/send/${targetNetwork}/${targetContract}/${targetSwapId}`
+      `/send/${targetNetwork}/${targetContract}/${targetSwapId}?checkOnly=${
+        checkOnly || ""
+      }`
+    );
+  },
+
+  async getLastUserSwap(
+    network: string,
+    userAddress: string,
+    instContractAddress: string
+  ) {
+    return await this.request(
+      "get",
+      `/user/last/swap/${network}/${userAddress}/${instContractAddress}`
     );
   },
 
