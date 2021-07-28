@@ -134,7 +134,7 @@ navbar#navigation(:show-navbar="showNavbar")
               style="max-height: 18px"
               src="img/metamask.png") 
             span.ml-2 Add MTGY to MetaMask
-      li.nav-item.d-none.d-xl-block(v-if="activeNetwork && activeNetwork.buy")
+      li.nav-item.d-none.d-xl-block(v-if="activeNetwork && activeNetwork.buy && activeNetwork.buy.link")
         a.nav-link.clickable(
           :href="activeNetwork.buy.link"
           target="_blank"

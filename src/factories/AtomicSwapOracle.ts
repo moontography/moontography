@@ -3,7 +3,7 @@ import axios from "axios";
 export default {
   client: axios.create({
     // baseURL: process.env.ATOMIC_SWAP_ENDPOINT || `https://as.moontography.com`,
-    baseURL: `https://as.moontography.com`,
+    baseURL: "http://localhost:8000", // `https://as.moontography.com`,
   }),
 
   async getSwap({ userAddress, sourceNetwork, sourceContract }: any) {
@@ -35,6 +35,20 @@ export default {
     return await this.request(
       "post",
       `/send/${targetNetwork}/${targetContract}/${targetSwapId}?checkOnly=${
+        checkOnly || ""
+      }`
+    );
+  },
+
+  async refundTokens({
+    checkOnly,
+    targetNetwork,
+    targetContract,
+    targetSwapId,
+  }: any) {
+    return await this.request(
+      "post",
+      `/refund/${targetNetwork}/${targetContract}/${targetSwapId}?checkOnly=${
         checkOnly || ""
       }`
     );

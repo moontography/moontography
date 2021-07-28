@@ -23,9 +23,10 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
         style="max-width: 30px; height: auto"
         :src="targetNetworkImg(swap.targetNetwork)")
       div {{ targetNetworkName(swap.targetNetwork) }} token
-      div {{ swap.targetToken.targetTokenSymbol }}
-      div
-        small {{ swap.targetToken.targetTokenName }}
+      template(v-if="swap.targetToken")
+        div {{ swap.targetToken.targetTokenSymbol }}
+        div
+          small {{ swap.targetToken.targetTokenName }}
   template(v-slot:footer='')
     div.alert.alert-danger.text-left(
       v-if="hasUnclaimedSentFromTarget"
@@ -49,17 +50,28 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
     div.d-flex.align-items-center.justify-content-center
       div
         n-button(
+          :disabled="globalLoading"
+          v-loading="globalLoading"
           type='primary'
           round=''
           data-toggle="modal"
-          :data-target="`#swap-send-modal-${swap.sourceContract}`") Initiate New Swap
+          :data-target="`#swap-send-modal-${swap.sourceContract}`") Initiate Swap
       //- div.ml-2(v-if="hasUnclaimedSentFromSource")
       div.ml-2
         n-button(
+          :disabled="globalLoading"
+          v-loading="globalLoading"
           type='success'
           round=''
           data-toggle="modal"
           :data-target="`#claim-tokens-modal-${swap.sourceContract}`") Claim Tokens
+      div.ml-2(v-if="hasUnclaimedInSourceAndNotInitiatedClaiming")
+        n-button(
+          :disabled="globalLoading"
+          v-loading="globalLoading"
+          type='danger'
+          round=''
+          @click="refundTokens") Refund Tokens
 
 .modal.fade(
   :id="`swap-send-modal-${swap.sourceContract}`"
@@ -124,6 +136,7 @@ claim-tokens-modal(
 <script>
 import $ from "jquery";
 import BigNumber from "bignumber.js";
+import Swal from "sweetalert2";
 import { mapState } from "vuex";
 import ClaimTokensModal from "./ClaimTokensModal";
 export default {
@@ -137,6 +150,13 @@ export default {
     return {
       percAmountToSend: 0,
       latestSwap: null,
+      refundAlert: Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-danger",
+          cancelButton: "btn btn-secondary",
+        },
+        buttonsStyling: false,
+      }),
     };
   },
 
@@ -170,10 +190,24 @@ export default {
     },
 
     hasUnclaimedSentFromTarget() {
+      const targetSwap = this.swap.unclaimedSentFromTarget;
       return (
-        this.swap.unclaimedSentFromTarget &&
-        new BigNumber(this.swap.unclaimedSentFromTarget.amount).gt(0) &&
-        !this.swap.unclaimedSentFromTarget.isComplete
+        targetSwap &&
+        new BigNumber(targetSwap.amount).gt(0) &&
+        !targetSwap.isComplete &&
+        !targetSwap.isRefunded
+      );
+    },
+
+    hasUnclaimedInSourceAndNotInitiatedClaiming() {
+      const sourceSwap = this.swap.unclaimedSentFromSource;
+      const targetSwap = this.swap.unclaimedSentFromTarget;
+      return (
+        sourceSwap &&
+        new BigNumber(sourceSwap.amount).gt(0) &&
+        !sourceSwap.isComplete &&
+        !sourceSwap.isRefunded &&
+        (!targetSwap || sourceSwap.id !== (targetSwap || {}).id)
       );
     },
 
@@ -245,13 +279,13 @@ export default {
         const correctSendTokenAmount = new BigNumber(this.sendTokenAmount)
           .times(new BigNumber(10).pow(this.swap.token.decimals))
           .toFixed(0);
-        if (
-          new BigNumber(this.swap.token.contractBalance).lt(
-            correctSendTokenAmount
-          )
-        ) {
-          throw new Error(`You can't send more than the contract has in it.`);
-        }
+        // if (
+        //   new BigNumber(this.swap.token.contractBalance).lt(
+        //     correctSendTokenAmount
+        //   )
+        // ) {
+        //   throw new Error(`You can't send more than the contract has in it.`);
+        // }
         this.$store.commit("SET_GLOBAL_LOADING", true);
         await this.$store.dispatch("sendTokensToSwap", {
           amount: correctSendTokenAmount,
@@ -269,6 +303,41 @@ export default {
         )
           .div(new BigNumber(10).pow(this.swap.token.decimals))
           .toFormat();
+      } catch (err) {
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
+      }
+    },
+
+    async refundTokens() {
+      try {
+        const { isConfirmed } = await this.refundAlert.fire({
+          title: "<span class='text-danger'>Refund Tokens?</span>",
+          html: `
+            <div>
+              Are you sure you want to refund your tokens to this network?
+              You cannot claim them anymore on the target network.
+            </div>
+          `,
+          confirmButtonText: "Yes, refund my tokens!",
+          cancelButtonText: "Cancel, do not refund.",
+          showCancelButton: true,
+        });
+        if (!isConfirmed) return;
+
+        this.$store.commit("SET_GLOBAL_LOADING", true);
+
+        await this.$store.dispatch("asaasRefundTokens", {
+          instContract: this.swap.sourceContract,
+          id: this.swap.unclaimedSentFromSource.id,
+          timestamp: this.swap.unclaimedSentFromSource.origTimestamp,
+          amount: this.swap.unclaimedSentFromSource.amount,
+        });
+
+        this.$toast.success(`Your tokens were successfully refunded!`);
+
+        await this.$store.dispatch("getAllSwapContracts");
       } catch (err) {
         this.$toast.error(err.message);
       } finally {

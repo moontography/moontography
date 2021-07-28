@@ -86,7 +86,7 @@ export default {
         this.$toast.info(
           `We're claiming your tokens now. Please be patient as this could take up to several minutes to complete!`
         );
-        await this.$store.dispatch("fundAndClaimTokens", {
+        await this.$store.dispatch("asaasFundAndClaimTokens", {
           instContract: this.swap.sourceContract,
           id: this.swapId,
           timestamp: this.timestamp,

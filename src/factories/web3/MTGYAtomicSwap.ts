@@ -9,46 +9,6 @@ const atomicSwapAbi: AbiItem[] = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_mtgyAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_mtgySpendAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_oracleAddress",
-        type: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
         name: "_newCost",
         type: "uint256",
@@ -145,6 +105,107 @@ const atomicSwapAbi: AbiItem[] = [
       },
     ],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_mtgyAddress",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_mtgySpendAddress",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_oracleAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_createdBlockTimestamp",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_sourceContract",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_targetContract",
+        type: "address",
+      },
+      {
+        internalType: "bool",
+        name: "_isActive",
+        type: "bool",
+      },
+    ],
+    name: "updateSwapContract",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "updateSwapCreationGasLoadAmount",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -317,13 +378,6 @@ const atomicSwapAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "swapCreationGasLoadAmount",
     outputs: [
       {
@@ -441,60 +495,6 @@ const atomicSwapAbi: AbiItem[] = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_createdBlockTimestamp",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_sourceContract",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_targetContract",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "_isActive",
-        type: "bool",
-      },
-    ],
-    name: "updateSwapContract",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "updateSwapCreationGasLoadAmount",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
 ];

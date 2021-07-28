@@ -146,6 +146,25 @@ const atomicSwapInstAbi: AbiItem[] = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "TokenOwnerUpdated",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "bool",
@@ -591,6 +610,19 @@ const atomicSwapInstAbi: AbiItem[] = [
       },
     ],
     name: "updateSwapCompletionStatus",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "updateTokenOwner",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

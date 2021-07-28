@@ -203,15 +203,13 @@ export default {
   },
 
   async getMtgyTokenInfo({ commit }) {
-    const info = await MTGYDataUtils.getTokenInfo("the-moontography-project");
+    const info = await MTGYDataUtils.getTokenInfo("moontography");
     commit("SET_MTGY_TOKEN_INFO", info);
   },
 
   async getMtgyTokenChart({ commit, state }, reset = false) {
     if (state.mtgyChart && state.mtgyChart.length > 0 && !reset) return;
-    const prices = await MTGYDataUtils.getTokenChart(
-      "the-moontography-project"
-    );
+    const prices = await MTGYDataUtils.getTokenChart("moontography");
     commit("SET_MTGY_TOKEN_CHART", prices);
   },
 
