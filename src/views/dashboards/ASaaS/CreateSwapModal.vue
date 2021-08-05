@@ -125,7 +125,6 @@ export default {
   data() {
     return {
       isLoadingLocal: true,
-      percAmountToStake: 0,
       tokenInfo: null,
       numberTokens: 0,
       maxSwap: 0,
@@ -242,6 +241,14 @@ export default {
     this.timestamp = localStorage.mtgyAsaasTimestamp;
     this.contractAddress = localStorage.mtgyAsaasContract;
     if (this.activeNetwork && this.activeNetwork.contracts) await this.init();
+
+    $(`#${this.$el.id}`).on("shown.bs.modal", async () => {
+      this.tokenInfo = null;
+      this.numberTokens = 0;
+      this.maxSwap = 0;
+      this.targetNetwork = null;
+      this.timestamp = null;
+    });
   },
 
   beforeUnmount() {

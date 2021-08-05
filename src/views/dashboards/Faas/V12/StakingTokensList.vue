@@ -47,7 +47,7 @@ export default {
         {
           value: "balances",
           text: "Balances",
-          classes: "d-none d-lg-table-cell",
+          classes: "",
         },
 
         {

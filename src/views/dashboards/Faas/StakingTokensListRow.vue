@@ -21,7 +21,7 @@ td
 //-           rel="noopener noreferrer") {{ rewardTokenSymbol }}
   div.text-secondary
     small {{ rewardsTokenName }}
-td.text-left.d-none.d-lg-table-cell
+td.text-left
   div
     h6.m-0
       strong
