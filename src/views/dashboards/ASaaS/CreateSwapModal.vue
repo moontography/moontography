@@ -209,14 +209,17 @@ export default {
             .times(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFixed(),
           targetNetwork: this.targetNetwork,
-          targetContract: localStorage.mtgyAsaasContract || this.zeroAddy,
+          targetContract:
+            (this.createdFirstAlready && this.contractAddress) || this.zeroAddy,
         });
         await AtomicSwapOracle.createSwap({
           sourceTimestamp: timestamp,
           sourceNetwork: this.activeNetwork.short_name,
           sourceContract: sourceContract,
-          targetTimestamp: localStorage.mtgyAsaasTimestamp || 0,
-          targetContract: localStorage.mtgyAsaasContract || targetContract,
+          targetTimestamp: (this.createdFirstAlready && this.timestamp) || 0,
+          targetContract:
+            (this.createdFirstAlready && this.contractAddress) ||
+            targetContract,
         });
         this.timestamp = localStorage.mtgyAsaasTimestamp = timestamp;
         this.contractAddress = localStorage.mtgyAsaasContract = sourceContract;
