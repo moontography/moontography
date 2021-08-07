@@ -41,10 +41,20 @@ export default {
       return await dispatch("getAllSwapContracts");
     }
     const asaasAddy = activeNetwork.contracts.atomicSwap;
+    const asaasAddy_V1 = activeNetwork.contracts.atomicSwap_V1;
     const contract = MTGYAtomicSwap(web3, asaasAddy);
-    const allSwaps = await contract.methods.getAllSwapContracts().call();
+    const contract_V1 = asaasAddy_V1 && MTGYAtomicSwap(web3, asaasAddy_V1);
+    const [allSwaps, allSwaps_V1] = await Promise.all([
+      contract.methods.getAllSwapContracts().call(),
+      (async () => {
+        if (contract_V1) {
+          return await contract_V1.methods.getAllSwapContracts().call();
+        }
+        return [];
+      })(),
+    ]);
     const mappedSwaps = await Promise.all(
-      allSwaps.map(async (swap) => {
+      allSwaps.concat(allSwaps_V1).map(async (swap) => {
         try {
           const sourceSwapInst = MTGYAtomicSwapInstance(
             web3,

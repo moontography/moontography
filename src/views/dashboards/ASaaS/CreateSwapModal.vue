@@ -247,7 +247,6 @@ export default {
       this.numberTokens = 0;
       this.maxSwap = 0;
       this.targetNetwork = null;
-      this.timestamp = null;
     });
   },
 
