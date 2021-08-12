@@ -64,7 +64,7 @@ navbar#navigation(:show-navbar="showNavbar")
             span.ml-2 BscScan
         a.dropdown-item(
           title="CoinGecko"
-          href="https://www.coingecko.com/en/coins/the-moontography-project"
+          href="https://www.coingecko.com/en/coins/moontography"
           target="_blank"
           rel="noopener noreferrer")
             img(
