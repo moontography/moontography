@@ -78,7 +78,7 @@ export default {
           atomicSwap_V1: "0x3d2C8A4a5785fce1bCF86481510d505371c0556d",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
-          faas: "0x30F401b07b20f5F68e40858117e85A223D43d35E",
+          faas: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
         },
         buy: {

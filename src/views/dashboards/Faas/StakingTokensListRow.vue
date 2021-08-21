@@ -130,8 +130,7 @@ export default {
 
     frozenOrStaked() {
       return ![
-        "0x349dD52a2Ae5C3808Df82AC374E5ACBB228Dada2".toLowerCase(),
-        "0x28C2A8607300eC4999AB69dB3f1C545544FeD376".toLowerCase(),
+        "0xFB7D9c478b2F8B1d07Ad196076c881f11F370Ca4".toLowerCase(),
       ].includes(this.row.item.farmingTokenAddy.toLowerCase())
         ? "staked"
         : "frozen";
