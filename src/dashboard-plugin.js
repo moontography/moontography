@@ -9,7 +9,7 @@ import "bootstrap/dist/js/bootstrap.min.js";
 
 import "bootstrap/scss/bootstrap.scss";
 import "./assets/scss/now-ui-dashboard.scss";
-import "./assets/css/demo.scss";
+import "./assets/scss/index.scss";
 
 export default {
   install(app) {

@@ -135,7 +135,7 @@ export default {
         native_currency: {
           symbol: "KCS",
           name: "KCS",
-          decimals: "18",
+          decimals: 18,
           contractAddress: "",
           balance: "",
         },
@@ -169,7 +169,7 @@ export default {
         native_currency: {
           symbol: "MATIC",
           name: "MATIC",
-          decimals: "18",
+          decimals: 18,
           contractAddress: "",
           balance: "",
         },
@@ -184,11 +184,11 @@ export default {
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
           faas: "0xf99693b010e35B38274835CE91ccCBb1eB89B32A",
         },
-        buy: {
-          // link: "https://koffeeswap.exchange/#/pro",
-          // img: "img/koffeeswap.png",
-          // text: "KoffeeSwap",
-        },
+        // buy: {
+        //   link: "https://koffeeswap.exchange/#/pro",
+        //   img: "img/koffeeswap.png",
+        //   text: "KoffeeSwap",
+        // },
       },
       // {
       //   name: "Ethereum Ropsten",

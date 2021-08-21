@@ -129,10 +129,10 @@ $margin-base-horizontal: 15px !default;
 
 $margin-bottom: 10px !default;
 $border: 1px solid !default;
-$border-radius-extra-small: 0.125rem !default;
-$border-radius-small: 0.1875rem !default;
-$border-radius-large: 0.25rem !default;
-$border-radius-extreme: 0.875rem !default;
+$border-radius-extra-small: 0.25rem !default;
+$border-radius-small: 0.5rem !default;
+$border-radius-large: 1rem !default;
+$border-radius-extreme: 2rem !default;
 
 $border-radius-large-top: $border-radius-large $border-radius-large 0 0 !default;
 $border-radius-large-bottom: 0 0 $border-radius-large $border-radius-large !default;
