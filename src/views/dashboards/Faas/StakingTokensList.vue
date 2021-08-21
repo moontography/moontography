@@ -38,7 +38,7 @@ export default {
       showStakingTokens: false,
 
       columns: [
-        { value: "staked", text: "Staked", classes: "" },
+        { value: "staked", text: "Frozen/Staked", classes: "" },
 
         {
           value: "balances",

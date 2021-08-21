@@ -61,7 +61,7 @@
                   //-   v-loading="globalLoading"
                   //-   :disabled="globalLoading"
                   //-   @click="unstakeTokens") Unstake Tokens Currently Staked
-                  div.ml-auto
+                  div.ml-auto(v-if="shouldShowEmergencyUnstake")
                     a.text-danger.clickable(
                       v-loading="globalLoading"
                       @click="unstakeTokens(false)")
@@ -142,6 +142,13 @@ export default {
       const timelockSeconds = this.stakingInfo.poolInfo.stakeTimeLockSec;
       if (!timelockSeconds) return 0;
       return new BigNumber(timelockSeconds).div(60).div(60).div(24).toFormat();
+    },
+
+    shouldShowEmergencyUnstake() {
+      return ![
+        "0x349dD52a2Ae5C3808Df82AC374E5ACBB228Dada2".toLowerCase(),
+        "0x28C2A8607300eC4999AB69dB3f1C545544FeD376".toLowerCase(),
+      ].includes(this.farmAddress.toLowerCase());
     },
 
     timeUserOriginallyStaked() {

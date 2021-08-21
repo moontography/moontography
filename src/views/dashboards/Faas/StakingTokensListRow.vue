@@ -28,7 +28,7 @@ td.text-left
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${farmingTokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer") {{ stakedBalance }} {{ stakedTokenSymbol }} staked
+          rel="noopener noreferrer") {{ stakedBalance }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
   div.text-secondary
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td.d-none.d-lg-table-cell
@@ -42,7 +42,7 @@ td.d-none.d-lg-table-cell
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${rewardsTokenAddress}`"
           target="_blank"
           rel="noopener noreferrer") {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
-      div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} staked
+      div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
 td.d-none.d-lg-table-cell
   div Block: {{ row.item.lastStakableBlock }}
   div.text-secondary(v-if="estimateExpirationTime")
@@ -127,6 +127,15 @@ export default {
       userAddy: (state) => state.web3.address,
       web3: (state) => state.web3.instance,
     }),
+
+    frozenOrStaked() {
+      return ![
+        "0x349dD52a2Ae5C3808Df82AC374E5ACBB228Dada2".toLowerCase(),
+        "0x28C2A8607300eC4999AB69dB3f1C545544FeD376".toLowerCase(),
+      ].includes(this.row.item.farmingTokenAddy.toLowerCase())
+        ? "staked"
+        : "frozen";
+    },
 
     tokenRoute() {
       return this.activeNetworkExplorerUrl === "https://explorer.kcc.io/en"
