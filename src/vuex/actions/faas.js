@@ -75,7 +75,10 @@ export default {
               userBalance: rewardUserBalance,
             },
           ] = await Promise.all([
-            dispatch("getErc20TokenInfo", tokenAddy),
+            dispatch(
+              poolInfo.isStakedNft ? "getErc721TokenInfo" : "getErc20TokenInfo",
+              tokenAddy
+            ),
             dispatch("getErc20TokenInfo", rewardAddy),
           ]);
           return {
@@ -135,7 +138,10 @@ export default {
     ]);
     const tokensRewardedPerBlock = poolInfo.perBlockNum;
     const [stakingTokenInfo, rewardsTokenInfo] = await Promise.all([
-      dispatch("getErc20TokenInfo", stakingContract),
+      dispatch(
+        poolInfo.isStakedNft ? "getErc721TokenInfo" : "getErc20TokenInfo",
+        stakingContract
+      ),
       dispatch("getErc20TokenInfo", rewardsContract),
     ]);
     return {
@@ -158,7 +164,7 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: amountTokens,
       tokenAddress: stakingContractAddress,
       delegateAddress: farmingContractAddress,
@@ -204,7 +210,14 @@ export default {
 
   async faasCreateNewPool(
     { dispatch, getters, state },
-    { stakableToken, rewardsToken, rewardsSupply, perBlockNum, timelockSeconds }
+    {
+      stakableToken,
+      rewardsToken,
+      rewardsSupply,
+      perBlockNum,
+      timelockSeconds,
+      isStakedTokenNft,
+    }
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
@@ -218,15 +231,17 @@ export default {
     ]);
     if (new BigNumber(mtgyBalance).lt(serviceCost)) {
       throw new Error(
-        `You do not have the amount of MTGY to cover the service cost. Please ensure you have enough MTGY in your wallet to cover the service fee and try again.`
+        `You do not have the amount of MTGY to cover the service cost.
+        Please ensure you have enough MTGY in your wallet to cover 
+        the service fee and try again.`
       );
     }
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: serviceCost,
       tokenAddress: mtgyAddy,
       delegateAddress: faasAddy,
     });
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: rewardsSupply,
       tokenAddress: rewardsToken,
       delegateAddress: faasAddy,
@@ -238,7 +253,8 @@ export default {
         rewardsSupply,
         perBlockNum,
         0,
-        timelockSeconds
+        timelockSeconds,
+        isStakedTokenNft || false
       )
       .send({ from: userAddy });
   },

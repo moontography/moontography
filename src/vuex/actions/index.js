@@ -4,12 +4,11 @@ import faas from "./faas";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
-import router from "../../router";
-
 import BigNumber from "bignumber.js";
 import DexUtils from "../../factories/DexUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
+import ERC721 from "../../factories/web3/ERC721";
 import { useToast } from "vue-toastification";
 import MTGYDataUtils from "@/factories/MTGYDataUtils";
 const toast = useToast();
@@ -224,7 +223,7 @@ export default {
     });
   },
 
-  async genericTokenApproval(
+  async genericErc20Approval(
     { state },
     { spendAmount, tokenAddress, delegateAddress }
   ) {
@@ -241,6 +240,21 @@ export default {
     }
   },
 
+  async genericErc721Approval(
+    { state },
+    { tokenId, tokenAddress, delegateAddress }
+  ) {
+    const userAddy = state.web3.address;
+    const contract = ERC721(state.web3.instance, tokenAddress);
+    const tokenIdOwner = await contract.methods.ownerOf(tokenId).call();
+    if (tokenIdOwner.toLowerCase() !== userAddy.toLowerCase()) {
+      throw new Error(`You're not the owner of this NFT!`);
+    }
+    await contract.methods
+      .approve(delegateAddress, tokenId)
+      .send({ from: userAddy });
+  },
+
   async getErc20TokenInfo({ state }, tokenAddy) {
     const userAddy = state.web3.address;
     const contract = ERC20(state.web3.instance, tokenAddy);
@@ -255,6 +269,22 @@ export default {
       name,
       symbol,
       decimals,
+      userBalance,
+    };
+  },
+
+  async getErc721TokenInfo({ state }, tokenAddy) {
+    const userAddy = state.web3.address;
+    const contract = ERC721(state.web3.instance, tokenAddy);
+    const [name, symbol, userBalance] = await Promise.all([
+      contract.methods.name().call(),
+      contract.methods.symbol().call(),
+      contract.methods.balanceOf(userAddy).call(),
+    ]);
+    return {
+      address: tokenAddy,
+      name,
+      symbol,
       userBalance,
     };
   },

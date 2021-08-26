@@ -53,6 +53,11 @@ const mtgyFaasTokenAbi: AbiItem[] = [
         name: "_stakeTimeLockSec",
         type: "uint256",
       },
+      {
+        internalType: "bool",
+        name: "_isStakedNft",
+        type: "bool",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -429,6 +434,11 @@ const mtgyFaasTokenAbi: AbiItem[] = [
         name: "stakeTimeLockSec",
         type: "uint256",
       },
+      {
+        internalType: "bool",
+        name: "isStakedNft",
+        type: "bool",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -457,7 +467,7 @@ const mtgyFaasTokenAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "_amountOrTokenId",
         type: "uint256",
       },
     ],
@@ -507,6 +517,11 @@ const mtgyFaasTokenAbi: AbiItem[] = [
       {
         internalType: "uint256",
         name: "rewardDebt",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "nftTokenId",
         type: "uint256",
       },
     ],

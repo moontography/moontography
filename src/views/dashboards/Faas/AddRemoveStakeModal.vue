@@ -178,19 +178,31 @@ export default {
     },
 
     formattedAmountToStake() {
-      return new BigNumber(
-        new BigNumber(this.percAmountToStake)
-          .div(100)
-          .times(this.stakingInfo.stakingTokenInfo.userBalance)
-      )
-        .div(new BigNumber(10).pow(this.stakingInfo.stakingTokenInfo.decimals))
-        .toFormat();
+      return this.stakingInfo.poolInfo.isStakedNft
+        ? new BigNumber(
+            new BigNumber(this.percAmountToStake)
+              .div(100)
+              .times(this.stakingInfo.stakingTokenInfo.userBalance)
+          ).toFormat()
+        : new BigNumber(
+            new BigNumber(this.percAmountToStake)
+              .div(100)
+              .times(this.stakingInfo.stakingTokenInfo.userBalance)
+          )
+            .div(
+              new BigNumber(10).pow(this.stakingInfo.stakingTokenInfo.decimals)
+            )
+            .toFormat();
     },
 
     userStakingBalance() {
-      return new BigNumber(this.stakingInfo.stakingTokenInfo.userBalance)
-        .div(new BigNumber(10).pow(this.stakingInfo.stakingTokenInfo.decimals))
-        .toFormat();
+      return this.stakingInfo.poolInfo.isStakedNft
+        ? this.stakingInfo.stakingTokenInfo.userBalance
+        : new BigNumber(this.stakingInfo.stakingTokenInfo.userBalance)
+            .div(
+              new BigNumber(10).pow(this.stakingInfo.stakingTokenInfo.decimals)
+            )
+            .toFormat();
     },
   },
 

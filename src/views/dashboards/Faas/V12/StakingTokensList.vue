@@ -154,7 +154,12 @@ export default {
                   userBalance: rewardUserBalance,
                 },
               ] = await Promise.all([
-                this.$store.dispatch("getErc20TokenInfo", tokenAddy),
+                this.$store.dispatch(
+                  poolInfo.isStakedNft
+                    ? "getErc721TokenInfo"
+                    : "getErc20TokenInfo",
+                  tokenAddy
+                ),
                 this.$store.dispatch("getErc20TokenInfo", rewardAddy),
               ]);
               return {

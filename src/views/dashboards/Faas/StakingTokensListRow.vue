@@ -42,7 +42,9 @@ td.d-none.d-lg-table-cell
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${rewardsTokenAddress}`"
           target="_blank"
           rel="noopener noreferrer") {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
-      div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
+      div
+        | {{ row.item.poolInfo.isStakedNft ? totalTokensStaked[0] : totalTokensStaked[1] }}
+        | {{ stakedTokenSymbol }} {{ frozenOrStaked }}
 td.d-none.d-lg-table-cell
   div Block: {{ row.item.lastStakableBlock }}
   div.text-secondary(v-if="estimateExpirationTime")
@@ -222,20 +224,24 @@ export default {
     },
 
     stakedBalance() {
-      return new BigNumber(this.row.item.farmingTokenBalance)
-        .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
-        .times(
-          new BigNumber(10).pow(
-            this.row.item.farmingTokenDecimals - this.tokenDecimals
-          )
-        )
-        .toFormat(0, BigNumber.ROUND_DOWN);
+      return this.row.item.poolInfo.isStakedNft
+        ? this.row.item.farmingTokenBalance
+        : new BigNumber(this.row.item.farmingTokenBalance)
+            .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
+            .times(
+              new BigNumber(10).pow(
+                this.row.item.farmingTokenDecimals - this.tokenDecimals
+              )
+            )
+            .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
     remainingTokenBalance() {
-      return new BigNumber(this.row.item.currentTokenBalance)
-        .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
-        .toFormat(0, BigNumber.ROUND_DOWN);
+      return this.row.item.poolInfo.isStakedNft
+        ? this.row.item.currentTokenBalance
+        : new BigNumber(this.row.item.currentTokenBalance)
+            .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
+            .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
     stakingApr() {
