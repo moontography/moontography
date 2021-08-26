@@ -29,7 +29,7 @@
           card
             template(v-slot:header='')
               h4.card-title
-                | Overall Plot Stats
+                | Overall Plot Stats (#[strong {{ plotInfo.length }}] total)
             div.row
               div.col-lg-6
                 n-table.mb-0(
