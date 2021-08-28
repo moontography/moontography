@@ -28,21 +28,23 @@ export default {
 
       // Get MTGY info before having to connect wallet.
       // Allows dashboard data to be shown even if user does not connect wallet.
-      await Promise.all([
-        dispatch("getMtgyPriceUsd"),
-        dispatch("getMTGYCirculatingSupply"),
-        dispatch("getMTGYTotalSupply"),
-        dispatch("getMtgyTokenInfo"),
-        dispatch("getMtgyTokenChart"),
-        dispatch("getCurrentBlock"),
-      ]);
+      // Wrapped in try/catch so errors thrown here don't prevent finishing init.
+      try {
+        await Promise.all([
+          dispatch("getMtgyPriceUsd"),
+          dispatch("getMTGYCirculatingSupply"),
+          dispatch("getMTGYTotalSupply"),
+          dispatch("getMtgyTokenInfo"),
+          dispatch("getMtgyTokenChart"),
+          dispatch("getCurrentBlock"),
+        ]);
+      } catch (e) {
+        console.log("Error getting MTGY info.");
+      }
 
       if (!window.web3) {
-        return commit(
-          "SET_GLOBAL_ERROR",
-          new Error(
-            "Make sure you using a web3 enabled browser like Metamask, TrustWallet etc."
-          )
+        throw new Error(
+          "Make sure you using a web3 enabled browser like Metamask, TrustWallet etc."
         );
       }
       if (state.web3 && state.web3.isConnected && !reset) return;
