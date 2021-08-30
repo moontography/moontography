@@ -1,6 +1,7 @@
 import airdropper from "./airdropper";
 import asaas from "./asaas";
 import faas from "./faas";
+import kether from "./kether";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
@@ -8,6 +9,7 @@ export default {
   ...airdropper,
   ...asaas,
   ...faas,
+  ...kether,
   ...passwordManager,
   ...trustedTimestamping,
 
@@ -114,6 +116,9 @@ export default {
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
           faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
+          // kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
+          // ketherNFT: "",
+          // ketherNFTLoaner: "",
         },
         buy: {
           link:
@@ -206,33 +211,36 @@ export default {
       //     balance: ""
       //   }
       // },
-      // {
-      //   name: "Ethereum Rinkeby",
-      //   short_name: "rin",
-      //   chain: "ETH",
-      //   network: "rinkeby",
-      //   chain_id: 4,
-      //   network_id: 4,
-      //   explorer_url: "https://rinkeby.etherscan.io",
-      //   rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
-      //   blocks_per_day: 6450,
-      //   native_currency: {
-      //     symbol: "ETH",
-      //     name: "Ethereum",
-      //     decimals: "18",
-      //     contractAddress: "",
-      //     balance: "",
-      //   },
-      //   contracts: {
-      //     mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
-      //     mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-      //     airdropper: "0x94E9cEE0Af5aF7347D1e4D82cC1e3e446b0e2B4a",
-      //     atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
-      //     passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
-      //     trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-      //     faas: "0x889A82d66e1Db7041967507b6AD942f32657d0EC",
-      //   },
-      // },
+      {
+        name: "Ethereum Rinkeby",
+        short_name: "rin",
+        chain: "ETH",
+        network: "rinkeby",
+        chain_id: 4,
+        network_id: 4,
+        explorer_url: "https://rinkeby.etherscan.io",
+        rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
+        blocks_per_day: 6450,
+        native_currency: {
+          symbol: "ETH",
+          name: "Ethereum",
+          decimals: "18",
+          contractAddress: "",
+          balance: "",
+        },
+        contracts: {
+          mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
+          mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
+          airdropper: "0x94E9cEE0Af5aF7347D1e4D82cC1e3e446b0e2B4a",
+          atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
+          passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
+          trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
+          faas: "0x889A82d66e1Db7041967507b6AD942f32657d0EC",
+          kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
+          ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
+          ketherNFTLoaner: "0xAC725d83adDE5882eB15f733F536EED83C8B8613",
+        },
+      },
       // {
       //   name: "Ethereum Görli",
       //   short_name: "gor",

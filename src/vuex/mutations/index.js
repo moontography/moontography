@@ -1,6 +1,7 @@
 import airdropper from "./airdropper";
 import asaas from "./asaas";
 import faas from "./faas";
+import kether from "./kether";
 import trustedTimestamping from "./trustedTimestamping";
 import passwordManager from "./passwordManager";
 
@@ -8,6 +9,7 @@ export default {
   ...airdropper,
   ...asaas,
   ...faas,
+  ...kether,
   ...passwordManager,
   ...trustedTimestamping,
 

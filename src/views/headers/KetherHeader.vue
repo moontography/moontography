@@ -1,14 +1,15 @@
 <template lang="pug">
 div.panel-header
   div.header.text-center
-    h2.title 1000 Ether Homepage Stats
+    h2.title Thousand Ether Homepage Stats
     p.category.text-white
-      div.text-white.mb-2 Statistics on the 1000 Ether Homepage
-      div
-        a.text-success(
-          href="https://v1.thousandetherhomepage.com/"
+      div.text-white.mb-3
+        | Statistics on the Thousand Ether Homepage.
+        a.ml-1.text-white(
+          href="https://thousandetherhomepage.com/"
           target="_blank"
-          rel="noopener noreferrer") Check out the dApp!
+          rel="noopener noreferrer")
+            u Check it out now!
 </template>
 
 <script>
