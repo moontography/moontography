@@ -116,9 +116,9 @@ export default {
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
           faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
-          // kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
-          // ketherNFT: "",
-          // ketherNFTLoaner: "",
+          kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
+          ketherNFT: "",
+          ketherNFTLoaner: "",
         },
         buy: {
           link:
@@ -238,7 +238,7 @@ export default {
           faas: "0x889A82d66e1Db7041967507b6AD942f32657d0EC",
           kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
           ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
-          ketherNFTLoaner: "0xAC725d83adDE5882eB15f733F536EED83C8B8613",
+          ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",
         },
       },
       // {

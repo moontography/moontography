@@ -132,7 +132,7 @@ export default {
         `The connected network does not support 1000 Ether Homepage!`
       ));
     } else {
-      await this.getPlots();
+      await this.getPlots(true);
     }
   },
 };

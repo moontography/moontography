@@ -31,9 +31,9 @@ const ketherNFTLoanerAbi: AbiItem[] = [
       },
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "uint16",
         name: "overrideMaxLoanDays",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     name: "AddPlot",
@@ -76,6 +76,12 @@ const ketherNFTLoanerAbi: AbiItem[] = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: "uint256", name: "idx", type: "uint256" },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
     ],
     name: "RemovePlot",
     type: "event",
@@ -101,9 +107,9 @@ const ketherNFTLoanerAbi: AbiItem[] = [
       },
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "uint16",
         name: "overrideMaxLoanDays",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     name: "UpdatePlot",
@@ -117,7 +123,7 @@ const ketherNFTLoanerAbi: AbiItem[] = [
         name: "_overridePerDayCharge",
         type: "uint256",
       },
-      { internalType: "uint8", name: "_overrideMaxDays", type: "uint8" },
+      { internalType: "uint16", name: "_overrideMaxDays", type: "uint16" },
     ],
     name: "addPlot",
     outputs: [],
@@ -148,7 +154,7 @@ const ketherNFTLoanerAbi: AbiItem[] = [
   {
     inputs: [
       { internalType: "uint256", name: "_idx", type: "uint256" },
-      { internalType: "uint8", name: "_numDays", type: "uint8" },
+      { internalType: "uint16", name: "_numDays", type: "uint16" },
       {
         components: [
           { internalType: "string", name: "link", type: "string" },
@@ -180,6 +186,7 @@ const ketherNFTLoanerAbi: AbiItem[] = [
       { internalType: "address", name: "loaner", type: "address" },
       { internalType: "uint256", name: "start", type: "uint256" },
       { internalType: "uint256", name: "end", type: "uint256" },
+      { internalType: "uint256", name: "totalFee", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
@@ -187,7 +194,7 @@ const ketherNFTLoanerAbi: AbiItem[] = [
   {
     inputs: [],
     name: "maxLoanDurationDays",
-    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+    outputs: [{ internalType: "uint16", name: "", type: "uint16" }],
     stateMutability: "view",
     type: "function",
   },
@@ -209,10 +216,11 @@ const ketherNFTLoanerAbi: AbiItem[] = [
         type: "uint256",
       },
       {
-        internalType: "uint8",
+        internalType: "uint16",
         name: "overrideMaxLoanDurationDays",
-        type: "uint8",
+        type: "uint16",
       },
+      { internalType: "uint256", name: "totalFeesCollected", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
@@ -241,7 +249,7 @@ const ketherNFTLoanerAbi: AbiItem[] = [
     inputs: [{ internalType: "uint256", name: "_idx", type: "uint256" }],
     name: "removePlot",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -273,7 +281,7 @@ const ketherNFTLoanerAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint8", name: "_numDays", type: "uint8" }],
+    inputs: [{ internalType: "uint16", name: "_numDays", type: "uint16" }],
     name: "setMaxLoanDurationDays",
     outputs: [],
     stateMutability: "nonpayable",
@@ -304,7 +312,7 @@ const ketherNFTLoanerAbi: AbiItem[] = [
         name: "_overridePerDayCharge",
         type: "uint256",
       },
-      { internalType: "uint8", name: "_overrideMaxDays", type: "uint8" },
+      { internalType: "uint16", name: "_overrideMaxDays", type: "uint16" },
     ],
     name: "updatePlot",
     outputs: [],

@@ -11,14 +11,15 @@
             </div>
           </div>
           <div class="col-7 text-right" v-if="$slots.content || title">
-            <slot>
-              <h3 v-if="title" class="info-title">{{ title }}</h3>
-              <h6 v-if="subTitle" class="stats-title">{{ subTitle }}</h6>
-            </slot>
+            <h3 v-if="title" class="info-title">{{ title }}</h3>
+            <!-- <h6 v-if="subTitle" class="stats-title">{{ subTitle }}</h6> -->
+            <div v-if="subTitle" class="stats-title">{{ subTitle }}</div>
+            <!-- <slot></slot> -->
           </div>
         </div>
       </div>
     </div>
+    <slot></slot>
     <template v-slot:footer>
       <div class="stats" v-if="$slots.footer">
         <slot name="footer"></slot>
