@@ -3,7 +3,8 @@ stats-card(
   :type='type'
   :title='`idx: ${plot.index}`'
   :sub-title='`${ plot.width * 10 }x${ plot.height * 10 } (${ plotArea }px)`'
-  :icon='`now-ui-icons ${iconClass}`')
+  :icon='`now-ui-icons ${iconClass}`'
+  :icon-title="isWrapped ? 'Plot is wrapped!' : 'Not wrapped yet'")
     div.d-flex.flex-column.align-items-center.my-2
       div.mb-3
         a(
@@ -18,7 +19,7 @@ stats-card(
       div.text-secondary
         small
           small
-            div Plot owner: {{ plot.actualOwner }}
+            div owner: {{ plot.actualOwner }}
     template(v-slot:footer='')
       div(v-if="ketherNFTLoanerCont")
         div.d-flex.align-items-center(v-if="plot.actualOwner == userAddy")
@@ -61,6 +62,7 @@ loan-plot-modal(
   :plot="plot")
 </template>
 <script>
+import $ from "jquery";
 import { mapState } from "vuex";
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
@@ -198,6 +200,11 @@ export default {
         this.$store.commit("SET_GLOBAL_LOADING", false);
       }
     },
+  },
+
+  beforeUnmount() {
+    $(`#loan-plot-modal-${this.plot.index}`).remove();
+    $(`#make-loanable-modal-${this.plot.index}`).remove();
   },
 };
 </script>

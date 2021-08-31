@@ -59,6 +59,13 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
           path: '/dtax',
         }`
       )
+      sidebar-item(
+        :link=`{
+          name: 'Thousand Ether Homepage',
+          icon: 'now-ui-icons objects_globe',
+          path: '/1000ether',
+        }`
+      )
 
   div.main-panel
     top-navbar

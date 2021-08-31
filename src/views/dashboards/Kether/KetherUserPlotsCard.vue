@@ -50,13 +50,13 @@ export default {
     }),
 
     selectedPlots() {
-      let plots = this.allPlots;
+      let plots = this.allPlots.slice();
       switch (this.plotsFilter) {
         case "user":
-          plots = this.yourPlots;
+          plots = this.yourPlots.slice();
           break;
         case "loanable":
-          plots = this.loanablePlots;
+          plots = this.loanablePlots.slice();
           break;
       }
       if (!this.searchQuery) return plots;

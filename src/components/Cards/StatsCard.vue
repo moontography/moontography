@@ -3,7 +3,7 @@
     <div class="statistics statistics-horizontal">
       <div class="info info-horizontal">
         <div class="row">
-          <div class="col-5" v-if="$slots.icon || icon">
+          <div class="col-5" v-if="$slots.icon || icon" :title="iconTitle">
             <div class="icon icon-circle" :class="`icon-${type}`">
               <slot name="icon">
                 <i :class="icon"></i>
@@ -41,6 +41,7 @@ export default {
       default: "primary",
     },
     icon: String,
+    iconTitle: String,
     title: String,
     subTitle: String,
   },
