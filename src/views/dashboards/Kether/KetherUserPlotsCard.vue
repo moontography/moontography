@@ -10,18 +10,37 @@ card
         placeholder="Search for width, height, area, etc.")
       el-select.ml-1.select-primary(
         placeholder='Filter Plots'
-        v-model='plotsFilter')
+        v-model="plotsFilter"
+        @change="pagination.currentPage = 1")
           el-option.select-primary(
             v-for='option in plotOptions'
             :value='option.value'
             :label='option.label'
             :key='option.label')
-card.b-4(v-if="selectedPlots.length === 0")
+card.b-4(v-if="pagedData.length === 0")
   div
     i No plots yet with the filters selected!
 div.row(v-else)
-  div.col-md-6(v-for="plot in selectedPlots")
+  div.col-12.d-flex.align-items-center.justify-content-center.justify-content-sm-between.flex-wrap
+    div
+      p.card-category
+        | Showing {{ from + 1 }} to {{ to }} of {{ total }} plots
+    n-pagination.pagination-no-border(
+      v-model='pagination.currentPage'
+      :per-page='pagination.perPage'
+      :total='total')
+
+  div.col-md-6(v-for="plot in pagedData")
     user-plot-card(:plot="plot")
+
+  div.col-12.d-flex.align-items-center.justify-content-center.justify-content-sm-between.flex-wrap
+    div
+      p.card-category
+        | Showing {{ from + 1 }} to {{ to }} of {{ total }} plots
+    n-pagination.pagination-no-border(
+      v-model='pagination.currentPage'
+      :per-page='pagination.perPage'
+      :total='total')
 </template>
 <script>
 import { mapState } from "vuex";
@@ -40,17 +59,46 @@ export default {
         { value: "user", label: "Only your plots" },
       ],
       searchQuery: null,
+
+      pagination: {
+        perPage: 50,
+        currentPage: 1,
+        perPageOptions: [5, 10, 25, 50],
+        total: 0,
+      },
     };
   },
 
   computed: {
     ...mapState({
-      plotInfo: (state) => state.kether.plotInfo,
+      plotInfo: (state) => state.kether.plotInfo || [],
       userAddy: (state) => state.web3.address,
     }),
 
+    pagedData() {
+      return (this.selectedPlots || []).slice(this.from, this.to);
+    },
+
+    to() {
+      let highBound = this.from + this.pagination.perPage;
+      if (this.total < highBound) {
+        highBound = this.total;
+      }
+      return highBound;
+    },
+
+    from() {
+      return this.pagination.perPage * (this.pagination.currentPage - 1);
+    },
+
+    total() {
+      return (this.selectedPlots || []).length > 0
+        ? (this.selectedPlots || []).length
+        : (this.plotInfo || []).length;
+    },
+
     selectedPlots() {
-      let plots = this.allPlots.slice();
+      let plots = this.plotInfo.slice();
       switch (this.plotsFilter) {
         case "user":
           plots = this.yourPlots.slice();
@@ -79,10 +127,6 @@ export default {
           plot.actualOwner.toLowerCase().includes(query)
         );
       });
-    },
-
-    allPlots() {
-      return this.plotInfo.slice();
     },
 
     loanablePlots() {

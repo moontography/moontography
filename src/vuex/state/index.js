@@ -117,8 +117,8 @@ export default {
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
           faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
-          ketherNFT: "",
-          ketherNFTLoaner: "",
+          ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
+          ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
         },
         buy: {
           link:

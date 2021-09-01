@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import exponentialBackoff from "../../factories/ExponentialBackoff";
 // import MTGY from "../../factories/web3/MTGY";
 import KetherHomepage from "../../factories/web3/KetherHomepage";
 import KetherNFT from "../../factories/web3/KetherNFT";
@@ -15,7 +16,9 @@ export default {
     const numberPlots = await contract.methods.getAdsLength().call();
     const plotInfo = await Promise.all(
       new Array(parseInt(numberPlots)).fill(0).map(async (_, plotIndex) => {
-        return await dispatch("getKetherPlot", plotIndex);
+        return await exponentialBackoff(
+          async () => await dispatch("getKetherPlot", plotIndex)
+        );
       })
     );
     const plotInfoAggData = plotInfo.reduce(
@@ -219,5 +222,26 @@ export default {
     await loanerContract.methods
       .loanPlot(index, numDays, publishInfo)
       .send({ from: userAddy, value });
+  },
+
+  async publishPlot({ getters, state }, { index, publishInfo }) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const ketherNFTCont = getters.activeNetwork.contracts.ketherNFT;
+    const ketherNFTLoanerCont = getters.activeNetwork.contracts.ketherNFTLoaner;
+    const nftContract = KetherNFT(web3, ketherNFTCont);
+    const loanerContract = KetherNFTLoaner(web3, ketherNFTLoanerCont);
+    const hasLoan = await loanerContract.methods.hasActiveLoan(index).call();
+    console.log("LOAN", hasLoan, index, publishInfo);
+    if (hasLoan) {
+      await loanerContract.methods
+        .publish(index, publishInfo)
+        .send({ from: userAddy });
+    } else {
+      const [link, image, title, NSFW] = publishInfo;
+      await nftContract.methods
+        .publish(index, link, image, title, NSFW)
+        .send({ from: userAddy });
+    }
   },
 };

@@ -13,6 +13,7 @@ stats-card(
           target="_blank"
           rel="noopener noreferrer")
             img(
+              :title="plot.title"
               :style="{borderRadius: '0px', width: `${plot.width * 10}px`, height: `${plot.height * 10}px`}"
               :src="plot.image")
         i(v-else) No published ad yet!
@@ -20,9 +21,15 @@ stats-card(
         small
           small
             div owner: {{ plot.actualOwner }}
+      div.text-center.mt-4(v-if="isLoanedToCurrentUser || (isWrapped && isOwner && !plot.hasActiveLoan)")
+        div.text-success.mb-3(v-if="isLoanedToCurrentUser")
+          | You are currently loaning this plot!
+        a.clickable(
+          data-toggle="modal"
+          :data-target="`#publish-plot-modal-${plot.index}`") Publish new ad!
     template(v-slot:footer='')
-      div(v-if="ketherNFTLoanerCont")
-        div.d-flex.align-items-center(v-if="plot.actualOwner == userAddy")
+      div(v-if="ketherNFTCont")
+        div.d-flex.align-items-center(v-if="plot.actualOwner.toLowerCase() === userAddy.toLowerCase()")
           div(v-if="!isLoanable")
             a.clickable(
               v-loading="globalLoading"
@@ -30,7 +37,7 @@ stats-card(
               @click="isWrapped ? unwrapPlot() : wrapPlot()")
                 i.now-ui-icons(:class="isWrapped ? 'files_paper' : 'objects_diamond'")
                 | {{ isWrapped ? 'Unwrap' : 'Wrap Plot' }}
-          div.ml-auto(v-if="isWrapped")
+          div.ml-auto(v-if="isWrapped && ketherNFTLoanerCont")
             a.clickable.text-danger(
               v-if="isLoanable"
               v-loading="globalLoading"
@@ -45,8 +52,9 @@ stats-card(
                 i.now-ui-icons.ui-1_simple-add
                 | Make plot loanable
         div.text-right(v-else-if="isLoanable")
-          div(v-if="plotHasActiveLoan")
-            i Current loan is set to expire at {{ plotLoanExpirationDate }}
+          div.text-center(v-if="plotHasActiveLoan")
+            small
+              i Loan expires {{ plotLoanExpirationDate }}
           a.clickable.text-success(
             v-else
             data-toggle="modal"
@@ -60,6 +68,10 @@ make-loanable-modal(
 loan-plot-modal(
   :id="`loan-plot-modal-${plot.index}`"
   :plot="plot")
+
+publish-modal(
+  :id="`publish-plot-modal-${plot.index}`"
+  :plot="plot")
 </template>
 <script>
 import $ from "jquery";
@@ -69,11 +81,13 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import LoanPlotModal from "./LoanPlotModal";
 import MakeLoanableModal from "./MakeLoanableModal";
+import PublishModal from "./PublishModal";
 
 export default {
   components: {
     LoanPlotModal,
     MakeLoanableModal,
+    PublishModal,
   },
 
   props: {
@@ -95,17 +109,35 @@ export default {
   computed: {
     ...mapState({
       globalLoading: (state) => state.globalLoading,
+      ketherNFTCont: (_, getters) => getters.activeNetwork.contracts.ketherNFT,
       ketherNFTLoanerCont: (_, getters) =>
         getters.activeNetwork.contracts.ketherNFTLoaner,
       userAddy: (state) => state.web3.address,
     }),
 
+    isLoanedToCurrentUser() {
+      return (
+        this.plot.hasActiveLoan &&
+        this.plot.loanInfo.loaner.toLowerCase() === this.userAddy.toLowerCase()
+      );
+    },
+
+    isOwner() {
+      return (
+        this.userAddy.toLowerCase() === this.plot.actualOwner.toLowerCase()
+      );
+    },
+
     iconClass() {
-      return this.isWrapped ? "files_box" : "files_paper";
+      if (this.isLoanable) return "business_bank";
+      if (this.isWrapped) return "files_box";
+      return "files_paper";
     },
 
     type() {
-      return this.isWrapped ? "success" : "danger";
+      if (this.isLoanable) return "primary";
+      if (this.isWrapped) return "success";
+      return "danger";
     },
 
     isWrapped() {
@@ -127,12 +159,12 @@ export default {
     plotHasActiveLoan() {
       return (
         this.plot.loanInfo.end > 0 &&
-        dayjs(this.plot.loanInfo.end).isAfter(dayjs())
+        dayjs.unix(this.plot.loanInfo.end).isAfter(dayjs())
       );
     },
 
     plotLoanExpirationDate() {
-      return dayjs(this.plot.loanInfo.end).toISOString();
+      return dayjs.unix(this.plot.loanInfo.end).format("MMM Do, YYYY hh:mm a");
     },
   },
 
