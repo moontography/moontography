@@ -12,6 +12,7 @@ import AirdropperHeader from "../views/headers/AirdropperHeader";
 import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import DtaxHeader from "../views/headers/DtaxHeader";
 import FaasHeader from "../views/headers/FaasHeader";
+import KetherHeader from "../views/headers/KetherHeader";
 import PaasHeader from "../views/headers/PaasHeader";
 import PasswordManagerHeader from "../views/headers/PasswordManagerHeader";
 import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
@@ -23,6 +24,7 @@ import Airdropper from "../views/dashboards/Airdropper/Airdropper.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
+import KetherStats from "../views/dashboards/Kether/KetherStats";
 import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager.vue";
 import PasswordManagerLayout from "../views/layout/PasswordManagerLayout.vue";
 import SwapsListView from "../views/dashboards/ASaaS/SwapsListView.vue";
@@ -134,6 +136,12 @@ const routes = [
         path: "redirecting",
         name: "Redirecting",
         components: { default: GlobalLoader, header: GlobalLoader },
+      },
+
+      {
+        path: "1000ether",
+        name: "1000ether",
+        components: { default: KetherStats, header: KetherHeader },
       },
     ],
   },

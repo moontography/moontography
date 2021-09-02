@@ -10,7 +10,7 @@
         .modal-header.border-bottom.pb-3
           h3.modal-title.d-flex.align-items-center
             | #[i.now-ui-icons.users_circle-08.mr-2]
-            | Add/Remove Staked Tokens
+            | Add/Remove {{ isFrozen ? 'Frozen' : 'Staked' }} Tokens
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
@@ -20,7 +20,7 @@
               div.card-category
                 | Farm contract:
                 | {{ farmAddress }}
-              div You will stake:
+              div You will {{ isFrozen ? 'freeze' : 'stake' }}:
             h1.card-title {{ stakingInfo.stakingTokenInfo.symbol }}
             h3.card-category
               div {{ stakingInfo.stakingTokenInfo.name }}
@@ -33,7 +33,7 @@
 
             div.card-footer
               div(v-if="!isExpired")
-                | You can stake up to #[strong {{ userStakingBalance }}]
+                | You can {{ isFrozen ? 'freeze' : 'stake' }} up to #[strong {{ userStakingBalance }}]
                 | {{ stakingInfo.stakingTokenInfo.symbol }}
               slider-input-percent(v-model="percAmountToStake")
               //- div {{ formattedAmountToStake }}
@@ -44,7 +44,9 @@
                   size="lg"
                   v-loading="globalLoading"
                   :disabled="globalLoading || this.percAmountToStake <= 0"
-                  @click="stakeTokens") Stake {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
+                  @click="stakeTokens")
+                    | {{ isFrozen ? 'Freeze' : 'Stake' }}
+                    | {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
               template(v-if="hasStakedTokens")
                 div.text-danger.mt-4(v-if="!isPastTimelock")
                   b
@@ -144,10 +146,14 @@ export default {
       return new BigNumber(timelockSeconds).div(60).div(60).div(24).toFormat();
     },
 
-    shouldShowEmergencyUnstake() {
-      return ![
+    isFrozen() {
+      return [
         "0xFB7D9c478b2F8B1d07Ad196076c881f11F370Ca4".toLowerCase(),
       ].includes(this.farmAddress.toLowerCase());
+    },
+
+    shouldShowEmergencyUnstake() {
+      return !this.isFrozen;
     },
 
     timeUserOriginallyStaked() {

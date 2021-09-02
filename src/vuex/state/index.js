@@ -1,6 +1,7 @@
 import airdropper from "./airdropper";
 import asaas from "./asaas";
 import faas from "./faas";
+import kether from "./kether";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
@@ -8,6 +9,7 @@ export default {
   ...airdropper,
   ...asaas,
   ...faas,
+  ...kether,
   ...passwordManager,
   ...trustedTimestamping,
 
@@ -114,6 +116,9 @@ export default {
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
           faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
+          kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
+          ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
+          ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
         },
         buy: {
           link:
@@ -230,7 +235,14 @@ export default {
           atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
           passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
+<<<<<<< HEAD
           faas: "0xA3Ac9279aF4c7A78Be3da740BA37E1C4D41FfEDC",
+=======
+          faas: "0x252fCfC3694B9B08E7A8F325287F5aB5Fa543965",
+          kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
+          ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
+          ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",
+>>>>>>> master
         },
       },
       // {

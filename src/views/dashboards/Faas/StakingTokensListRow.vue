@@ -32,7 +32,7 @@ td.text-left
   div.text-secondary
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td.d-none.d-lg-table-cell
-  div
+  div(v-if="!isFrozen")
     strong
       | {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}% APR` : 'APR Coming Soon' }}
   div.text-secondary
@@ -130,12 +130,14 @@ export default {
       web3: (state) => state.web3.instance,
     }),
 
-    frozenOrStaked() {
-      return ![
+    isFrozen() {
+      return [
         "0xFB7D9c478b2F8B1d07Ad196076c881f11F370Ca4".toLowerCase(),
-      ].includes(this.row.item.farmingTokenAddy.toLowerCase())
-        ? "staked"
-        : "frozen";
+      ].includes(this.row.item.farmingTokenAddy.toLowerCase());
+    },
+
+    frozenOrStaked() {
+      return !this.isFrozen ? "staked" : "frozen";
     },
 
     tokenRoute() {
