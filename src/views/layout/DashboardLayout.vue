@@ -12,13 +12,6 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Trusted Timestamping',
-          icon: 'now-ui-icons design_app',
-          path: '/timestamping',
-        }`
-      )
-      sidebar-item(
-        :link=`{
           name: 'Farming',
           icon: 'now-ui-icons sport_trophy',
           path: '/faas',
@@ -26,9 +19,9 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Password Manager',
-          icon: 'now-ui-icons ui-1_lock-circle-open',
-          path: '/passwords',
+          name: 'Atomic Swapping',
+          icon: 'now-ui-icons arrows-1_refresh-69',
+          path: '/asaas',
         }`
       )
       sidebar-item(
@@ -40,9 +33,16 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Atomic Swapping',
-          icon: 'now-ui-icons arrows-1_refresh-69',
-          path: '/asaas',
+          name: 'Trusted Timestamping',
+          icon: 'now-ui-icons design_app',
+          path: '/timestamping',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Password Manager',
+          icon: 'now-ui-icons ui-1_lock-circle-open',
+          path: '/passwords',
         }`
       )
       sidebar-item(
