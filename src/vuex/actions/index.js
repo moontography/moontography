@@ -5,10 +5,9 @@ import kether from "./kether";
 import passwordManager from "./passwordManager";
 import trustedTimestamping from "./trustedTimestamping";
 
-import router from "../../router";
-
 import BigNumber from "bignumber.js";
 import DexUtils from "../../factories/DexUtils";
+import ExponentialBackoff from "../../factories/ExponentialBackoff";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
 import { useToast } from "vue-toastification";
@@ -30,14 +29,17 @@ export default {
 
       // Get MTGY info before having to connect wallet.
       // Allows dashboard data to be shown even if user does not connect wallet.
-      await Promise.all([
-        dispatch("getMtgyPriceUsd"),
-        dispatch("getMTGYCirculatingSupply"),
-        dispatch("getMTGYTotalSupply"),
-        dispatch("getMtgyTokenInfo"),
-        dispatch("getMtgyTokenChart"),
-        dispatch("getCurrentBlock"),
-      ]);
+
+      await ExponentialBackoff(async () => {
+        await Promise.all([
+          dispatch("getMtgyPriceUsd"),
+          dispatch("getMTGYCirculatingSupply"),
+          dispatch("getMTGYTotalSupply"),
+          dispatch("getMtgyTokenInfo"),
+          dispatch("getMtgyTokenChart"),
+          dispatch("getCurrentBlock"),
+        ]);
+      });
 
       if (!window.web3) {
         return commit(
@@ -109,17 +111,21 @@ export default {
     if (state.refreshableInterval) return;
 
     const go = async () => {
-      await Promise.all([
-        dispatch("getUserBalance"),
-        dispatch("getMtgyPriceUsd"),
-        dispatch("getMTGYCirculatingSupply"),
-        dispatch("getMTGYTotalSupply"),
-        dispatch("getMtgyTokenInfo"),
-        dispatch("getMtgyTokenChart"),
-        dispatch("getCurrentBlock"),
-      ]);
+      try {
+        await Promise.all([
+          dispatch("getUserBalance"),
+          dispatch("getMtgyPriceUsd"),
+          dispatch("getMTGYCirculatingSupply"),
+          dispatch("getMTGYTotalSupply"),
+          dispatch("getMtgyTokenInfo"),
+          dispatch("getMtgyTokenChart"),
+          dispatch("getCurrentBlock"),
+        ]);
+      } catch (err) {
+        console.error(`Error refreshing data`, err);
+      }
     };
-    state.refreshableInterval = setInterval(go, 7500);
+    state.refreshableInterval = setInterval(go, 10000);
     await go();
   },
 

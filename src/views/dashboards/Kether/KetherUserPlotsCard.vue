@@ -56,7 +56,8 @@ export default {
       plotOptions: [
         { value: "all", label: "All plots" },
         { value: "loanable", label: "Loanable plots" },
-        { value: "user", label: "Only your plots" },
+        { value: "loaning", label: "Plots you're lending" },
+        { value: "user", label: "Plots you own" },
       ],
       searchQuery: null,
 
@@ -103,6 +104,9 @@ export default {
         case "user":
           plots = this.yourPlots.slice();
           break;
+        case "loaning":
+          plots = this.plotsYourLending.slice();
+          break;
         case "loanable":
           plots = this.loanablePlots.slice();
           break;
@@ -133,6 +137,14 @@ export default {
       return this.plotInfo.filter((plot) => plot.isLoanable);
     },
 
+    plotsYourLending() {
+      return this.loanablePlots.filter(
+        (plot) =>
+          plot.loanInfo &&
+          plot.loanInfo.loaner.toLowerCase() === this.userAddy.toLowerCase()
+      );
+    },
+
     yourPlots() {
       return this.plotInfo.filter(
         (plot) => plot.actualOwner.toLowerCase() === this.userAddy.toLowerCase()
@@ -141,7 +153,12 @@ export default {
   },
 
   created() {
-    if (this.yourPlots.length === 0) this.plotsFilter = "all";
+    if (this.yourPlots.length === 0) {
+      if (this.plotsYourLending.length > 0)
+        return (this.plotsFilter = "loaning");
+      if (this.loanablePlots.length > 0) return (this.plotsFilter = "loanable");
+      this.plotsFilter = "all";
+    }
   },
 };
 </script>
