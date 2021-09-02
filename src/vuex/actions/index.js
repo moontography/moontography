@@ -234,17 +234,27 @@ export default {
 
   async genericTokenApproval(
     { state },
-    { spendAmount, tokenAddress, delegateAddress }
+    { spendAmount, tokenAddress, delegateAddress, unlimited }
   ) {
+    if (new BigNumber(spendAmount || 0).lte(0)) return;
+
+    unlimited = unlimited === false ? false : true;
     const userAddy = state.web3.address;
     const contract = ERC20(state.web3.instance, tokenAddress);
-    const [userBalance, currentAllowance] = await Promise.all([
-      contract.methods.balanceOf(userAddy).call(),
-      contract.methods.allowance(userAddy, delegateAddress).call(),
-    ]);
+    const [userBalance, currentAllowance] = await ExponentialBackoff(
+      async () => {
+        return await Promise.all([
+          contract.methods.balanceOf(userAddy).call(),
+          contract.methods.allowance(userAddy, delegateAddress).call(),
+        ]);
+      }
+    );
     if (new BigNumber(currentAllowance).lte(spendAmount || 0)) {
       await contract.methods
-        .approve(delegateAddress, userBalance)
+        .approve(
+          delegateAddress,
+          unlimited ? new BigNumber(2).pow(256).minus(1).toFixed() : userBalance
+        )
         .send({ from: userAddy });
     }
   },

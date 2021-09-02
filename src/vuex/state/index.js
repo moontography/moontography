@@ -235,7 +235,7 @@ export default {
           atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
           passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-          faas: "0x889A82d66e1Db7041967507b6AD942f32657d0EC",
+          faas: "0x252fCfC3694B9B08E7A8F325287F5aB5Fa543965",
           kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
           ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
           ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",
