@@ -9,7 +9,7 @@
               div.d-flex.align-items-center
                 h4.card-title.mb-0
                   | Token Users will Stake
-                checkbox.ml-3(v-model="isStakableTokenNft") Is the stakable token an NFT?
+                checkbox.ml-3(v-model="isStakableTokenNft") Is this an NFT contract?
               div.text-secondary
                 small The token users can stake to earn rewards from the rewards pool you've provided.
           token-input-standalone(

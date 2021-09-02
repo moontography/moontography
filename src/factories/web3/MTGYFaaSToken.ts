@@ -467,8 +467,13 @@ const mtgyFaasTokenAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_amountOrTokenId",
+        name: "_amount",
         type: "uint256",
+      },
+      {
+        internalType: "uint256[]",
+        name: "_tokenIds",
+        type: "uint256[]",
       },
     ],
     name: "stakeTokens",
@@ -517,11 +522,6 @@ const mtgyFaasTokenAbi: AbiItem[] = [
       {
         internalType: "uint256",
         name: "rewardDebt",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "nftTokenId",
         type: "uint256",
       },
     ],

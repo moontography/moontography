@@ -50,27 +50,7 @@ export default {
     ...mapState({
       faasAddyV12: (_, getters) => getters.activeNetwork.contracts.faas_V12,
       userAddy: (state) => state.web3.address,
-      userStakingContracts: (state) => state.faas.userPools,
     }),
-
-    userStakingContractsCleaned() {
-      return this.userStakingContracts.map((c) => ({ contract: c }));
-    },
-  },
-
-  methods: {
-    async getUserStakingContracts() {
-      await this.$store.dispatch("getFaasUserStakingContracts");
-    },
-  },
-
-  async mounted() {
-    try {
-      if (!this.userAddy) return;
-      await this.getUserStakingContracts();
-    } catch (err) {
-      this.localError = err;
-    }
   },
 };
 </script>

@@ -6,7 +6,9 @@ td
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${tokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer") {{ stakedTokenSymbol }}
+          rel="noopener noreferrer")
+            | {{ row.item.poolInfo.isStakedNft ? 'NFT -' : '' }}
+            | {{ stakedTokenSymbol }}
   div.text-secondary
     small {{ tokenName }}
   div.text-danger(v-if="timelockDays && timelockDays > 0")
@@ -28,7 +30,8 @@ td.text-left
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${farmingTokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer") {{ stakedBalance }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
+          rel="noopener noreferrer")
+            | {{ stakedBalance }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
   div.text-secondary
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td.d-none.d-lg-table-cell

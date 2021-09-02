@@ -32,18 +32,24 @@
               | {{ stakingInfo.rewardsTokenInfo.symbol }} per block in aggregate.
 
             div.card-footer
-              div(v-if="!isExpired")
-                | You can {{ isFrozen ? 'freeze' : 'stake' }} up to #[strong {{ userStakingBalance }}]
-                | {{ stakingInfo.stakingTokenInfo.symbol }}
-              slider-input-percent(v-model="percAmountToStake")
-              //- div {{ formattedAmountToStake }}
+              - // Staking token is ERC721
+              template(v-if="stakingInfo.poolInfo.isStakedNft")
+                div NFTTTT
+              - // Staking token is ERC20
+              template(v-else)
+                div(v-if="!isExpired")
+                  | You can {{ isFrozen ? 'freeze' : 'stake' }} up to #[strong {{ userStakingBalance }}]
+                  | {{ stakingInfo.stakingTokenInfo.symbol }}
+                slider-input-percent(v-model="percAmountToStake")
+                //- div {{ formattedAmountToStake }}
+
               div
                 n-button(
                   v-if="!isExpired"
                   type="success"
                   size="lg"
                   v-loading="globalLoading"
-                  :disabled="globalLoading || this.percAmountToStake <= 0"
+                  :disabled="globalLoading || !canStake"
                   @click="stakeTokens")
                     | {{ isFrozen ? 'Freeze' : 'Stake' }}
                     | {{ formattedAmountToStake }} {{ stakingInfo.stakingTokenInfo.symbol }}
@@ -96,6 +102,8 @@ export default {
       isLoadingLocal: true,
       percAmountToStake: 0,
       stakingInfo: {},
+      allUserNftTokens: [],
+      selectedNftTokenIds: [],
 
       emergencyUnstake: Swal.mixin({
         customClass: {
@@ -110,8 +118,16 @@ export default {
   computed: {
     ...mapState({
       // cost: (state) => state.passwordManager.cost,
+      activeNetwork: (_, getters) => getters.activeNetwork,
       globalLoading: (state) => state.globalLoading,
+      userAddy: (state) => state.web3.address,
     }),
+
+    canStake() {
+      return this.stakingInfo.poolInfo.isStakedNft
+        ? this.selectedNftTokenIds.length > 0
+        : this.percAmountToStake > 0;
+    },
 
     isPastTimelock() {
       if (!this.stakingInfo) return true;
@@ -221,12 +237,13 @@ export default {
 
     async stakeTokens() {
       try {
-        if (this.rawAmountToStake <= 0) return;
+        if (!this.canStake) return;
         this.$store.commit("SET_GLOBAL_LOADING", true);
         await this.$store.dispatch("faasStakeTokens", {
           farmingContractAddress: this.farmAddress,
           stakingContractAddress: this.stakingInfo.stakingTokenInfo.address,
           amountTokens: this.rawAmountToStake,
+          nftTokenIds: this.selectedNftTokenIds,
         });
         this.$toast.success(`Successfully staked your tokens!`);
         this.$emit("staked");
@@ -281,17 +298,36 @@ export default {
     },
   },
 
-  async mounted() {
+  mounted() {
     $(`#${this.$el.id}`).on("shown.bs.modal", async () => {
       try {
         this.stakingInfo = await this.$store.dispatch(
           "getFaasStakingInfo",
           this.farmAddress
         );
+        if (this.stakingInfo.poolInfo.isStakedNft) {
+          this.allUserNftTokens = await this.$store.dispatch(
+            "getUserOwnedNfts",
+            this.stakingInfo.stakingTokenInfo.address
+          );
+          // console.log(
+          //   "NFTTOKENS",
+          //   typeof this.allUserNftTokens,
+          //   Object.values(this.allUserNftTokens),
+          //   this.allUserNftTokens
+          // );
+          this.selectedNftTokenIds = Object.values(
+            this.allUserNftTokens
+          )[0].token_id;
+        }
       } finally {
         this.isLoadingLocal = false;
       }
     });
+  },
+
+  beforeUnmount() {
+    $(`#${this.$el.id}`).remove();
   },
 };
 </script>

@@ -44,62 +44,12 @@ const mtgyFaasAbi: AbiItem[] = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_addy",
-        type: "address",
-      },
-    ],
-    name: "addUserAsStaking",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_stakingContract",
-        type: "address",
-      },
-    ],
-    name: "addUserToContract",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
         name: "",
         type: "uint256",
       },
     ],
     name: "allFarmingContracts",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "allUsersStaking",
     outputs: [
       {
         internalType: "address",
@@ -167,30 +117,6 @@ const mtgyFaasAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_stakingContract",
-        type: "address",
-      },
-    ],
-    name: "doesUserHaveContract",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "getAllFarmingContracts",
     outputs: [
@@ -212,25 +138,6 @@ const mtgyFaasAbi: AbiItem[] = [
       },
     ],
     name: "getTokensForStaking",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-    ],
-    name: "getUserStakingContracts",
     outputs: [
       {
         internalType: "address[]",
@@ -271,42 +178,11 @@ const mtgyFaasAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_stakingAddy",
-        type: "address",
-      },
-    ],
-    name: "removeContractFromUser",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "_faasTokenAddy",
         type: "address",
       },
     ],
     name: "removeTokenContract",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_addy",
-        type: "address",
-      },
-    ],
-    name: "removeUserAsStaking",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -366,49 +242,6 @@ const mtgyFaasAbi: AbiItem[] = [
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_addy",
-        type: "address",
-      },
-    ],
-    name: "userInd",
-    outputs: [
-      {
-        internalType: "int256",
-        name: "",
-        type: "int256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "userStakes",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ];

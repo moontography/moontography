@@ -260,18 +260,16 @@ export default {
     }
   },
 
-  async genericErc721Approval(
-    { state },
-    { tokenId, tokenAddress, delegateAddress }
-  ) {
+  async genericErc721Approval({ state }, { tokenAddress, delegateAddress }) {
     const userAddy = state.web3.address;
     const contract = ERC721(state.web3.instance, tokenAddress);
-    const tokenIdOwner = await contract.methods.ownerOf(tokenId).call();
-    if (tokenIdOwner.toLowerCase() !== userAddy.toLowerCase()) {
-      throw new Error(`You're not the owner of this NFT!`);
-    }
+    // const tokenIdOwner = await contract.methods.ownerOf(tokenId).call();
+    const isApproved = await contract.methods
+      .isApprovedForAll(userAddy, delegateAddress)
+      .call();
+    if (isApproved) return;
     await contract.methods
-      .approve(delegateAddress, tokenId)
+      .setApprovalForAll(delegateAddress, true)
       .send({ from: userAddy });
   },
 
