@@ -1,14 +1,34 @@
 <template lang="pug">
 div.panel-header
   div.header.text-center
-    h2.title 1000 Ether Homepage Stats
+    h2.title Thousand Ether Homepage Lending
     p.category.text-white
-      div.text-white.mb-2 Statistics on the 1000 Ether Homepage
-      div
-        a.text-success(
-          href="https://v1.thousandetherhomepage.com/"
+      div.text-white
+        | Statistics on the Thousand Ether Homepage.
+        a.ml-1.text-white(
+          href="https://thousandetherhomepage.com/"
           target="_blank"
-          rel="noopener noreferrer") Check out the dApp!
+          rel="noopener noreferrer")
+            u Check it out now!
+      div
+        a.mr-2(
+          href="https://twitter.com/ketherhomepage"
+          target="_blank"
+          rel="noopener noreferrer")
+            n-button.btn-twitter(type="neutral" social icon round)
+              i.fa.fa-twitter
+        a.mr-2(
+          href="https://github.com/thousandetherhomepage"
+          target="_blank"
+          rel="noopener noreferrer")
+            n-button.btn-github(type="neutral" social icon round)
+              i.fa.fa-github
+        a(
+          href="https://discord.com/invite/kMb7hXaaER"
+          target="_blank"
+          rel="noopener noreferrer")
+            n-button.btn-discord(type="neutral" social icon round)
+              img.img-fluid(style="max-width: 20px" src="img/discord.png")
 </template>
 
 <script>
