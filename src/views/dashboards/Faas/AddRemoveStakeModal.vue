@@ -14,7 +14,7 @@
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
-          loading-panel(v-if="this.isLoadingLocal")
+          loading-panel(v-if="isLoadingLocal")
           div.text-center(v-else)
             div
               div.card-category
@@ -34,7 +34,18 @@
             div.card-footer
               - // Staking token is ERC721
               template(v-if="stakingInfo.poolInfo.isStakedNft")
-                div NFTTTT
+                div.mb-2 Select NFT's you would like to stake:
+                div.row.d-flex.mx-auto.mb-2(
+                  v-if="allUserNftTokens && allUserNftTokens.length > 0", 
+                  v-for="nft in allUserNftTokens")
+                  div.col
+                    p.mb-1(style="font-weight: bold") {{ nft.nft_name }} #[i.text-success.fa.fa-check(v-if="isNftSelected(nft.token_id)")]
+                    img.clickable(
+                      style="height: 100px; width: auto", 
+                      :class="isNftSelected(nft.token_id) ? 'nft-selected' : ''", 
+                      :src="nft.image",
+                      @click="toggleNft(nft.token_id)")
+                    
               - // Staking token is ERC20
               template(v-else)
                 div(v-if="!isExpired")
@@ -201,11 +212,7 @@ export default {
 
     formattedAmountToStake() {
       return this.stakingInfo.poolInfo.isStakedNft
-        ? new BigNumber(
-            new BigNumber(this.percAmountToStake)
-              .div(100)
-              .times(this.stakingInfo.stakingTokenInfo.userBalance)
-          ).toFormat()
+        ? this.selectedNftTokenIds.length
         : new BigNumber(
             new BigNumber(this.percAmountToStake)
               .div(100)
@@ -233,6 +240,16 @@ export default {
       return new BigNumber(amount)
         .div(new BigNumber(10).pow(this.stakingInfo.rewardsTokenInfo.decimals))
         .toFormat();
+    },
+
+    isNftSelected(id) {
+      return this.selectedNftTokenIds.find((i) => i == id);
+    },
+
+    toggleNft(id) {
+      const selected = this.isNftSelected(id);
+      if (selected) return this.selectedNftTokenIds.splice(selected, 1);
+      return this.selectedNftTokenIds.push(id);
     },
 
     async stakeTokens() {
@@ -310,15 +327,14 @@ export default {
             "getUserOwnedNfts",
             this.stakingInfo.stakingTokenInfo.address
           );
-          // console.log(
-          //   "NFTTOKENS",
-          //   typeof this.allUserNftTokens,
-          //   Object.values(this.allUserNftTokens),
-          //   this.allUserNftTokens
-          // );
-          this.selectedNftTokenIds = Object.values(
-            this.allUserNftTokens
-          )[0].token_id;
+          this.allUserNftTokens = this.allUserNftTokens.map((nft) => {
+            this.selectedNftTokenIds.push(nft.token_id);
+            return {
+              ...nft,
+              nft_name: JSON.parse(nft.metadata).name,
+              image: JSON.parse(nft.metadata).image,
+            };
+          });
         }
       } finally {
         this.isLoadingLocal = false;
@@ -331,3 +347,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.nft-selected {
+  outline: 1px solid #18ce0f;
+}
+</style>
