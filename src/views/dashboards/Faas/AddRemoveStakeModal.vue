@@ -329,8 +329,8 @@ export default {
             this.stakingInfo.stakingTokenInfo.address
           );
           this.allUserNftTokens = this.allUserNftTokens.map((nft) => {
-            this.selectedNftTokenIds.push(nft.token_id);
             const metadata = JSON.parse(nft.metadata);
+            if (metadata) this.selectedNftTokenIds.push(nft.token_id);
             return {
               ...nft,
               nft_name: metadata ? metadata.name : null,
