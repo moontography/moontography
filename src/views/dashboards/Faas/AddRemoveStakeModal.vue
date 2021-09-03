@@ -35,10 +35,8 @@
               - // Staking token is ERC721
               template(v-if="stakingInfo.poolInfo.isStakedNft")
                 div.mb-2 Select NFT's you would like to stake:
-                div.row.d-flex.mx-auto.mb-2(
-                  v-if="allUserNftTokens && allUserNftTokens.length > 0", 
-                  v-for="nft in allUserNftTokens")
-                  div.col
+                div.row.mb-2(v-if="allUserNftTokens && allUserNftTokens.length > 0", )
+                  div.col(v-for="nft in allUserNftTokens")
                     p.mb-1(style="font-weight: bold") {{ nft.nft_name }} #[i.text-success.fa.fa-check(v-if="isNftSelected(nft.token_id)")]
                     img.clickable(
                       style="height: 100px; width: auto", 
@@ -247,9 +245,10 @@ export default {
     },
 
     toggleNft(id) {
-      const selected = this.isNftSelected(id);
-      if (selected) return this.selectedNftTokenIds.splice(selected, 1);
-      return this.selectedNftTokenIds.push(id);
+      const index = this.selectedNftTokenIds.findIndex((i) => i == id);
+      if (index != -1) return this.selectedNftTokenIds.splice(index, 1);
+      this.selectedNftTokenIds.push(id);
+      this.selectedNftTokenIds = [...new Set(this.selectedNftTokenIds)];
     },
 
     async stakeTokens() {
