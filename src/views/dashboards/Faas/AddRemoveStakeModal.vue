@@ -44,7 +44,7 @@
                       :src="nft.image",
                       @click="toggleNft(nft.token_id)")
                 div(v-else)
-                  b No NFT's found to stake.
+                  b No NFT's found
                     
               - // Staking token is ERC20
               template(v-else)
