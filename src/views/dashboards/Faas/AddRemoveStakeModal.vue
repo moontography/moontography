@@ -330,10 +330,11 @@ export default {
           );
           this.allUserNftTokens = this.allUserNftTokens.map((nft) => {
             this.selectedNftTokenIds.push(nft.token_id);
+            const metadata = JSON.parse(nft.metadata);
             return {
               ...nft,
-              nft_name: JSON.parse(nft.metadata).name,
-              image: JSON.parse(nft.metadata).image,
+              nft_name: metadata ? metadata.name : null,
+              image: metadata ? metadata.image : null,
             };
           });
         }
