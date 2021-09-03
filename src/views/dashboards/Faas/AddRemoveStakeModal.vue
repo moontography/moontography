@@ -328,9 +328,18 @@ export default {
             "getUserOwnedNfts",
             this.stakingInfo.stakingTokenInfo.address
           );
+
+          // Filter NFT's that do not yet have metadata
+          this.allUserNftTokens = this.allUserNftTokens.filter((nft) => {
+            const metadata = JSON.parse(nft.metadata);
+            if (!metadata) return false;
+            return true;
+          });
+
+          // Map NFT's with metadata information
           this.allUserNftTokens = this.allUserNftTokens.map((nft) => {
             const metadata = JSON.parse(nft.metadata);
-            if (metadata) this.selectedNftTokenIds.push(nft.token_id);
+            this.selectedNftTokenIds.push(nft.token_id);
             return {
               ...nft,
               nft_name: metadata ? metadata.name : null,
