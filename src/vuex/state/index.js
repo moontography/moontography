@@ -82,7 +82,7 @@ export default {
           atomicSwap_V1: "0x3d2C8A4a5785fce1bCF86481510d505371c0556d",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
-          faas: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
+          faas: "0xaA0c2852F5391919b8AcE9ac079cf3791E5fE7e7",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
           faas_V13: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
         },
@@ -157,7 +157,7 @@ export default {
           atomicSwap_V1: "0x455D17B815f822F2D8aFd3Aa15F18518427E201e",
           passwordManager: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
           trustedTimestamping: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
-          faas: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
+          faas: "0x51807E0745bC0c4A2534Ca7531F20E3C0F2a73Dc",
           faas_V13: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
         },
         buy: {
@@ -192,7 +192,7 @@ export default {
           atomicSwap_V1: "0xc39E5a234Fe2CAD49263d985FF2178eeA1A06916",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
-          faas: "0xf99693b010e35B38274835CE91ccCBb1eB89B32A",
+          faas: "0x40c29F3A0248Dd2d8Eb5917E8de1574dE9f9A253",
           faas_V13: "0xf99693b010e35B38274835CE91ccCBb1eB89B32A",
         },
         // buy: {

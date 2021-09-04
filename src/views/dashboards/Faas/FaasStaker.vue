@@ -59,6 +59,7 @@ export default {
   computed: {
     ...mapState({
       faasAddyV12: (_, getters) => getters.activeNetwork.contracts.faas_V12,
+      faasAddyV13: (_, getters) => getters.activeNetwork.contracts.faas_V13,
       userAddy: (state) => state.web3.address,
     }),
   },
