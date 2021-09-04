@@ -27,8 +27,8 @@ div
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 import StakingTokensListRow from "./StakingTokensListRow";
-import MTGYFaaS from "../../../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken";
+import MTGYFaaS from "../../../../factories/web3/MTGYFaaS_V3";
+import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken_V3";
 
 export default {
   components: {
