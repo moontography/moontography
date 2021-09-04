@@ -84,6 +84,7 @@ export default {
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           faas: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
+          faas_V13: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
         },
         buy: {
           link:
@@ -117,7 +118,8 @@ export default {
           atomicSwap_V1: "0x48d6F1Fa74ec4E752b5f7f3cf112aC783251713D",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
-          faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
+          faas: "0x306996a2F45F3CA3472cABa245d772D566d4aab7",
+          faas_V13: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
@@ -156,6 +158,7 @@ export default {
           passwordManager: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
           trustedTimestamping: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           faas: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
+          faas_V13: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
         },
         buy: {
           link: "https://koffeeswap.exchange/#/pro",
@@ -190,6 +193,7 @@ export default {
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
           faas: "0xf99693b010e35B38274835CE91ccCBb1eB89B32A",
+          faas_V13: "0xf99693b010e35B38274835CE91ccCBb1eB89B32A",
         },
         // buy: {
         //   link: "https://koffeeswap.exchange/#/pro",
