@@ -165,7 +165,7 @@ export default {
     await faasToken.methods
       .stakeTokens(
         amountTokens,
-        nftTokenIds && nftTokenIds.length > 0 ? [nftTokenIds] : []
+        nftTokenIds && nftTokenIds.length > 0 ? nftTokenIds : []
       )
       .send({ from: userAddy });
   },

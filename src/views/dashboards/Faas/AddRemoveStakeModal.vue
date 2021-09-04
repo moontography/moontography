@@ -35,14 +35,17 @@
               - // Staking token is ERC721
               template(v-if="stakingInfo.poolInfo.isStakedNft")
                 div.mb-2 Select NFT's you would like to stake:
-                div.row.mb-2(v-if="allUserNftTokens && allUserNftTokens.length > 0", )
+                div.row.mb-2(v-if="allUserNftTokens && allUserNftTokens.length > 0")
                   div.col(v-for="nft in allUserNftTokens")
                     p.mb-1(style="font-weight: bold") {{ nft.nft_name }} #[i.text-success.fa.fa-check(v-if="isNftSelected(nft.token_id)")]
                     img.clickable(
+                      v-if="nft.image"
                       style="height: 100px; width: auto", 
                       :class="isNftSelected(nft.token_id) ? 'nft-selected' : ''", 
                       :src="nft.image",
                       @click="toggleNft(nft.token_id)")
+                    div.d-inline-block.border(v-else)
+                      i No NFT image...
                 div(v-else)
                   b No NFT's found
                     
@@ -330,11 +333,11 @@ export default {
           );
 
           // Filter NFT's that do not yet have metadata
-          this.allUserNftTokens = this.allUserNftTokens.filter((nft) => {
-            const metadata = JSON.parse(nft.metadata);
-            if (!metadata) return false;
-            return true;
-          });
+          // this.allUserNftTokens = this.allUserNftTokens.filter((nft) => {
+          //   const metadata = JSON.parse(nft.metadata);
+          //   if (!metadata) return false;
+          //   return true;
+          // });
 
           // Map NFT's with metadata information
           this.allUserNftTokens = this.allUserNftTokens.map((nft) => {
@@ -342,7 +345,7 @@ export default {
             this.selectedNftTokenIds.push(nft.token_id);
             return {
               ...nft,
-              nft_name: metadata ? metadata.name : null,
+              nft_name: metadata ? metadata.name : "No name",
               image: metadata ? metadata.image : null,
             };
           });
