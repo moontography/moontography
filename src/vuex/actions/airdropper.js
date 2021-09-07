@@ -34,7 +34,7 @@ export default {
         `You do not have the amount of MTGY to cover the service cost. Please ensure you have enough MTGY in your wallet to cover the service fee and try again.`
       );
     }
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: serviceCost,
       tokenAddress: mtgyAddy,
       delegateAddress: airdropAddy,
@@ -58,7 +58,7 @@ export default {
         `You do not have the amount of ${tokenInfo.symbol} to airdrop this many tokens. Please ensure you have the appropriate amount of tokens and try again.`
       );
     }
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: totalAmount,
       tokenAddress: tokenAddress,
       delegateAddress: airdropAddy,

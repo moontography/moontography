@@ -6,9 +6,7 @@ td
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${tokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer")
-            | {{ row.item.poolInfo.isStakedNft ? 'NFT -' : '' }}
-            | {{ stakedTokenSymbol }}
+          rel="noopener noreferrer") {{ stakedTokenSymbol }}
   div.text-secondary
     small {{ tokenName }}
   div.text-danger(v-if="timelockDays && timelockDays > 0")
@@ -30,8 +28,7 @@ td.text-left
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${farmingTokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer")
-            | {{ stakedBalance }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
+          rel="noopener noreferrer") {{ stakedBalance }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
   div.text-secondary
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
 td.d-none.d-lg-table-cell
@@ -45,9 +42,7 @@ td.d-none.d-lg-table-cell
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${rewardsTokenAddress}`"
           target="_blank"
           rel="noopener noreferrer") {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
-      div
-        | {{ row.item.poolInfo.isStakedNft ? totalTokensStaked[0] : totalTokensStaked[1] }}
-        | {{ stakedTokenSymbol }} {{ frozenOrStaked }}
+      div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
 td.d-none.d-lg-table-cell
   div Block: {{ row.item.lastStakableBlock }}
   div.text-secondary(v-if="estimateExpirationTime")
@@ -99,8 +94,8 @@ import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
-// import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
+// import MTGYFaaS from "../../../../factories/web3/MTGYFaaS_V3";
+import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken_V3";
 
 export default {
   props: {
@@ -229,24 +224,20 @@ export default {
     },
 
     stakedBalance() {
-      return this.row.item.poolInfo.isStakedNft
-        ? this.row.item.farmingTokenBalance
-        : new BigNumber(this.row.item.farmingTokenBalance)
-            .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
-            .times(
-              new BigNumber(10).pow(
-                this.row.item.farmingTokenDecimals - this.tokenDecimals
-              )
-            )
-            .toFormat(0, BigNumber.ROUND_DOWN);
+      return new BigNumber(this.row.item.farmingTokenBalance)
+        .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
+        .times(
+          new BigNumber(10).pow(
+            this.row.item.farmingTokenDecimals - this.tokenDecimals
+          )
+        )
+        .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
     remainingTokenBalance() {
-      return this.row.item.poolInfo.isStakedNft
-        ? this.row.item.currentTokenBalance
-        : new BigNumber(this.row.item.currentTokenBalance)
-            .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
-            .toFormat(0, BigNumber.ROUND_DOWN);
+      return new BigNumber(this.row.item.currentTokenBalance)
+        .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
+        .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
     stakingApr() {

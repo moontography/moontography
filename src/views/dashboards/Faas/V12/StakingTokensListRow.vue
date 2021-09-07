@@ -94,7 +94,7 @@ import dayjs from "dayjs";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken";
+import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken_V3";
 
 export default {
   props: {

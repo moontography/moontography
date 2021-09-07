@@ -1,7 +1,6 @@
 <template lang="pug">
 div
-  div(v-if="!faasAddy")
-  div(v-else-if="isLoadingLocal")
+  div(v-if="isLoadingLocal")
     loading-panel
   div.px-4(v-else-if="!web3")
     div.alert.alert-danger
@@ -42,7 +41,7 @@ export default {
       tokenStakingContracts: [],
 
       columns: [
-        { value: "staked", text: "Staked", classes: "" },
+        { value: "staked", text: "Frozen/Staked", classes: "" },
 
         {
           value: "balances",
@@ -78,7 +77,7 @@ export default {
   computed: {
     ...mapState({
       currentBlock: (state) => state.currentBlock,
-      faasAddy: (_, getters) => getters.activeNetwork.contracts.faas_V12,
+      faasAddy: (_, getters) => getters.activeNetwork.contracts.faas_V13,
       selectedTokenAddress: (state) => state.selectedAddressInfo.address,
       web3: (state) => state.web3.instance,
     }),
@@ -113,12 +112,21 @@ export default {
   methods: {
     async lookUpTokenStakingContracts() {
       try {
-        let tokenAddresses;
         this.isLoadingLocal = true;
-        const contract = MTGYFaaS(this.web3, this.faasAddy);
-        if (this.isAddyValid && this.selectedTokenAddress) {
+        // await this.$store.dispatch("getAllStakingContracts");
+        const web3 = this.web3;
+        // const userAddy = state.web3.address;
+        const faasAddy = this.faasAddy;
+        const selectedTokenAddress = this.selectedTokenAddress;
+
+        let tokenAddresses;
+        const contract = MTGYFaaS(web3, faasAddy);
+        if (
+          selectedTokenAddress &&
+          web3.utils.isAddress(selectedTokenAddress)
+        ) {
           tokenAddresses = await contract.methods
-            .getTokensForStaking(this.selectedTokenAddress)
+            .getTokensForStaking(selectedTokenAddress)
             .call();
         } else {
           tokenAddresses = await contract.methods
@@ -129,7 +137,7 @@ export default {
         const stakingContracts = await Promise.all(
           tokenAddresses.map(async (farmingTokenAddy) => {
             try {
-              const farmingCont = MTGYFaaSToken(this.web3, farmingTokenAddy);
+              const farmingCont = MTGYFaaSToken(web3, farmingTokenAddy);
               const [
                 tokenAddy,
                 rewardAddy,
@@ -154,12 +162,7 @@ export default {
                   userBalance: rewardUserBalance,
                 },
               ] = await Promise.all([
-                this.$store.dispatch(
-                  poolInfo.isStakedNft
-                    ? "getErc721TokenInfo"
-                    : "getErc20TokenInfo",
-                  tokenAddy
-                ),
+                this.$store.dispatch("getErc20TokenInfo", tokenAddy),
                 this.$store.dispatch("getErc20TokenInfo", rewardAddy),
               ]);
               return {

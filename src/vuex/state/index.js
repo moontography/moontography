@@ -19,6 +19,8 @@ export default {
   refreshableInterval: null,
   route: null,
   zeroAddy: "0x0000000000000000000000000000000000000000",
+  moralisApiKey:
+    "NSKfhloCF479195Dcy17lo4WWGyx4kQENDhK3iOlXpRSM8wto3aS64t10sfsrbFi",
 
   activeNetwork: localStorage.activeNetwork || "eth",
   mtgyCircSupply: "0",
@@ -80,8 +82,9 @@ export default {
           atomicSwap_V1: "0x3d2C8A4a5785fce1bCF86481510d505371c0556d",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
           trustedTimestamping: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
-          faas: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
+          faas: "0xaA0c2852F5391919b8AcE9ac079cf3791E5fE7e7",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
+          faas_V13: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
         },
         buy: {
           link:
@@ -115,7 +118,8 @@ export default {
           atomicSwap_V1: "0x48d6F1Fa74ec4E752b5f7f3cf112aC783251713D",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
-          faas: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
+          faas: "0x306996a2F45F3CA3472cABa245d772D566d4aab7",
+          faas_V13: "0x5Cfc47359381526615F7EB91D8460F4Eb73534e1",
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
@@ -153,7 +157,8 @@ export default {
           atomicSwap_V1: "0x455D17B815f822F2D8aFd3Aa15F18518427E201e",
           passwordManager: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
           trustedTimestamping: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
-          faas: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
+          faas: "0x51807E0745bC0c4A2534Ca7531F20E3C0F2a73Dc",
+          faas_V13: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
         },
         buy: {
           link: "https://koffeeswap.exchange/#/pro",
@@ -187,7 +192,8 @@ export default {
           atomicSwap_V1: "0xc39E5a234Fe2CAD49263d985FF2178eeA1A06916",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
           trustedTimestamping: "0x266BFfc052a5F02d4797A3DD99C3455Ac9D49eb6",
-          faas: "0xf99693b010e35B38274835CE91ccCBb1eB89B32A",
+          faas: "0x40c29F3A0248Dd2d8Eb5917E8de1574dE9f9A253",
+          faas_V13: "0xf99693b010e35B38274835CE91ccCBb1eB89B32A",
         },
         // buy: {
         //   link: "https://koffeeswap.exchange/#/pro",
@@ -213,7 +219,7 @@ export default {
       // },
       {
         name: "Ethereum Rinkeby",
-        short_name: "rin",
+        short_name: "rinkeby",
         chain: "ETH",
         network: "rinkeby",
         chain_id: 4,
@@ -235,7 +241,7 @@ export default {
           atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
           passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-          faas: "0x889A82d66e1Db7041967507b6AD942f32657d0EC",
+          faas: "0xEC517E8d195A62DEFEb30ce63CebfCE610bF39E4",
           kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
           ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
           ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",

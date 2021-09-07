@@ -10,6 +10,7 @@ import DexUtils from "../../factories/DexUtils";
 import ExponentialBackoff from "../../factories/ExponentialBackoff";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
+import ERC721 from "../../factories/web3/ERC721";
 import { useToast } from "vue-toastification";
 import MTGYDataUtils from "@/factories/MTGYDataUtils";
 const toast = useToast();
@@ -232,21 +233,44 @@ export default {
     });
   },
 
-  async genericTokenApproval(
+  async genericErc20Approval(
     { state },
-    { spendAmount, tokenAddress, delegateAddress }
+    { spendAmount, tokenAddress, delegateAddress, unlimited }
   ) {
+    if (new BigNumber(spendAmount || 0).lte(0)) return;
+
+    unlimited = unlimited === false ? false : true;
     const userAddy = state.web3.address;
     const contract = ERC20(state.web3.instance, tokenAddress);
-    const [userBalance, currentAllowance] = await Promise.all([
-      contract.methods.balanceOf(userAddy).call(),
-      contract.methods.allowance(userAddy, delegateAddress).call(),
-    ]);
+    const [userBalance, currentAllowance] = await ExponentialBackoff(
+      async () => {
+        return await Promise.all([
+          contract.methods.balanceOf(userAddy).call(),
+          contract.methods.allowance(userAddy, delegateAddress).call(),
+        ]);
+      }
+    );
     if (new BigNumber(currentAllowance).lte(spendAmount || 0)) {
       await contract.methods
-        .approve(delegateAddress, userBalance)
+        .approve(
+          delegateAddress,
+          unlimited ? new BigNumber(2).pow(256).minus(1).toFixed() : userBalance
+        )
         .send({ from: userAddy });
     }
+  },
+
+  async genericErc721Approval({ state }, { tokenAddress, delegateAddress }) {
+    const userAddy = state.web3.address;
+    const contract = ERC721(state.web3.instance, tokenAddress);
+    // const tokenIdOwner = await contract.methods.ownerOf(tokenId).call();
+    const isApproved = await contract.methods
+      .isApprovedForAll(userAddy, delegateAddress)
+      .call();
+    if (isApproved) return;
+    await contract.methods
+      .setApprovalForAll(delegateAddress, true)
+      .send({ from: userAddy });
   },
 
   async getErc20TokenInfo({ state }, tokenAddy) {
@@ -263,6 +287,22 @@ export default {
       name,
       symbol,
       decimals,
+      userBalance,
+    };
+  },
+
+  async getErc721TokenInfo({ state }, tokenAddy) {
+    const userAddy = state.web3.address;
+    const contract = ERC721(state.web3.instance, tokenAddy);
+    const [name, symbol, userBalance] = await Promise.all([
+      contract.methods.name().call(),
+      contract.methods.symbol().call(),
+      contract.methods.balanceOf(userAddy).call(),
+    ]);
+    return {
+      address: tokenAddy,
+      name,
+      symbol,
       userBalance,
     };
   },

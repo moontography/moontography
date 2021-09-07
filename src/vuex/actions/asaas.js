@@ -176,13 +176,13 @@ export default {
     }
 
     if (new BigNumber(instanceServiceCost).gt(0)) {
-      await dispatch("genericTokenApproval", {
+      await dispatch("genericErc20Approval", {
         spendAmount: instanceServiceCost,
         tokenAddress: mtgyAddy,
         delegateAddress: sourceContract,
       });
     }
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: amount,
       tokenAddress: tokenContract,
       delegateAddress: sourceContract,
@@ -207,13 +207,13 @@ export default {
       contract.methods.swapCreationGasLoadAmount().call(),
     ]);
     if (new BigNumber(mtgyServiceCost).gt(0)) {
-      await dispatch("genericTokenApproval", {
+      await dispatch("genericErc20Approval", {
         spendAmount: mtgyServiceCost,
         tokenAddress: mtgyAddy,
         delegateAddress: asaasAddy,
       });
     }
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: tokenSupply,
       tokenAddress: tokenAddress,
       delegateAddress: asaasAddy,
