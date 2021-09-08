@@ -35,17 +35,20 @@
               - // Staking token is ERC721
               template(v-if="stakingInfo.poolInfo.isStakedNft")
                 div.mb-2 Select NFT's you would like to stake:
-                div.row.mb-2(v-if="allUserNftTokens && allUserNftTokens.length > 0")
-                  div.col(v-for="nft in allUserNftTokens")
-                    p.mb-1(style="font-weight: bold") {{ nft.nft_name }} #[i.text-success.fa.fa-check(v-if="isNftSelected(nft.token_id)")]
-                    img.clickable(
-                      v-if="nft.image"
-                      style="height: 100px; width: auto", 
-                      :class="isNftSelected(nft.token_id) ? 'nft-selected' : ''", 
-                      :src="nft.image",
-                      @click="toggleNft(nft.token_id)")
-                    div.d-inline-block.border(v-else)
-                      i No NFT image...
+                div.row(v-if="allUserNftTokens && allUserNftTokens.length > 0")
+                  div.col-6.col-lg-3.mb-2.clickable(
+                    v-for="nft in allUserNftTokens"
+                    @click="toggleNft(nft.token_id)")
+                      p.mb-1(style="font-weight: bold")
+                        | {{ nft.nft_name }}
+                        | #[i.fa(:class="isNftSelected(nft.token_id) ? 'fa-check text-success' : 'fa-times text-danger'")]
+                      img(
+                        v-if="nft.image"
+                        style="max-height: 100px; width: auto"
+                        :class="isNftSelected(nft.token_id) ? 'nft-selected' : ''"
+                        :src="nft.image")
+                      div.d-inline-block.border(v-else)
+                        i No NFT image...
                 div(v-else)
                   b No NFT's found
                     
@@ -93,6 +96,7 @@
 
 <script>
 import $ from "jquery";
+import axios from "axios";
 import dayjs from "dayjs";
 import BigNumber from "bignumber.js";
 import Swal from "sweetalert2";
@@ -331,7 +335,6 @@ export default {
             "getUserOwnedNfts",
             this.stakingInfo.stakingTokenInfo.address
           );
-
           // Filter NFT's that do not yet have metadata
           // this.allUserNftTokens = this.allUserNftTokens.filter((nft) => {
           //   const metadata = JSON.parse(nft.metadata);
@@ -340,15 +343,26 @@ export default {
           // });
 
           // Map NFT's with metadata information
-          this.allUserNftTokens = this.allUserNftTokens.map((nft) => {
-            const metadata = JSON.parse(nft.metadata);
-            this.selectedNftTokenIds.push(nft.token_id);
-            return {
-              ...nft,
-              nft_name: metadata ? metadata.name : "No name",
-              image: metadata ? metadata.image : null,
-            };
-          });
+          this.allUserNftTokens = await Promise.all(
+            this.allUserNftTokens.map(async (nft) => {
+              let metadata = JSON.parse(nft.metadata);
+              if (!metadata && nft.token_uri) {
+                const { data } = await axios.get(nft.token_uri);
+                if (data.image) {
+                  metadata = {
+                    name: data.name,
+                    image: data.image,
+                  };
+                }
+              }
+              this.selectedNftTokenIds.push(nft.token_id);
+              return {
+                ...nft,
+                nft_name: metadata ? metadata.name : "No name",
+                image: metadata ? metadata.image : null,
+              };
+            })
+          );
         }
       } finally {
         this.isLoadingLocal = false;
