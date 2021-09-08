@@ -69,7 +69,7 @@ td.td-actions.text-right
       type="success"
       round
       data-toggle="modal"
-      :data-target="`#stake-modal-${farmingTokenAddress}`")
+      :data-target="`#stake-modal-v3-${farmingTokenAddress}`")
         span #[i.fa.fa-minus] / #[i.fa.fa-plus]
     //- a.text-danger.clickable.mr-1(
     //-   v-if="isInFarm"
@@ -82,7 +82,7 @@ td.td-actions.text-right
     //-     i.fa.fa-2x.fa-plus-circle
 
 add-remove-stake-modal(
-  :id="`stake-modal-${farmingTokenAddress}`"
+  :id="`stake-modal-v3-${farmingTokenAddress}`"
   :is-expired="isFarmExpired"
   :farm-address="farmingTokenAddress"
   @staked="init")
@@ -332,12 +332,12 @@ export default {
     await this.init();
 
     // Modal appearing in table and below backgound on mobile
-    $(`#stake-modal-${this.farmingTokenAddress}`).appendTo("body");
+    $(`#stake-modal-v3-${this.farmingTokenAddress}`).appendTo("body");
   },
 
   beforeUnmount() {
     // See comments above as to why this needs to be here.
-    $(`#stake-modal-${this.farmingTokenAddress}`).remove();
+    $(`#stake-modal-v3-${this.farmingTokenAddress}`).remove();
   },
 };
 </script>
