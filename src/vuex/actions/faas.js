@@ -4,6 +4,7 @@ import ERC721 from "../../factories/web3/ERC721";
 import MTGY from "../../factories/web3/MTGY";
 import MTGYFaaS from "../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
+import MTGYFaaSToken_V3 from "../../factories/web3/MTGYFaaSToken_V3";
 
 export default {
   // async faasHarvestTokens({ state }, tokenAddy) {
@@ -168,6 +169,21 @@ export default {
         nftTokenIds && nftTokenIds.length > 0 ? nftTokenIds : []
       )
       .send({ from: userAddy });
+  },
+
+  async faasStakeTokens_V3(
+    { dispatch, state },
+    { farmingContractAddress, stakingContractAddress, amountTokens }
+  ) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const faasToken = MTGYFaaSToken_V3(web3, farmingContractAddress);
+    await dispatch("genericErc20Approval", {
+      spendAmount: amountTokens,
+      tokenAddress: stakingContractAddress,
+      delegateAddress: farmingContractAddress,
+    });
+    await faasToken.methods.stakeTokens(amountTokens).send({ from: userAddy });
   },
 
   async faasUnstakeTokens(

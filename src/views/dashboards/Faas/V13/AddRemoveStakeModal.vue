@@ -77,6 +77,7 @@ import dayjs from "dayjs";
 import BigNumber from "bignumber.js";
 import Swal from "sweetalert2";
 import { mapState } from "vuex";
+import MTGYFaaSToken_V3 from "../../../../factories/web3/MTGYFaaSToken_V3";
 export default {
   name: "AddRemoveStakeModal",
 
@@ -111,6 +112,8 @@ export default {
     ...mapState({
       // cost: (state) => state.passwordManager.cost,
       globalLoading: (state) => state.globalLoading,
+      web3: (state) => state.web3.instance,
+      userAddy: (state) => state.web3.address,
     }),
 
     isPastTimelock() {
@@ -211,7 +214,7 @@ export default {
       try {
         if (this.rawAmountToStake <= 0) return;
         this.$store.commit("SET_GLOBAL_LOADING", true);
-        await this.$store.dispatch("faasStakeTokens", {
+        await this.$store.dispatch("faasStakeTokens_V3", {
           farmingContractAddress: this.farmAddress,
           stakingContractAddress: this.stakingInfo.stakingTokenInfo.address,
           amountTokens: this.rawAmountToStake,
@@ -272,10 +275,47 @@ export default {
   async mounted() {
     $(`#${this.$el.id}`).on("shown.bs.modal", async () => {
       try {
-        this.stakingInfo = await this.$store.dispatch(
-          "getFaasStakingInfo",
-          this.farmAddress
-        );
+        const web3 = this.web3;
+        const userAddy = this.userAddy;
+        const faasToken = MTGYFaaSToken_V3(web3, this.farmAddress);
+        const [
+          userStakingAmount,
+          stakingContract,
+          rewardsContract,
+          poolInfo,
+          contractIsRemoved,
+          stakerInfo,
+          lastBlock,
+          currentBlock,
+        ] = await Promise.all([
+          faasToken.methods.balanceOf(userAddy).call(),
+          faasToken.methods.stakedTokenAddress().call(),
+          faasToken.methods.rewardsTokenAddress().call(),
+          faasToken.methods.pool().call(),
+          faasToken.methods.contractIsRemoved().call(),
+          faasToken.methods.stakers(userAddy).call(),
+          faasToken.methods.getLastStakableBlock().call(),
+          web3.eth.getBlockNumber(),
+        ]);
+        const tokensRewardedPerBlock = poolInfo.perBlockNum;
+        const [stakingTokenInfo, rewardsTokenInfo] = await Promise.all([
+          this.$store.dispatch(
+            poolInfo.isStakedNft ? "getErc721TokenInfo" : "getErc20TokenInfo",
+            stakingContract
+          ),
+          this.$store.dispatch("getErc20TokenInfo", rewardsContract),
+        ]);
+        this.stakingInfo = {
+          userStakingAmount,
+          tokensRewardedPerBlock,
+          poolInfo,
+          contractIsRemoved,
+          stakerInfo,
+          currentBlock,
+          lastBlock,
+          stakingTokenInfo,
+          rewardsTokenInfo,
+        };
       } finally {
         this.isLoadingLocal = false;
       }
