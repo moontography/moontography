@@ -170,17 +170,16 @@ export default {
     const userAddy = state.web3.address;
     const ketherNFTCont = getters.activeNetwork.contracts.ketherNFT;
     const ketherNFTLoanerCont = getters.activeNetwork.contracts.ketherNFTLoaner;
-    const nftContract = KetherNFT(web3, ketherNFTCont);
+    // const nftContract = KetherNFT(web3, ketherNFTCont);
     const loanerContract = KetherNFTLoaner(web3, ketherNFTLoanerCont);
-    const [delegate, loanCharge] = await Promise.all([
-      nftContract.methods.getApproved(plotIndex).call(),
-      dispatch("getAddPlotToMakeLoanableCharge", plotIndex),
-    ]);
-    if (delegate.toLowerCase() !== ketherNFTLoanerCont.toLowerCase()) {
-      await nftContract.methods
-        .approve(ketherNFTLoanerCont, plotIndex)
-        .send({ from: userAddy });
-    }
+    const loanCharge = await dispatch(
+      "getAddPlotToMakeLoanableCharge",
+      plotIndex
+    );
+    await dispatch("genericErc721Approval", {
+      tokenAddress: ketherNFTCont,
+      delegateAddress: ketherNFTLoanerCont,
+    });
     await loanerContract.methods
       .addPlot(plotIndex, overridePerDayCharge, overrideMaxDays)
       .send({ from: userAddy, value: loanCharge });

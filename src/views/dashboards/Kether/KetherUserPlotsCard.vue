@@ -56,7 +56,7 @@ export default {
       plotOptions: [
         { value: "all", label: "All plots" },
         { value: "loanable", label: "Loanable plots" },
-        { value: "loaning", label: "Plots you're lending" },
+        { value: "loaning", label: "Plots you're loaning" },
         { value: "user", label: "Plots you own" },
       ],
       searchQuery: null,

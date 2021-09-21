@@ -28,12 +28,14 @@ export default {
       commit("SET_INIT_LOADING", true);
       commit("SET_GLOBAL_ERROR", null);
 
+      // an error with this API will break the app if we await, so don't here
+      dispatch("getMtgyPriceUsd");
+
       // Get MTGY info before having to connect wallet.
       // Allows dashboard data to be shown even if user does not connect wallet.
 
       await ExponentialBackoff(async () => {
         await Promise.all([
-          dispatch("getMtgyPriceUsd"),
           dispatch("getMTGYCirculatingSupply"),
           dispatch("getMTGYTotalSupply"),
           dispatch("getMtgyTokenInfo"),
@@ -113,9 +115,11 @@ export default {
 
     const go = async () => {
       try {
+        // an error with this API will break the app if we await, so don't here
+        dispatch("getMtgyPriceUsd");
+
         await Promise.all([
           dispatch("getUserBalance"),
-          dispatch("getMtgyPriceUsd"),
           dispatch("getMTGYCirculatingSupply"),
           dispatch("getMTGYTotalSupply"),
           dispatch("getMtgyTokenInfo"),

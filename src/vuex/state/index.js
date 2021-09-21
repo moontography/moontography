@@ -77,7 +77,7 @@ export default {
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
-          airdropper: "0xeFD47d675683c2788f8171Fede12A1505D07c2B2",
+          airdropper: "0x9c171AB0d912154BFF2eB0E3967d28E6D30e0b01",
           atomicSwap: "0x5b88b0CFAF3f97fb1a66B16681F6E502Ec03627e",
           atomicSwap_V1: "0x3d2C8A4a5785fce1bCF86481510d505371c0556d",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
