@@ -192,7 +192,8 @@ export default {
     },
 
     fdMarketCap() {
-      return this.tokenInfo.market_data.fully_diluted_valuation.usd;
+      // return this.tokenInfo.market_data.fully_diluted_valuation.usd;
+      return new BigNumber(this.totSupply).times(this.mtgyPriceUsd).toFixed(2);
     },
 
     totalVolume() {
