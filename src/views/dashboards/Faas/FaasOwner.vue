@@ -16,7 +16,7 @@
             v-model="stakableTokenInfo"
             btn-size="sm"
             btn-text="Find stakable token from contract"
-            :is-nft="this.isStakableTokenNft")
+            :is-nft="isStakableTokenNft")
       .col-lg-6
         card
           template(v-slot:header='')

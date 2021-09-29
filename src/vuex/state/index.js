@@ -77,7 +77,7 @@ export default {
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
-          airdropper: "0x9c171AB0d912154BFF2eB0E3967d28E6D30e0b01",
+          airdropper: "0xc3f2A5D962d86a6305c5F9BD0bAdF3af6a017272",
           atomicSwap: "0x5b88b0CFAF3f97fb1a66B16681F6E502Ec03627e",
           atomicSwap_V1: "0x3d2C8A4a5785fce1bCF86481510d505371c0556d",
           passwordManager: "0xf67f6A36d751677D67069F359Be7623c4ea04524",
@@ -113,7 +113,7 @@ export default {
         contracts: {
           mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           mtgySpend: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
-          airdropper: "0x8f70517bc8d336db91f5f3f8abb4b58e61786b83",
+          airdropper: "0x87Db3450ae10aE95B4e683c2d4A2270A7cFc8a97",
           atomicSwap: "0xa6C81ea7a97432f330F878650A5d5d376795D919",
           atomicSwap_V1: "0x48d6F1Fa74ec4E752b5f7f3cf112aC783251713D",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
@@ -152,7 +152,7 @@ export default {
         contracts: {
           mtgy: "0xee00ef5a7ec4fdbd04eee39d60fe11c0ded65e73",
           mtgySpend: "0x2060539895f6ef746336471001cEC66BfBf591d9",
-          airdropper: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+          airdropper: "0xCc52339e62A8e2297ebE5aD6C9389DAd69397808",
           atomicSwap: "0xae31AbAef5F7000E469AED538f8e2A2a88661fF1",
           atomicSwap_V1: "0x455D17B815f822F2D8aFd3Aa15F18518427E201e",
           passwordManager: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
@@ -187,7 +187,7 @@ export default {
         contracts: {
           mtgy: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
           mtgySpend: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
-          airdropper: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
+          airdropper: "0x59a170Ead85428E13bdDc4048D273eCe57CB8859",
           atomicSwap: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
           atomicSwap_V1: "0xc39E5a234Fe2CAD49263d985FF2178eeA1A06916",
           passwordManager: "0xc8DD32752abe732Bc586dd42740895B6736619e2",
@@ -237,7 +237,7 @@ export default {
         contracts: {
           mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
           mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-          airdropper: "0x94E9cEE0Af5aF7347D1e4D82cC1e3e446b0e2B4a",
+          airdropper: "0xE71Eb358845ac93aF96D5C340814D25663E3F4Ab",
           atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
           passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",

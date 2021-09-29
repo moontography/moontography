@@ -62,7 +62,10 @@ export default {
           );
 
           const isSwapActive = await sourceSwapInst.methods.isActive().call();
-          if (!(isSwapActive && swap.isActive)) return null;
+          if (!(isSwapActive && swap.isActive))
+            throw new Error(
+              `Swap doesn't appear to be active: source - ${swap.sourceContract}; target - ${swap.targetContract}`
+            );
 
           const [
             swapTokenAddy,
