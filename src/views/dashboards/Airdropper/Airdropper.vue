@@ -45,7 +45,9 @@
                 thead
                   tr
                     th Address
-                    th Amount {{ tokenInfo && tokenInfo.symbol ? tokenInfo.symbol : 'Tokens' }} to send
+                    th
+                      | {{ isAirdroppingTokenNft ? 'Token IDs of' : 'Amount' }}
+                      | {{ tokenInfo && tokenInfo.symbol ? tokenInfo.symbol : 'Tokens' }} to send
                     th
                 tbody
                   tr(v-if="!addresses || addresses.length === 0")
