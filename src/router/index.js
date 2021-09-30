@@ -15,6 +15,7 @@ import FaasHeader from "../views/headers/FaasHeader";
 import KetherHeader from "../views/headers/KetherHeader";
 import PaasHeader from "../views/headers/PaasHeader";
 import PasswordManagerHeader from "../views/headers/PasswordManagerHeader";
+import RafflerHeader from "../views/headers/RafflerHeader";
 import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
 
 // Dashboard pages
@@ -27,6 +28,8 @@ import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
 import KetherStats from "../views/dashboards/Kether/KetherStats";
 import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager.vue";
 import PasswordManagerLayout from "../views/layout/PasswordManagerLayout.vue";
+import Raffler from "../views/dashboards/Raffler/Raffler.vue";
+import RafflerLayout from "../views/layout/RafflerLayout.vue";
 import SwapsListView from "../views/dashboards/ASaaS/SwapsListView.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
 import TrustedTimestampingLayout from "../views/layout/TrustedTimestampingLayout.vue";
@@ -119,6 +122,27 @@ const routes = [
             path: "",
             name: "Password Manager",
             component: PasswordManager,
+          },
+        ],
+      },
+      {
+        path: "raffler",
+        name: "Raffler",
+        components: {
+          default: RafflerLayout,
+          header: RafflerHeader,
+        },
+        children: [
+          {
+            path: ":rafflerId",
+            name: "Raffle",
+            component: Raffler,
+            props: true,
+          },
+          {
+            path: "",
+            name: "Raffler",
+            component: Raffler,
           },
         ],
       },
