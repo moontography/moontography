@@ -32,6 +32,7 @@ export default {
     ...mapState({
       globalLoading: (state) => state.globalLoading,
       raffleIds: (state) => state.raffler.allRaffleIds || [],
+      userAddy: (state) => state.web3.address,
 
       filteredRaffles(state) {
         return this.raffleIds === 0 ||
@@ -42,7 +43,9 @@ export default {
               (id) =>
                 state.raffler.raffleInfo[id] &&
                 (!this.filters.includeComplete ||
-                  !state.raffler.raffleInfo[id].isComplete)
+                  !state.raffler.raffleInfo[id].isComplete ||
+                  state.raffler.raffleInfo[id].owner.toLowerCase() ===
+                    this.userAddy.toLowerCase())
             );
       },
     }),

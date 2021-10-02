@@ -106,6 +106,14 @@ export default {
     await contract.methods.enterRaffle(raffleId).send({ from: userAddy });
   },
 
+  async drawRaffleWinner({ getters, state }, raffleId) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const rafflerAddy = getters.activeNetwork.contracts.raffler;
+    const contract = MTGYRaffler(web3, rafflerAddy);
+    await contract.methods.drawWinner(raffleId).send({ from: userAddy });
+  },
+
   async createRaffle(
     { dispatch, getters, state },
     {
