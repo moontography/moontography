@@ -3,6 +3,7 @@ import asaas from "./asaas";
 import faas from "./faas";
 import kether from "./kether";
 import passwordManager from "./passwordManager";
+import raffler from "./raffler";
 import trustedTimestamping from "./trustedTimestamping";
 
 import BigNumber from "bignumber.js";
@@ -21,6 +22,7 @@ export default {
   ...faas,
   ...kether,
   ...passwordManager,
+  ...raffler,
   ...trustedTimestamping,
 
   async init({ commit, dispatch, getters, state }, reset = false) {

@@ -29,6 +29,7 @@ import KetherStats from "../views/dashboards/Kether/KetherStats";
 import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager.vue";
 import PasswordManagerLayout from "../views/layout/PasswordManagerLayout.vue";
 import Raffler from "../views/dashboards/Raffler/Raffler.vue";
+import RafflerNew from "../views/dashboards/Raffler/RafflerNew.vue";
 import RafflerLayout from "../views/layout/RafflerLayout.vue";
 import SwapsListView from "../views/dashboards/ASaaS/SwapsListView.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
@@ -134,10 +135,15 @@ const routes = [
         },
         children: [
           {
-            path: ":rafflerId",
+            path: ":raffleId",
             name: "Raffle",
             component: Raffler,
             props: true,
+          },
+          {
+            path: "new",
+            name: "New Raffle",
+            component: RafflerNew,
           },
           {
             path: "",

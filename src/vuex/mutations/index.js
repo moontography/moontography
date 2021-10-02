@@ -2,8 +2,9 @@ import airdropper from "./airdropper";
 import asaas from "./asaas";
 import faas from "./faas";
 import kether from "./kether";
-import trustedTimestamping from "./trustedTimestamping";
 import passwordManager from "./passwordManager";
+import raffler from "./raffler";
+import trustedTimestamping from "./trustedTimestamping";
 
 export default {
   ...airdropper,
@@ -11,6 +12,7 @@ export default {
   ...faas,
   ...kether,
   ...passwordManager,
+  ...raffler,
   ...trustedTimestamping,
 
   SET_GLOBAL_ERROR(state, error) {

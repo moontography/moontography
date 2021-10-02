@@ -77,7 +77,7 @@ div
             //-         animated-number(:value='tvl')
             //-       h6.stats-title Total Value Locked
   .row
-    .col-lg-6
+    .col-lg-4
       card
         .card-body.text-center
           a(href="#/faas")
@@ -89,7 +89,7 @@ div
                   | Farming as a Service
                 h6.stats-title.text-success Live Now!
     
-    .col-lg-6
+    .col-lg-4
       card
         .card-body.text-center
           a(href="#/asaas")
@@ -98,7 +98,18 @@ div
                 .icon.icon-success
                   i.now-ui-icons.arrows-1_refresh-69
                 h3.info-title
-                  | Atomic Swapping as a Service
+                  | Atomic Swap/Bridging 
+                h6.stats-title.text-success Live Now!
+    .col-lg-4
+      card
+        .card-body.text-center
+          a(href="#/raffler")
+            .statistics
+              .info
+                .icon.icon-success
+                  i.now-ui-icons.arrows-1_refresh-69
+                h3.info-title
+                  | Raffler/Lottery
                 h6.stats-title.text-success Live Now!
 
   .row    

@@ -3,24 +3,24 @@ div
   div.alert.alert-danger(v-if="!isConnected")
     | Make sure you connect to your wallet before searching for a contract.
   div(v-else)
-    div.px-3
+    div
       div.alert.alert-danger(v-if="localError")
         | {{ localError.message }}
       //- fg-input(
       //-   placeholder="Token Contract"
       //-   v-model="insertedTokenAddy")
-    div.px-3
+    div
       input.form-control(
-        placeholder="Token Contract"
+        placeholder="Token Contract Address"
         v-model="insertedTokenAddy"
         @update:modelValue="checkAndClear")
-    div.text-center
-      n-button(
-        type="primary"
-        :size="btnSize"
-        v-loading="globalLoading"
-        :disabled="globalLoading"
-        @click="selectAndGetToken") {{ btnText }}
+    //- div.text-center
+    //-   n-button(
+    //-     type="primary"
+    //-     :size="btnSize"
+    //-     v-loading="globalLoading"
+    //-     :disabled="globalLoading"
+    //-     @click="selectAndGetToken") {{ btnText }}
     template(v-if="selectedTokenSymbol")
       hr
       div.row.pb-3

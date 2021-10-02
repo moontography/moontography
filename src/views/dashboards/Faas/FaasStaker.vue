@@ -11,7 +11,7 @@
               | Find a Token to Farm and Earn
           template(v-slot:raw-content="")
             div
-              token-input(btn-text="Retrieve Farms for Token")
+              token-input.px-3(btn-text="Retrieve Farms for Token")
             div.card-body.table-full-width.py-0.border-top
               staking-tokens-list
 

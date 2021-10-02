@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  loading-panel(v-if="isInitLoading")
+  loading-panel(v-if="isLoadingLocal")
   div.d-flex.alert.alert-danger(v-else-if="!isConnected || !hasRafflerContract")
     div.mx-auto(v-if="!isConnected") Please make sure you are connected to your wallet to proceed.
     div.mx-auto(v-else-if="!hasRafflerContract")
@@ -14,13 +14,24 @@ div
 import { mapState } from "vuex";
 
 export default {
+  data() {
+    return { isLoadingLocal: true };
+  },
+
   computed: {
     ...mapState({
-      isInitLoading: (state) => state.initLoading,
       isConnected: (_, getters) => getters.isConnected,
       hasRafflerContract: (_, getters) =>
         getters.activeNetwork && getters.activeNetwork.contracts.raffler,
     }),
+  },
+
+  async created() {
+    try {
+      await this.$store.dispatch("initRaffler");
+    } finally {
+      this.isLoadingLocal = false;
+    }
   },
 };
 </script>

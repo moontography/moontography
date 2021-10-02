@@ -1,20 +1,26 @@
 <template lang="pug">
-.row
-  .col-md-10.mx-auto
-    card.p-2
-      h3.m-0 #[i.fa.fa-address-book.text-primary.mr-2] Raffler/Lottery
-
-      .card-body
-        div testing 123
+div.alert.alert-danger(v-if="filteredRaffles.length === 0")
+  | There are no raffles available to enter.
+div.row(v-else)
+  div.col-md-6.col-lg-4(v-for="id in filteredRaffles")
+    raffle-card(:raffle-id="id")
 </template>
 
 <script>
 import { mapState } from "vuex";
+import RaffleCard from "./RaffleCard";
 
 export default {
+  components: {
+    RaffleCard,
+  },
+
   data() {
     return {
       isLoading: true,
+      filters: {
+        includeComplete: false,
+      },
     };
   },
 
@@ -25,19 +31,21 @@ export default {
   computed: {
     ...mapState({
       globalLoading: (state) => state.globalLoading,
-      // accounts: (state) => state.passwordManager.accounts || [],
-    }),
-  },
+      raffleIds: (state) => state.raffler.allRaffleIds || [],
 
-  async created() {
-    try {
-      // await this.$store.dispatch("getPasswordManagerEncryptionKey");
-      // await this.$store.dispatch("getPasswordManagerAccounts");
-    } catch (err) {
-      this.$toast.error(err.message);
-    } finally {
-      this.isLoading = false;
-    }
+      filteredRaffles(state) {
+        return this.raffleIds === 0 ||
+          (this.raffleIds.length > 0 &&
+            Object.keys(state.raffler.raffleInfo).length === 0)
+          ? this.raffleIds
+          : this.raffleIds.filter(
+              (id) =>
+                state.raffler.raffleInfo[id] &&
+                (!this.filters.includeComplete ||
+                  !state.raffler.raffleInfo[id].isComplete)
+            );
+      },
+    }),
   },
 };
 </script>

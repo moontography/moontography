@@ -8,6 +8,7 @@ import {
   FormGroupInput as FgInput,
   LoadingPanel,
   NetworkSelector,
+  NftSelector,
   Slider,
   SliderInputPercent,
   StatsCard,
@@ -55,6 +56,7 @@ const GlobalComponents = {
     app.component("n-switch", Switch);
     app.component("n-table", NTable);
     app.component("network-selector", NetworkSelector);
+    app.component("nft-selector", NftSelector);
     app.component("slider", Slider);
     app.component("slider-input-percent", SliderInputPercent);
     app.component("stats-card", StatsCard);
