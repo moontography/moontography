@@ -69,7 +69,10 @@ export default {
     });
   },
 
-  async enterRaffle({ dispatch, getters, state }, raffleId) {
+  async enterRaffle(
+    { dispatch, getters, state },
+    { id: raffleId, numEntries }
+  ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const rafflerAddy = getters.activeNetwork.contracts.raffler;
@@ -96,6 +99,7 @@ export default {
 
     if (
       raffleInfo.userEntries &&
+      new BigNumber(raffleInfo.maxEntriesPerAddress).gt(0) &&
       new BigNumber(raffleInfo.userEntries).gte(raffleInfo.maxEntriesPerAddress)
     ) {
       throw new Error(
@@ -103,7 +107,9 @@ export default {
       );
     }
 
-    await contract.methods.enterRaffle(raffleId).send({ from: userAddy });
+    await contract.methods
+      .enterRaffle(raffleId, numEntries)
+      .send({ from: userAddy });
   },
 
   async drawRaffleWinner({ getters, state }, raffleId) {

@@ -11,7 +11,7 @@
               h5.m-0 Reward Token Information
               div
                 small Which token(s) are you supplying to be won from the raffle?
-            checkbox.ml-3(v-model="isRewardTokenNft") Is this an NFT contract?
+            //- checkbox.ml-3(v-model="isRewardTokenNft") Is this an NFT contract?
           token-input-standalone.mb-4(
             v-model="rewardTokenInfo"
             btn-size="sm"

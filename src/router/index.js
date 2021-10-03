@@ -30,6 +30,7 @@ import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager
 import PasswordManagerLayout from "../views/layout/PasswordManagerLayout.vue";
 import Raffler from "../views/dashboards/Raffler/Raffler.vue";
 import RafflerNew from "../views/dashboards/Raffler/RafflerNew.vue";
+import RafflerUnique from "../views/dashboards/Raffler/RafflerUnique.vue";
 import RafflerLayout from "../views/layout/RafflerLayout.vue";
 import SwapsListView from "../views/dashboards/ASaaS/SwapsListView.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
@@ -137,7 +138,7 @@ const routes = [
           {
             path: ":raffleId",
             name: "Raffle",
-            component: Raffler,
+            component: RafflerUnique,
             props: true,
           },
           {

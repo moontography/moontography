@@ -245,7 +245,7 @@ export default {
           airdropper: "0xE71Eb358845ac93aF96D5C340814D25663E3F4Ab",
           atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
           passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
-          raffler: "0x9A48CE3Fe43839248430ef2Fc2deC7d030bB01DB",
+          raffler: "0x1E6a4476bB73b3ACff096840344d923D95D3Af3f",
           trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
           faas: "0xEC517E8d195A62DEFEb30ce63CebfCE610bF39E4",
           kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",

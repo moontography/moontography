@@ -3,7 +3,8 @@ card.p-2
   loading-panel(v-if="isLoadingLocal")
   template(v-else)
     h3.m-0 #[i.fa.fa-ticket.text-primary.mr-2]
-      | {{ rewardAmountFormatted }} {{ raffleInfo.rewardTokenInfo.symbol }}
+      router-link(:to="`/raffler/${raffleId}`")
+        | {{ rewardAmountFormatted }} {{ raffleInfo.rewardTokenInfo.symbol }}
     .card-body.text-center
       div.reward-info.mb-4
         div This raffle will reward
@@ -36,9 +37,9 @@ card.p-2
         h5.m-0 Entry Fee
         div(v-if="!hasEntryFee")
           div.text-success No entry fee!
-        div(v-else)
+        div(v-else-if="raffleInfo.entryTokenInfo")
           div
-            small To enter the raffle you will spend
+            small To enter the raffle you will spend (per entry):
           div
             a(
               :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${raffleInfo.entryToken}`"
@@ -56,12 +57,19 @@ card.p-2
             div Total Entries
             div
               strong {{ raffleInfo.entries && raffleInfo.entries.length || 0 }}
-          div.col-lg-6
+          div.col-lg-6(v-if="raffleInfo.entryTokenInfo")
             div Entry Fees Collected
             div
               strong
                 span(v-if="raffleInfo.entryTokenInfo") {{ entryFeesCollectedFormatted }} {{ raffleInfo.entryTokenInfo.symbol }}
                 span(v-else) No Entry Fee
+      div.num-entries.mb-4.pt-4.border-top(v-if="canUserEnter && getMaxNumEntriesUserHasLeft > 1")
+        div Number of entries you want to add
+        slider(
+          v-model="numberOfEntries"
+          :range="{ min: 1, max: getMaxNumEntriesUserHasLeft }"
+          :options="{ step: 1 }")
+        div.d-flex.justify-content-center {{ numberOfEntries }}
       div.d-flex.justify-content-center(v-if="canUserEnter || canUserDrawWinner")
         n-button(
           v-if="canUserEnter"
@@ -69,7 +77,9 @@ card.p-2
           size="sm"
           v-loading="globalLoading"
           :disabled="globalLoading"
-          @click="enterRaffle") Enter Raffle
+          @click="enterRaffle")
+            | Enter Raffle
+            | #[span(v-if="raffleInfo.entryTokenInfo") ({{ getEntryFeesUserWillSpend }} {{ raffleInfo.entryTokenInfo.symbol }})]
         n-button.ml-2(
           v-if="canUserDrawWinner"
           type="danger"
@@ -92,6 +102,7 @@ export default {
   data() {
     return {
       isLoadingLocal: true,
+      numberOfEntries: 1,
     };
   },
 
@@ -118,7 +129,7 @@ export default {
         this.userAddy.toLowerCase() === this.raffleInfo.owner.toLowerCase() &&
         (this.raffleInfo.end == "0" ||
           dayjs
-            .unix(new BigNumber(this.raffleInfo.end).times(1000).toNumber())
+            .unix(new BigNumber(this.raffleInfo.end).toNumber())
             .isBefore(dayjs()))
       );
     },
@@ -129,14 +140,30 @@ export default {
         !this.raffleInfo.isComplete &&
         (this.raffleInfo.start == "0" ||
           dayjs
-            .unix(new BigNumber(this.raffleInfo.start).times(1000).toNumber())
+            .unix(new BigNumber(this.raffleInfo.start).toNumber())
             .isBefore(dayjs())) &&
         (this.raffleInfo.end == "0" ||
           dayjs
-            .unix(new BigNumber(this.raffleInfo.end).times(1000).toNumber())
+            .unix(new BigNumber(this.raffleInfo.end).toNumber())
             .isAfter(dayjs())) &&
-        this.raffleInfo.userEntries < this.raffleInfo.maxEntriesPerAddress
+        (this.raffleInfo.maxEntriesPerAddress == 0 ||
+          this.raffleInfo.userEntries < this.raffleInfo.maxEntriesPerAddress)
       );
+    },
+
+    getMaxNumEntriesUserHasLeft() {
+      return this.raffleInfo.maxEntriesPerAddress == "0"
+        ? 100
+        : new BigNumber(this.raffleInfo.maxEntriesPerAddress)
+            .minus(this.raffleInfo.userEntries)
+            .toNumber();
+    },
+
+    getEntryFeesUserWillSpend() {
+      if (this.entryFeeFormatted == 0) return 0;
+      return new BigNumber(this.numberOfEntries)
+        .times(this.entryFeeFormatted)
+        .toFormat(2);
     },
 
     hasEntryFee() {
@@ -164,6 +191,7 @@ export default {
     entryFeeFormatted() {
       return (
         (this.raffleInfo &&
+          this.raffleInfo.entryTokenInfo &&
           this.raffleInfo.entryFee &&
           new BigNumber(this.raffleInfo.entryFee)
             .div(new BigNumber(10).pow(this.raffleInfo.entryTokenInfo.decimals))
@@ -201,7 +229,11 @@ export default {
     async enterRaffle() {
       try {
         this.$store.commit("SET_GLOBAL_LOADING", true);
-        await this.$store.dispatch("enterRaffle", this.raffleId);
+        await this.$store.dispatch("enterRaffle", {
+          id: this.raffleId,
+          numEntries: new BigNumber(this.numberOfEntries).toFixed(0),
+        });
+        this.numberOfEntries = 1;
         this.$toast.success(`Successfully entered the raffle!`);
         await this.init();
       } catch (err) {

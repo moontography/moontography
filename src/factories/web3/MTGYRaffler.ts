@@ -88,6 +88,12 @@ const mtgyRafflerAbi: AbiItem[] = [
         name: "raffler",
         type: "address",
       },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "numberOfEntries",
+        type: "uint256",
+      },
     ],
     name: "EnterRaffle",
     type: "event",
@@ -110,6 +116,24 @@ const mtgyRafflerAbi: AbiItem[] = [
     ],
     name: "OwnershipTransferred",
     type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "_id",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "_newEnd",
+        type: "uint256",
+      },
+    ],
+    name: "changeEndDate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
@@ -261,6 +285,11 @@ const mtgyRafflerAbi: AbiItem[] = [
         internalType: "bytes32",
         name: "_id",
         type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "_numEntries",
+        type: "uint256",
       },
     ],
     name: "enterRaffle",
