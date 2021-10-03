@@ -126,6 +126,7 @@ export default {
     ...mapState({
       activeNetworkExplorerUrl: (_, getters) =>
         getters.activeNetworkExplorerUrl,
+      tokenRoute: (_, getters) => getters.tokenRoute,
       blocksPerDay: (_, getters) => getters.activeNetwork.blocks_per_day,
       currentBlock: (state) => state.currentBlock,
       globalLoading: (state) => state.globalLoading,
@@ -141,12 +142,6 @@ export default {
 
     frozenOrStaked() {
       return !this.isFrozen ? "staked" : "frozen";
-    },
-
-    tokenRoute() {
-      return this.activeNetworkExplorerUrl === "https://explorer.kcc.io/en"
-        ? "tokentxns"
-        : "token";
     },
 
     isFarmExpired() {

@@ -22,4 +22,10 @@ export default {
       return null;
     }
   },
+
+  tokenRoute(_, getters) {
+    return getters.activeNetworkExplorerUrl === "https://explorer.kcc.io/en"
+      ? "tokentxns"
+      : "token";
+  },
 };

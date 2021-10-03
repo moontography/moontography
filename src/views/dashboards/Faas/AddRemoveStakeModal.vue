@@ -36,19 +36,11 @@
               template(v-if="stakingInfo.poolInfo.isStakedNft")
                 div.mb-2 Select NFT's you would like to stake:
                 div.row(v-if="allUserNftTokens && allUserNftTokens.length > 0")
-                  div.col-6.col-lg-3.mb-2.clickable(
+                  nft-selector.col-6.col-lg-3.mb-2.clickable(
                     v-for="nft in allUserNftTokens"
-                    @click="toggleNft(nft.token_id)")
-                      p.mb-1(style="font-weight: bold")
-                        | {{ nft.nft_name }}
-                        | #[i.fa(:class="isNftSelected(nft.token_id) ? 'fa-check text-success' : 'fa-times text-danger'")]
-                      img(
-                        v-if="nft.image"
-                        style="max-height: 100px; width: auto"
-                        :class="isNftSelected(nft.token_id) ? 'nft-selected' : ''"
-                        :src="nft.image")
-                      div.d-inline-block.border(v-else)
-                        i No NFT image...
+                    :nft="nft"
+                    :is-selected="isNftSelected(nft.token_id)"
+                    @select="toggleNft")
                 div(v-else)
                   b No NFT's found
                     
@@ -250,7 +242,7 @@ export default {
     },
 
     isNftSelected(id) {
-      return this.selectedNftTokenIds.find((i) => i == id);
+      return !!this.selectedNftTokenIds.find((i) => i == id);
     },
 
     toggleNft(id) {
@@ -375,9 +367,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.nft-selected {
-  outline: 1px solid #18ce0f;
-}
-</style>

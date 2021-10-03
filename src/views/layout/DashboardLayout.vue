@@ -33,6 +33,13 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
+          name: 'Raffler/Lottery',
+          icon: 'now-ui-icons business_money-coins',
+          path: '/raffler',
+        }`
+      )
+      sidebar-item(
+        :link=`{
           name: 'Trusted Timestamping',
           icon: 'now-ui-icons design_app',
           path: '/timestamping',
@@ -55,7 +62,7 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       sidebar-item(
         :link=`{
           name: 'Tax Reporting',
-          icon: 'now-ui-icons business_money-coins',
+          icon: 'now-ui-icons business_briefcase-24',
           path: '/dtax',
         }`
       )

@@ -13,6 +13,7 @@ import Modal from "./Modal";
 import Navbar from "./Navbar/Navbar";
 import NavbarToggleButton from "./Navbar/NavbarToggleButton";
 import NetworkSelector from "./NetworkSelector";
+import NftSelector from "./NftSelector";
 import Notification from "./Notification";
 import Progress from "./Progress";
 import Radio from "./Inputs/Radio";
@@ -44,6 +45,7 @@ export {
   Navbar,
   NavbarToggleButton,
   NetworkSelector,
+  NftSelector,
   Notification,
   Progress,
   Radio,
