@@ -70,7 +70,7 @@ card.p-2
           :range="{ min: 1, max: getMaxNumEntriesUserHasLeft }"
           :options="{ step: 1 }")
         div.d-flex.justify-content-center {{ numberOfEntries }}
-      div.d-flex.justify-content-center(v-if="canUserEnter || canUserDrawWinner")
+      div.d-flex.justify-content-center(v-if="canUserEnter || isUserRaffleOwner || canUserDrawWinner")
         n-button(
           v-if="canUserEnter"
           type="success"
@@ -80,6 +80,13 @@ card.p-2
           @click="enterRaffle")
             | Enter Raffle
             | #[span(v-if="raffleInfo.entryTokenInfo") ({{ getEntryFeesUserWillSpend }} {{ raffleInfo.entryTokenInfo.symbol }})]
+        n-button.ml-2(
+          v-if="isUserRaffleOwner"
+          type="secondary"
+          size="sm"
+          v-loading="globalLoading"
+          :disabled="globalLoading"
+          @click="closeRaffle") Close Raffle
         n-button.ml-2(
           v-if="canUserDrawWinner"
           type="danger"
@@ -134,6 +141,14 @@ export default {
       );
     },
 
+    isUserRaffleOwner() {
+      return (
+        this.raffleInfo &&
+        !this.raffleInfo.isComplete &&
+        this.userAddy.toLowerCase() === this.raffleInfo.owner.toLowerCase()
+      );
+    },
+
     canUserEnter() {
       return (
         this.raffleInfo &&
@@ -147,7 +162,9 @@ export default {
             .unix(new BigNumber(this.raffleInfo.end).toNumber())
             .isAfter(dayjs())) &&
         (this.raffleInfo.maxEntriesPerAddress == 0 ||
-          this.raffleInfo.userEntries < this.raffleInfo.maxEntriesPerAddress)
+          new BigNumber(this.raffleInfo.userEntries).lt(
+            this.raffleInfo.maxEntriesPerAddress
+          ))
       );
     },
 
@@ -238,6 +255,20 @@ export default {
         await this.init();
       } catch (err) {
         console.error("Error entering raffle", err);
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
+      }
+    },
+
+    async closeRaffle() {
+      try {
+        this.$store.commit("SET_GLOBAL_LOADING", true);
+        await this.$store.dispatch("closeRaffleAndRefund", this.raffleId);
+        this.$toast.success(`Successfully closed raffle!`);
+        await this.init();
+      } catch (err) {
+        console.error("Error drawing winner", err);
         this.$toast.error(err.message);
       } finally {
         this.$store.commit("SET_GLOBAL_LOADING", false);

@@ -56,7 +56,7 @@
                 placeholder='Start Time'
                 v-model='startDateTime')
           div
-            label End Time That Users Can Enter Up Until (Empty means it ends when you draw the raffle)
+            label End Time That Users Can Enter Up Until (Empty means it ends when you draw the winner)
             fg-input
               el-date-picker(
                 type='datetime'

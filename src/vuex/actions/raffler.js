@@ -112,6 +112,16 @@ export default {
       .send({ from: userAddy });
   },
 
+  async closeRaffleAndRefund({ getters, state }, raffleId) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const rafflerAddy = getters.activeNetwork.contracts.raffler;
+    const contract = MTGYRaffler(web3, rafflerAddy);
+    await contract.methods
+      .closeRaffleAndRefund(raffleId)
+      .send({ from: userAddy });
+  },
+
   async drawRaffleWinner({ getters, state }, raffleId) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;

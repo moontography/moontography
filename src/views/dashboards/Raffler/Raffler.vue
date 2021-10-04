@@ -35,17 +35,18 @@ export default {
       userAddy: (state) => state.web3.address,
 
       filteredRaffles(state) {
-        return this.raffleIds === 0 ||
+        return this.raffleIds.length === 0 ||
           (this.raffleIds.length > 0 &&
             Object.keys(state.raffler.raffleInfo).length === 0)
           ? this.raffleIds
           : this.raffleIds.filter(
               (id) =>
                 state.raffler.raffleInfo[id] &&
-                (!this.filters.includeComplete ||
+                (this.filters.includeComplete ||
                   !state.raffler.raffleInfo[id].isComplete ||
                   state.raffler.raffleInfo[id].owner.toLowerCase() ===
-                    this.userAddy.toLowerCase())
+                    this.userAddy.toLowerCase()) &&
+                !state.raffler.raffleInfo[id].isClosed
             );
       },
     }),
