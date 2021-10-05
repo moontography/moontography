@@ -1,5 +1,5 @@
 <template lang="pug">
-div(@click="select")
+div.text-center(@click="select")
   p.mb-1(style="font-weight: bold")
     | {{ nft.nft_name }}
     | #[i.fa(:class="isSelected ? 'fa-check text-success' : 'fa-times text-danger'")]

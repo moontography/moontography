@@ -11,18 +11,30 @@
               h5.m-0 Reward Token Information
               div
                 small Which token(s) are you supplying to be won from the raffle?
-            //- checkbox.ml-3(v-model="isRewardTokenNft") Is this an NFT contract?
+            checkbox.ml-3(
+              v-model="isRewardTokenNft"
+              @update:modelValue="toggleNft") Is this an NFT contract?
           token-input-standalone.mb-4(
             v-model="rewardTokenInfo"
+            @update:modelValue="toggleNft"
             btn-size="sm"
             btn-text="Find reward token from contract"
             :is-nft="isRewardTokenNft")
-          div
+          div(v-if="!isRewardTokenNft")
             label Reward Token {{ isRewardTokenNft ? 'ID' : 'Amount' }}
             input.form-control(
               v-model="rewardAmountOrTokenId"
               type="number"
               placeholder='Raffle Reward Amount (# tokens)')
+          div.row(v-else)
+            div.col-12(v-if="allUserNftTokens.length == 0")
+              i You do not own any NFTs from the selected contract...
+            nft-selector.col-6.col-lg-3.mb-2.clickable(
+              v-else
+              v-for="nft in allUserNftTokens"
+              :nft="nft"
+              :is-selected="rewardAmountOrTokenId == nft.token_id"
+              @select="tokenId => rewardAmountOrTokenId = tokenId")
         div.border-bottom.pb-4.mb-4
           div.mb-2
             h5.m-0 Entry Token Information
@@ -88,6 +100,7 @@ export default {
       entryTokenInfo: null,
       entryFee: null,
       isRewardTokenNft: false,
+      allUserNftTokens: [],
       rewardTokenInfo: null,
       rewardAmountOrTokenId: null,
       maxEntriesPerWallet: 1,
@@ -123,6 +136,23 @@ export default {
   },
 
   methods: {
+    async toggleNft() {
+      try {
+        if (!(this.isRewardTokenNft && this.rewardTokenInfo)) return;
+
+        this.allUserNftTokens = await this.$store.dispatch("getUserOwnedNfts", {
+          tokenAddress: this.rewardTokenInfo.address,
+        });
+        this.rewardAmountOrTokenId =
+          this.allUserNftTokens.length > 0
+            ? this.allUserNftTokens[0].token_id
+            : null;
+      } catch (err) {
+        console.error("Error getting NFT info", err);
+        this.$toast.error(err.message);
+      }
+    },
+
     async createRaffle() {
       try {
         this.$store.commit("SET_GLOBAL_LOADING", true);

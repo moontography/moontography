@@ -16,10 +16,9 @@ export default function NftUtils(apiKey: string) {
     ) {
       const {
         data: { /* total, page, page_size, */ result },
-      } = await this.client.get(`${userAddy}/nft`, {
+      } = await this.client.get(`${userAddy}/nft/${nftTokenAddy}`, {
         params: {
           chain,
-          token_address: nftTokenAddy,
           format: "decimal",
           offset: 0,
           limit: 1e4,
@@ -27,6 +26,25 @@ export default function NftUtils(apiKey: string) {
         },
       });
       return result;
+    },
+
+    fixTokenUriURL(url: string) {
+      if (url.startsWith("ipfs")) {
+        return `https://ipfs.moralis.io:2053/ipfs/${
+          url.split("ipfs://ipfs/").slice(-1)[0]
+        }`;
+      } else {
+        return `${url}?format=json`;
+      }
+    },
+
+    fixImageURL(url: string) {
+      if (url.startsWith("ipfs")) {
+        return `https://ipfs.moralis.io:2053/ipfs/${
+          url.split("ipfs://").slice(-1)[0]
+        }`;
+      }
+      return url;
     },
   };
 }

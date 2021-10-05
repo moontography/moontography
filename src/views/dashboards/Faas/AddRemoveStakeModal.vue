@@ -88,11 +88,11 @@
 
 <script>
 import $ from "jquery";
-import axios from "axios";
 import dayjs from "dayjs";
 import BigNumber from "bignumber.js";
 import Swal from "sweetalert2";
 import { mapState } from "vuex";
+
 export default {
   name: "AddRemoveStakeModal",
 
@@ -325,7 +325,7 @@ export default {
         if (this.stakingInfo.poolInfo.isStakedNft) {
           this.allUserNftTokens = await this.$store.dispatch(
             "getUserOwnedNfts",
-            this.stakingInfo.stakingTokenInfo.address
+            { tokenAddress: this.stakingInfo.stakingTokenInfo.address }
           );
           // Filter NFT's that do not yet have metadata
           // this.allUserNftTokens = this.allUserNftTokens.filter((nft) => {
@@ -333,28 +333,6 @@ export default {
           //   if (!metadata) return false;
           //   return true;
           // });
-
-          // Map NFT's with metadata information
-          this.allUserNftTokens = await Promise.all(
-            this.allUserNftTokens.map(async (nft) => {
-              let metadata = JSON.parse(nft.metadata);
-              if (!metadata && nft.token_uri) {
-                const { data } = await axios.get(nft.token_uri);
-                if (data.image) {
-                  metadata = {
-                    name: data.name,
-                    image: data.image,
-                  };
-                }
-              }
-              this.selectedNftTokenIds.push(nft.token_id);
-              return {
-                ...nft,
-                nft_name: metadata ? metadata.name : "No name",
-                image: metadata ? metadata.image : null,
-              };
-            })
-          );
         }
       } finally {
         this.isLoadingLocal = false;

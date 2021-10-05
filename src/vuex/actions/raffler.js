@@ -160,8 +160,15 @@ export default {
       contract.methods.mtgyServiceCost().call(),
       mtgyCont.methods.balanceOf(userAddy).call(),
       rewardCont.methods.balanceOf(userAddy).call(),
-      dispatch("getErc20TokenInfo", rewardTokenAddress),
-      dispatch("getErc20TokenInfo", entryTokenAddress),
+      dispatch(
+        isNft ? "getErc721TokenInfo" : "getErc20TokenInfo",
+        rewardTokenAddress
+      ),
+      (async function () {
+        if (entryTokenAddress) {
+          return await dispatch("getErc20TokenInfo", entryTokenAddress);
+        }
+      })(),
     ]);
 
     if (!web3.utils.isAddress(rewardTokenAddress)) {

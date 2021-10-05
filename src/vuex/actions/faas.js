@@ -1,6 +1,4 @@
 import BigNumber from "bignumber.js";
-import NftUtils from "../../factories/NftUtils";
-import ERC721 from "../../factories/web3/ERC721";
 import MTGY from "../../factories/web3/MTGY";
 import MTGYFaaS from "../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
@@ -220,32 +218,6 @@ export default {
       "SET_FAAS_POOL_CREATION_COST",
       new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
     );
-  },
-
-  async getUserOwnedNfts({ getters, state }, tokenAddress) {
-    const web3 = state.web3.instance;
-    const userAddy = state.web3.address;
-    const moralisApiKey = state.moralisApiKey;
-    const activeNetwork = getters.activeNetwork;
-    const nftContract = ERC721(web3, tokenAddress);
-    const allUserTokens = await NftUtils(moralisApiKey).getNftsOwnedByUser(
-      tokenAddress,
-      userAddy,
-      activeNetwork.network
-    );
-    const checkOwns = await Promise.all(
-      Object.values(allUserTokens).map(async (token) => {
-        const owns = await nftContract.methods.ownerOf(token.token_id).call();
-        return owns.toLowerCase() === userAddy.toLowerCase() ? token : null;
-      })
-    );
-    let ids = new Set();
-    return checkOwns.filter((t) => {
-      if (!t) return false;
-      if (ids.has(t.token_id)) return false;
-      ids.add(t.token_id);
-      return true;
-    });
   },
 
   async faasCreateNewPool(
