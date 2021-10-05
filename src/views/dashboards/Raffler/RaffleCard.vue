@@ -7,9 +7,13 @@ card.p-2
         | {{ rewardAmountFormatted }} {{ raffleInfo.rewardTokenInfo.symbol }}
     .card-body.text-center
       div.reward-info.mb-4
-        div This raffle will reward
-        div(v-if="raffleInfo.isNft")
-          nft-selector(:nft="raffleInfo.rewardTokenInfo")
+        div.mb-2 This raffle will reward:
+        div(v-if="raffleInfo && raffleInfo.isNft")
+          nft-selector(
+            v-if="nftInfo"
+            :nft="nftInfo")
+          div(v-else)
+            i NFT info currently unavailable...
         div(v-else)
           div
             a(
@@ -70,7 +74,7 @@ card.p-2
           :range="{ min: 1, max: getMaxNumEntriesUserHasLeft }"
           :options="{ step: 1 }")
         div.d-flex.justify-content-center {{ numberOfEntries }}
-      div.d-flex.justify-content-center(v-if="canUserEnter || canUserDrawWinner")
+      div.d-flex.justify-content-center(v-if="canUserEnter || isUserRaffleOwner || canUserDrawWinner")
         n-button(
           v-if="canUserEnter"
           type="success"
@@ -80,6 +84,13 @@ card.p-2
           @click="enterRaffle")
             | Enter Raffle
             | #[span(v-if="raffleInfo.entryTokenInfo") ({{ getEntryFeesUserWillSpend }} {{ raffleInfo.entryTokenInfo.symbol }})]
+        n-button.ml-2(
+          v-if="isUserRaffleOwner"
+          type="secondary"
+          size="sm"
+          v-loading="globalLoading"
+          :disabled="globalLoading"
+          @click="closeRaffle") Close Raffle
         n-button.ml-2(
           v-if="canUserDrawWinner"
           type="danger"
@@ -102,6 +113,7 @@ export default {
   data() {
     return {
       isLoadingLocal: true,
+      nftInfo: null,
       numberOfEntries: 1,
     };
   },
@@ -117,6 +129,7 @@ export default {
       activeNetworkExplorerUrl: (_, getters) =>
         getters.activeNetworkExplorerUrl,
       tokenRoute: (_, getters) => getters.tokenRoute,
+      rafflerAddy: (_, getters) => getters.activeNetwork.contracts.raffler,
       raffleInfo(state) {
         return state.raffler.raffleInfo[this.raffleId];
       },
@@ -134,6 +147,14 @@ export default {
       );
     },
 
+    isUserRaffleOwner() {
+      return (
+        this.raffleInfo &&
+        !this.raffleInfo.isComplete &&
+        this.userAddy.toLowerCase() === this.raffleInfo.owner.toLowerCase()
+      );
+    },
+
     canUserEnter() {
       return (
         this.raffleInfo &&
@@ -147,7 +168,9 @@ export default {
             .unix(new BigNumber(this.raffleInfo.end).toNumber())
             .isAfter(dayjs())) &&
         (this.raffleInfo.maxEntriesPerAddress == 0 ||
-          this.raffleInfo.userEntries < this.raffleInfo.maxEntriesPerAddress)
+          new BigNumber(this.raffleInfo.userEntries).lt(
+            this.raffleInfo.maxEntriesPerAddress
+          ))
       );
     },
 
@@ -224,6 +247,18 @@ export default {
 
     async init() {
       await this.$store.dispatch("getRaffle", this.raffleId);
+      if (this.raffleInfo && this.raffleInfo.isNft) {
+        const allUserNftTokens = await this.$store.dispatch(
+          "getUserOwnedNfts",
+          {
+            tokenAddress: this.raffleInfo.rewardTokenInfo.address,
+            ownerAddress: this.rafflerAddy,
+          }
+        );
+        this.nftInfo = allUserNftTokens.find(
+          (nft) => this.raffleInfo.rewardAmountOrTokenId == nft.token_id
+        );
+      }
     },
 
     async enterRaffle() {
@@ -238,6 +273,20 @@ export default {
         await this.init();
       } catch (err) {
         console.error("Error entering raffle", err);
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
+      }
+    },
+
+    async closeRaffle() {
+      try {
+        this.$store.commit("SET_GLOBAL_LOADING", true);
+        await this.$store.dispatch("closeRaffleAndRefund", this.raffleId);
+        this.$toast.success(`Successfully closed raffle!`);
+        await this.init();
+      } catch (err) {
+        console.error("Error drawing winner", err);
         this.$toast.error(err.message);
       } finally {
         this.$store.commit("SET_GLOBAL_LOADING", false);

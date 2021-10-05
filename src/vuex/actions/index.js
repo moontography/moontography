@@ -6,9 +6,11 @@ import passwordManager from "./passwordManager";
 import raffler from "./raffler";
 import trustedTimestamping from "./trustedTimestamping";
 
+import axios from "axios";
 import BigNumber from "bignumber.js";
 import DexUtils from "../../factories/DexUtils";
 import ExponentialBackoff from "../../factories/ExponentialBackoff";
+import NftUtils from "../../factories/NftUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
 import ERC721 from "../../factories/web3/ERC721";
@@ -237,6 +239,57 @@ export default {
         .div(new BigNumber(10).pow(info.decimals))
         .toString(),
     });
+  },
+
+  async getUserOwnedNfts({ getters, state }, { tokenAddress, ownerAddress }) {
+    const userAddy = state.web3.address;
+    ownerAddress = ownerAddress || userAddy;
+
+    const web3 = state.web3.instance;
+    const moralisApiKey = state.moralisApiKey;
+    const activeNetwork = getters.activeNetwork;
+    const nftContract = ERC721(web3, tokenAddress);
+    const nftUtils = NftUtils(moralisApiKey);
+    const allUserTokens = await nftUtils.getNftsOwnedByUser(
+      tokenAddress,
+      ownerAddress,
+      activeNetwork.network
+    );
+    const checkOwns = await Promise.all(
+      Object.values(allUserTokens).map(async (token) => {
+        const owns = await nftContract.methods.ownerOf(token.token_id).call();
+        return owns.toLowerCase() === ownerAddress.toLowerCase() ? token : null;
+      })
+    );
+    let ids = new Set();
+    const ownedNfts = checkOwns.filter((t) => {
+      if (!t) return false;
+      if (ids.has(t.token_id)) return false;
+      ids.add(t.token_id);
+      return true;
+    });
+
+    return await Promise.all(
+      ownedNfts.map(async (nft) => {
+        let metadata = JSON.parse(nft.metadata || null);
+        if (!metadata && nft.token_uri) {
+          const { data } = await axios.get(
+            nftUtils.fixTokenUriURL(nft.token_uri)
+          );
+          if (data.image) {
+            metadata = {
+              name: data.name,
+              image: nftUtils.fixImageURL(data.image),
+            };
+          }
+        }
+        return {
+          ...nft,
+          nft_name: metadata ? metadata.name : "No name",
+          image: metadata ? nftUtils.fixImageURL(metadata.image) : null,
+        };
+      })
+    );
   },
 
   async genericErc20Approval(
