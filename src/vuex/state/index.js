@@ -144,7 +144,7 @@ export default {
         network_id: 1,
         explorer_url: "https://explorer.kcc.io/en",
         rpc_url: "https://rpc-mainnet.kcc.network",
-        blocks_per_day: 14400,
+        blocks_per_day: 28800,
         native_currency: {
           symbol: "KCS",
           name: "KCS",
