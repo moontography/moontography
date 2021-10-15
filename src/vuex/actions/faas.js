@@ -15,7 +15,7 @@ export default {
 
   async getAllStakingContracts({ commit, dispatch, getters, state }) {
     const web3 = state.web3.instance;
-    // const userAddy = state.web3.address;
+    const userAddy = state.web3.address;
     const faasAddy = getters.activeNetwork.contracts.faas;
     const selectedTokenAddress = state.selectedAddressInfo.address;
 
@@ -39,6 +39,7 @@ export default {
             lastStakableBlock,
             poolInfo,
             contractIsRemoved,
+            stakerInfo,
             farmingInfo,
           ] = await Promise.all([
             farmingCont.methods.stakedTokenAddress().call(),
@@ -46,6 +47,7 @@ export default {
             farmingCont.methods.getLastStakableBlock().call(),
             farmingCont.methods.pool().call(),
             farmingCont.methods.contractIsRemoved().call(),
+            farmingCont.methods.stakers(userAddy).call(),
             dispatch("getErc20TokenInfo", farmingTokenAddy),
           ]);
           const [
@@ -68,6 +70,7 @@ export default {
             tokenAddy,
             lastStakableBlock,
             poolInfo,
+            stakerInfo,
             contractIsRemoved,
             farmingTokenName: farmingInfo.name,
             farmingTokenSymbol: farmingInfo.symbol,

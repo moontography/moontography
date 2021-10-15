@@ -71,7 +71,7 @@ td
 td.td-actions.text-right
   small
     n-button.mr-2(
-      v-if="row.item.farmingTokenBalance > 0"
+      v-if="row.item.farmingTokenBalance > 0 && isPastTimelock"
       type="info"
       round
       @click="harvestTokens")
@@ -153,6 +153,29 @@ export default {
       return [
         "0xFB7D9c478b2F8B1d07Ad196076c881f11F370Ca4".toLowerCase(),
       ].includes(this.row.item.farmingTokenAddy.toLowerCase());
+    },
+
+    isPastTimelock() {
+      const stakingInfo = this.row.item;
+      if (!stakingInfo) return true;
+
+      const timelockSeconds = stakingInfo.poolInfo.stakeTimeLockSec;
+      if (!timelockSeconds) return true;
+
+      const userStakedTime =
+        stakingInfo.stakerInfo && stakingInfo.stakerInfo.timeOriginallyStaked;
+      if (!userStakedTime) return true;
+
+      const isPastTime = dayjs(
+        new BigNumber(userStakedTime).times(1e3).toNumber()
+      )
+        .add(timelockSeconds, "seconds")
+        .isBefore(dayjs());
+      if (isPastTime) return true;
+
+      if (this.isFarmExpired) return true;
+
+      return false;
     },
 
     frozenOrStaked() {
