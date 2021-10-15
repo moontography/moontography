@@ -140,7 +140,7 @@ export default {
 
     tokenRoute() {
       return this.activeNetworkExplorerUrl === "https://explorer.kcc.io/en"
-        ? "tokentxns"
+        ? "address"
         : "token";
     },
 

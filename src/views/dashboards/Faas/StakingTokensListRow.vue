@@ -70,6 +70,12 @@ td
   div(v-else) ---
 td.td-actions.text-right
   small
+    n-button.mr-2(
+      v-if="row.item.farmingTokenBalance > 0"
+      type="info"
+      round
+      @click="harvestTokens")
+        i.fa.fa-money
     n-button(
       type="success"
       round
@@ -97,6 +103,7 @@ add-remove-stake-modal(
 import $ from "jquery";
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
@@ -119,6 +126,14 @@ export default {
       tokensStakedPerBlock: [],
       amountUnharvested: [],
       totalTokensStaked: [],
+
+      harvestAlert: Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-primary",
+          cancelButton: "btn btn-secondary",
+        },
+        buttonsStyling: false,
+      }),
     };
   },
 
@@ -290,6 +305,39 @@ export default {
     async init() {
       await this.$store.dispatch("getAllStakingContracts");
       await this.getUnharvestedTokens();
+    },
+
+    async harvestTokens() {
+      try {
+        const { isConfirmed } = await this.harvestAlert.fire({
+          title: "<span class='text-primary'>Claim Rewards!</span>",
+          html: `
+                <div>
+                  By confirming you will retrieve any unclaimed rewards, but
+                  this will not unstake currently staked tokens nor compound
+                  the rewards for you (compounding will come in the future).
+                </div>
+              `,
+          confirmButtonText: "Yes, claim my rewards!",
+          cancelButtonText: "Cancel, do not claim.",
+          showCancelButton: true,
+        });
+        if (!isConfirmed) return;
+
+        this.$store.commit("SET_GLOBAL_LOADING", true);
+        if (new BigNumber(this.row.item.farmingTokenBalance).lte(0))
+          throw new Error(`You do not have any rewards to harvest.`);
+
+        await this.$store.dispatch("faasHarvestTokens", {
+          farmingContractAddress: this.farmingTokenAddress,
+        });
+        await this.init();
+      } catch (err) {
+        console.error(`Error harvesting tokens`, err);
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
+      }
     },
 
     async getUnharvestedTokens() {

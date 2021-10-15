@@ -209,6 +209,13 @@ export default {
     await faasToken.methods.emergencyUnstake().send({ from: userAddy });
   },
 
+  async faasHarvestTokens({ state }, { farmingContractAddress }) {
+    const web3 = state.web3.instance;
+    const userAddy = state.web3.address;
+    const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
+    await faasToken.methods.harvestForUser(userAddy).send({ from: userAddy });
+  },
+
   async getFaasPoolCreationCost({ commit, getters, state }) {
     const web3 = state.web3.instance;
     const addy = getters.activeNetwork.contracts.faas;

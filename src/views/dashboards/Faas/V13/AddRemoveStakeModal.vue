@@ -88,10 +88,6 @@ export default {
 
   emits: ["staked"],
 
-  watch: {
-    farmAddress() {},
-  },
-
   data() {
     return {
       isLoadingLocal: true,
