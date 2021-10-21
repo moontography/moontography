@@ -172,9 +172,10 @@ export default {
           new BigNumber(instanceServiceCost).plus(amount)
         )
       ) {
-        throw new Error(
-          `You need to make sure the amount you swap leaves you with at least ${servCostHumanReadable} MTGY to cover the service cost.`
-        );
+        // throw new Error(
+        //   `You need to make sure the amount you swap leaves you with at least ${servCostHumanReadable} MTGY to cover the service cost.`
+        // );
+        amount = new BigNumber(amount).minus(instanceServiceCost).toFixed();
       }
     }
 

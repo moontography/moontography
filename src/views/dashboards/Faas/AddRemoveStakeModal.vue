@@ -49,7 +49,9 @@
                 div(v-if="!isExpired")
                   | You can {{ isFrozen ? 'freeze' : 'stake' }} up to #[strong {{ userStakingBalance }}]
                   | {{ stakingInfo.stakingTokenInfo.symbol }}
-                slider-input-percent(v-model="percAmountToStake")
+                slider-input-percent(
+                  :max-amount="stakingInfo.poolInfo.isStakedNft ? null : maxAmountCanStakeHuman"
+                  v-model="percAmountToStake")
                 //- div {{ formattedAmountToStake }}
 
               div
@@ -195,6 +197,12 @@ export default {
       return dayjs(new BigNumber(userStakedTime).times(1e3).toNumber())
         .add(timelockSeconds, "seconds")
         .format("MMMM Do, YYYY HH:mm:ss");
+    },
+
+    maxAmountCanStakeHuman() {
+      return new BigNumber(this.stakingInfo.stakingTokenInfo.userBalance)
+        .div(new BigNumber(10).pow(this.stakingInfo.stakingTokenInfo.decimals))
+        .toFixed();
     },
 
     rawAmountToStake() {
