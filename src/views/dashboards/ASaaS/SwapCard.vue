@@ -299,7 +299,7 @@ export default {
         localStorage.mtgyAsaasLatestSwapId = this.latestSwap.id;
         localStorage.mtgyAsaasLatestSwapTimestamp = this.latestSwap.origTimestamp;
         localStorage.mtgyAsaasLatestSwapNumTokens = new BigNumber(
-          correctSendTokenAmount
+          this.latestSwap.amount
         )
           .div(new BigNumber(10).pow(this.swap.token.decimals))
           .toFormat();
