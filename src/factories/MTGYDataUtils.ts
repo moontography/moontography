@@ -8,6 +8,17 @@ export default {
     return data;
   },
 
+  async getTokenPriceUSD(symbol: string) {
+    const {
+      data: { price },
+    } = await axios.get(`https://api.moontography.com/token/price`, {
+      params: {
+        symbol,
+      },
+    });
+    return price;
+  },
+
   async getTokenChart(
     tokenId: string,
     days: number = 14,

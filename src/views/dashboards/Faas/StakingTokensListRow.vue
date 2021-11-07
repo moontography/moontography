@@ -37,14 +37,14 @@ td.text-left
 td.d-none.d-lg-table-cell
   div(v-if="!isFrozen")
     strong
-      | {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}% APR` : 'APR Coming Soon' }}
+      | {{ `${stakingApr || 0}% APR` }}
   div.text-secondary
     small
       div
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${rewardsTokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer") {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
+          rel="noopener noreferrer") {{ perBlockTokensRewarded }} {{ rewardTokenSymbol }}/block
       div
         | {{ row.item.poolInfo.isStakedNft ? totalTokensStaked[0] : totalTokensStaked[1] }}
         | {{ stakedTokenSymbol }} {{ frozenOrStaked }}
@@ -63,10 +63,6 @@ td
         i.fa.fa-refresh
     div.text-dark(v-else)
       i Removed
-    //- button.ml-3.btn.btn-sm.btn-primary(
-    //-   v-loading="globalLoading"
-    //-   :disabled="globalLoading"
-    //-   @click="claimTokens") Claim
   div(v-else) ---
 td.td-actions.text-right
   small
@@ -107,7 +103,9 @@ import Swal from "sweetalert2";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
+import MTGYDataUtils from "../../../factories/MTGYDataUtils";
 import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
+import DexUtils from "@/factories/DexUtils";
 
 export default {
   props: {
@@ -123,9 +121,12 @@ export default {
   data() {
     return {
       isInFarm: false,
-      tokensStakedPerBlock: [],
+      tokensRewardedPerBlock: [],
       amountUnharvested: [],
       totalTokensStaked: [],
+
+      rewardsTokenPriceUSD: 0,
+      stakingTokenPriceUSD: 0,
 
       harvestAlert: Swal.mixin({
         customClass: {
@@ -139,6 +140,7 @@ export default {
 
   computed: {
     ...mapState({
+      activeNetwork: (_, getters) => getters.activeNetwork,
       activeNetworkExplorerUrl: (_, getters) =>
         getters.activeNetworkExplorerUrl,
       tokenRoute: (_, getters) => getters.tokenRoute,
@@ -210,8 +212,8 @@ export default {
       return dayjs().add(secondsFromNow, "seconds").format("MMM D, YYYY HH:mm");
     },
 
-    perBlockNumTokens() {
-      return new BigNumber(this.tokensStakedPerBlock[0] || 0)
+    perBlockTokensRewarded() {
+      return new BigNumber(this.tokensRewardedPerBlock[0] || 0)
         .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
         .times(
           new BigNumber(10).pow(
@@ -227,6 +229,10 @@ export default {
 
     farmingTokenAddress() {
       return this.row.item.farmingTokenAddy;
+    },
+
+    farmingTokenSymbol() {
+      return this.row.item.farmingTokenSymbol;
     },
 
     tokenAddress() {
@@ -255,6 +261,14 @@ export default {
 
     rewardTokenSymbol() {
       return this.row.item.rewardTokenSymbol;
+    },
+
+    stakedTokenDecimals() {
+      return this.row.item.currentTokenDecimals;
+    },
+
+    stakedTokenAddress() {
+      return this.tokenAddress;
     },
 
     stakedTokenSymbol() {
@@ -289,15 +303,24 @@ export default {
           ? this.row.item.farmingTokenBalance
           : new BigNumber(this.totalTokensStaked[0]).div(500)
       );
-      const totalStakedBalance = new BigNumber(this.totalTokensStaked[0] || 0);
-      const perBlockAmount = new BigNumber(this.tokensStakedPerBlock[0] || 0);
-      if (totalStakedBalance.toString() === "0") return 0;
+      const totalStakedBalanceUSD = new BigNumber(
+        this.totalTokensStaked[0] || 0
+      )
+        .times(this.stakingTokenPriceUSD)
+        .div(new BigNumber(10).pow(this.stakedTokenDecimals));
+      const perBlockRewardedAmountUSD = new BigNumber(
+        this.tokensRewardedPerBlock[0] || 0
+      )
+        .times(this.rewardsTokenPriceUSD)
+        .div(new BigNumber(10).pow(this.rewardsTokenDecimals));
+      if (totalStakedBalanceUSD.eq(0) || perBlockRewardedAmountUSD.eq(0))
+        return 0;
 
-      const tokensStakablePerYear = perBlockAmount
+      const tokensStakablePerYear = perBlockRewardedAmountUSD
         .times(blocksPerDay)
         .times(365);
       const userStakablePerYear = userStakedTokens
-        .div(totalStakedBalance)
+        .div(totalStakedBalanceUSD)
         .times(tokensStakablePerYear);
       const apr = userStakablePerYear
         .div(userStakedTokens)
@@ -308,26 +331,41 @@ export default {
   },
 
   methods: {
-    // async claimTokens() {
-    //   try {
-    //     this.$store.commit("SET_GLOBAL_LOADING", true);
+    async getBothTokenPricesUSD() {
+      // TODO check if either token is an LP token and handle it separately
 
-    //     await this.$store.dispatch(
-    //       "faasHarvestTokens",
-    //       this.farmingTokenAddress
-    //     );
-    //     this.$toast.success(`Successfully claimed your tokens!`);
-    //     this.$emit("harvested");
-    //   } catch (err) {
-    //     this.$toast.error(err.message);
-    //   } finally {
-    //     this.$store.commit("SET_GLOBAL_LOADING", false);
-    //   }
-    // },
+      // 1. get both staking and rewards token information
+      const [stakingTokenAddress, stakingTokenSymbol] = [
+        this.stakedTokenAddress,
+        this.stakedTokenSymbol,
+      ];
+      const [rewardsTokenAddress, rewardsTokenSymbol] = [
+        this.rewardsTokenAddress,
+        this.rewardTokenSymbol,
+      ];
+
+      // 2. check if BSC and use DexUtils to get price in USD, otherwise use api.moontography.com
+      if (this.activeNetwork.short_name === "bsc") {
+        const [sp, rp] = await Promise.all([
+          DexUtils.getTokenPrice(stakingTokenAddress),
+          DexUtils.getTokenPrice(rewardsTokenAddress),
+        ]);
+        this.stakingTokenPriceUSD = sp;
+        this.rewardsTokenPriceUSD = rp;
+      } else {
+        const [sp, rp] = await Promise.all([
+          MTGYDataUtils.getTokenPriceUSD(stakingTokenSymbol),
+          MTGYDataUtils.getTokenPriceUSD(rewardsTokenSymbol),
+        ]);
+        this.stakingTokenPriceUSD = sp;
+        this.rewardsTokenPriceUSD = rp;
+      }
+    },
 
     async init() {
       await this.$store.dispatch("getAllStakingContracts");
       await this.getUnharvestedTokens();
+      await this.getBothTokenPricesUSD();
     },
 
     async harvestTokens() {
@@ -390,7 +428,7 @@ export default {
             .div(new BigNumber(10).pow(this.tokenDecimals))
             .toFormat(2),
         ];
-        this.tokensStakedPerBlock = [
+        this.tokensRewardedPerBlock = [
           pool.perBlockNum,
           new BigNumber(pool.perBlockNum)
             .div(new BigNumber(10).pow(this.tokenDecimals))
