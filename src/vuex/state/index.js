@@ -179,7 +179,7 @@ export default {
         chain_id: 137,
         network_id: 1,
         explorer_url: "https://polygonscan.com/",
-        rpc_url: "https://matic-mainnet.chainstacklabs.com",
+        rpc_url: "https://polygon-rpc.com",
         blocks_per_day: 33200,
         native_currency: {
           symbol: "MATIC",
