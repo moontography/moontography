@@ -181,10 +181,12 @@ export default {
 
     async createSwap() {
       try {
+        const maxSwap = Number();
         if (
           !(
             this.numberTokens &&
-            typeof this.maxSwap === "number" &&
+            (this.maxSwap ||
+              (typeof this.maxSwap === "number" && this.maxSwap >= 0)) &&
             this.targetNetwork
           )
         ) {
