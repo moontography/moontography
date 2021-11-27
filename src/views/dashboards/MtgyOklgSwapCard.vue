@@ -137,7 +137,6 @@ export default {
       this.$store.commit("SET_GLOBAL_LOADING", true);
       await this.$store.dispatch("getMtgyOklgRatio");
     } catch (err) {
-      console.log("here", err);
       this.$toast.error(err.message);
     } finally {
       this.$store.commit("SET_GLOBAL_LOADING", false);
