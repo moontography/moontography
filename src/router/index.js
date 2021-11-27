@@ -13,6 +13,7 @@ import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import DtaxHeader from "../views/headers/DtaxHeader";
 import FaasHeader from "../views/headers/FaasHeader";
 import KetherHeader from "../views/headers/KetherHeader";
+import MtgyOklgSwapHeader from "../views/headers/MtgyOklgSwapHeader";
 import PaasHeader from "../views/headers/PaasHeader";
 import PasswordManagerHeader from "../views/headers/PasswordManagerHeader";
 import RafflerHeader from "../views/headers/RafflerHeader";
@@ -26,6 +27,7 @@ import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
 import KetherStats from "../views/dashboards/Kether/KetherStats";
+import MtgyOklgSwapCard from "../views/dashboards/MtgyOklgSwapCard.vue";
 import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager.vue";
 import PasswordManagerLayout from "../views/layout/PasswordManagerLayout.vue";
 import Raffler from "../views/dashboards/Raffler/Raffler.vue";
@@ -51,6 +53,11 @@ const routes = [
         path: "dashboard",
         name: "Dashboard",
         components: { default: Dashboard, header: DashboardHeader },
+      },
+      {
+        path: "mtgy-oklg-swap",
+        name: "Swap MTGY for OKLG",
+        components: { default: MtgyOklgSwapCard, header: MtgyOklgSwapHeader },
       },
       {
         path: "asaas",

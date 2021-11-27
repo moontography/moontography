@@ -39,6 +39,9 @@ export default {
   },
   mtgyChart: [],
 
+  oklgPriceUsd: "0",
+  mtgyOklgRatio: "0",
+
   web3: {
     instance: null,
     isConnected: false,
@@ -88,6 +91,7 @@ export default {
           faas: "0xaA0c2852F5391919b8AcE9ac079cf3791E5fE7e7",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
           faas_V13: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
+          mtgyOklgSwap: "INSERT SWAP CONTRACT ADDRESS",
         },
         buy: {
           link:
@@ -127,6 +131,7 @@ export default {
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
+          mtgyOklgSwap: "INSERT SWAP CONTRACT ADDRESS",
         },
         buy: {
           link:
@@ -223,37 +228,37 @@ export default {
       //     balance: ""
       //   }
       // },
-      {
-        name: "Ethereum Rinkeby",
-        short_name: "rinkeby",
-        chain: "ETH",
-        network: "rinkeby",
-        chain_id: 4,
-        network_id: 4,
-        explorer_url: "https://rinkeby.etherscan.io",
-        rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
-        blocks_per_day: 6450,
-        native_currency: {
-          symbol: "ETH",
-          name: "Ethereum",
-          decimals: "18",
-          contractAddress: "",
-          balance: "",
-        },
-        contracts: {
-          mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
-          mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-          airdropper: "0xE71Eb358845ac93aF96D5C340814D25663E3F4Ab",
-          atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
-          passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
-          raffler: "0x1E6a4476bB73b3ACff096840344d923D95D3Af3f",
-          trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-          faas: "0xEC517E8d195A62DEFEb30ce63CebfCE610bF39E4",
-          kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
-          ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
-          ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",
-        },
-      },
+      // {
+      //   name: "Ethereum Rinkeby",
+      //   short_name: "rinkeby",
+      //   chain: "ETH",
+      //   network: "rinkeby",
+      //   chain_id: 4,
+      //   network_id: 4,
+      //   explorer_url: "https://rinkeby.etherscan.io",
+      //   rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
+      //   blocks_per_day: 6450,
+      //   native_currency: {
+      //     symbol: "ETH",
+      //     name: "Ethereum",
+      //     decimals: "18",
+      //     contractAddress: "",
+      //     balance: "",
+      //   },
+      //   contracts: {
+      //     mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
+      //     mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
+      //     airdropper: "0xE71Eb358845ac93aF96D5C340814D25663E3F4Ab",
+      //     atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
+      //     passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
+      //     raffler: "0x1E6a4476bB73b3ACff096840344d923D95D3Af3f",
+      //     trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
+      //     faas: "0xEC517E8d195A62DEFEb30ce63CebfCE610bF39E4",
+      //     kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
+      //     ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
+      //     ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",
+      //   },
+      // },
       // {
       //   name: "Ethereum Görli",
       //   short_name: "gor",

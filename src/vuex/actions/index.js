@@ -2,6 +2,7 @@ import airdropper from "./airdropper";
 import asaas from "./asaas";
 import faas from "./faas";
 import kether from "./kether";
+import mtgyOklgSwap from "./mtgyOklgSwap";
 import passwordManager from "./passwordManager";
 import raffler from "./raffler";
 import trustedTimestamping from "./trustedTimestamping";
@@ -23,6 +24,7 @@ export default {
   ...asaas,
   ...faas,
   ...kether,
+  ...mtgyOklgSwap,
   ...passwordManager,
   ...raffler,
   ...trustedTimestamping,
@@ -34,6 +36,7 @@ export default {
 
       // an error with this API will break the app if we await, so don't here
       dispatch("getMtgyPriceUsd");
+      dispatch("getOklgPriceUsd");
 
       // Get MTGY info before having to connect wallet.
       // Allows dashboard data to be shown even if user does not connect wallet.
@@ -121,6 +124,7 @@ export default {
       try {
         // an error with this API will break the app if we await, so don't here
         dispatch("getMtgyPriceUsd");
+        dispatch("getOklgPriceUsd");
 
         await Promise.all([
           dispatch("getUserBalance"),
@@ -205,6 +209,13 @@ export default {
       "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
     );
     commit("SET_MTGY_PRICE_USD", price);
+  },
+
+  async getOklgPriceUsd({ commit }) {
+    const price = await DexUtils.getTokenPrice(
+      "0x55e8b37a3c43b049dedf56c77f462db095108651"
+    );
+    commit("SET_OKLG_PRICE_USD", price);
   },
 
   async getMTGYCirculatingSupply({ commit, state }, reset = false) {

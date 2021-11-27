@@ -94,4 +94,12 @@ export default {
   SET_CURRENT_BLOCK(state, block) {
     state.currentBlock = block;
   },
+
+  SET_OKLG_PRICE_USD(state, price) {
+    state.oklgPriceUsd = price;
+  },
+
+  SET_MTGY_OKLG_RATIO(state, ratio) {
+    state.mtgyOklgRatio = ratio;
+  },
 };

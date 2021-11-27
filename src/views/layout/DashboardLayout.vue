@@ -12,6 +12,13 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
+          name: 'Swap MTGY for OKLG',
+          icon: 'now-ui-icons ui-1_send',
+          path: '/mtgy-oklg-swap',
+        }`
+      )
+      sidebar-item(
+        :link=`{
           name: 'Farming',
           icon: 'now-ui-icons sport_trophy',
           path: '/faas',
