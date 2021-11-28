@@ -171,7 +171,7 @@ export default {
           faas_V13: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
         },
         buy: {
-          link: "https://koffeeswap.exchange/#/pro",
+          link: "https://koffeeswap.exchange/#/pro/KCS/0xeE00eF5a7EC4fDbD04eeE39d60Fe11C0DeD65e73",
           img: "img/koffeeswap.png",
           text: "KoffeeSwap",
         },
