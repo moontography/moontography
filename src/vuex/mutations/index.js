@@ -27,6 +27,10 @@ export default {
     state.initLoading = isLoading;
   },
 
+  SET_INIT_FINISHED(state, isFinished) {
+    state.initFinished = isFinished;
+  },
+
   SET_ROUTE(state, to) {
     state.route = to;
   },

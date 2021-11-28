@@ -1,5 +1,4 @@
 import BigNumber from "bignumber.js";
-import MTGY from "../../factories/web3/MTGY";
 import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
 
 export default {

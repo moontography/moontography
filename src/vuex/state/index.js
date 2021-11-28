@@ -91,7 +91,8 @@ export default {
           faas: "0xaA0c2852F5391919b8AcE9ac079cf3791E5fE7e7",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
           faas_V13: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
-          mtgyOklgSwap: "INSERT SWAP CONTRACT ADDRESS",
+          oklg: "0x55e8b37a3c43b049dedf56c77f462db095108651",
+          mtgyOklgSwap: "0x55e1D9D077Cbee2f39F9e1A45e9F73235891BD55",
         },
         buy: {
           link:
@@ -131,7 +132,6 @@ export default {
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
-          mtgyOklgSwap: "INSERT SWAP CONTRACT ADDRESS",
         },
         buy: {
           link:

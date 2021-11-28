@@ -103,10 +103,12 @@ export default {
       commit("SET_GLOBAL_ERROR", new Error(err));
     } finally {
       commit("SET_INIT_LOADING", false);
+      commit("SET_INIT_FINISHED", true);
     }
   },
 
   async getUserBalance({ commit, dispatch, getters }) {
+    if (!getters.activeNetwork) return;
     const { userBalance, decimals } = await dispatch(
       "getErc20TokenInfo",
       getters.activeNetwork.contracts.mtgy
@@ -204,16 +206,18 @@ export default {
     commit("SET_CURRENT_BLOCK", block);
   },
 
-  async getMtgyPriceUsd({ commit }) {
+  async getMtgyPriceUsd({ commit, getters }) {
+    if (!getters.activeNetwork) return;
     const price = await DexUtils.getTokenPrice(
-      "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
+      getters.activeNetwork.contracts.mtgy
     );
     commit("SET_MTGY_PRICE_USD", price);
   },
 
-  async getOklgPriceUsd({ commit }) {
+  async getOklgPriceUsd({ commit, getters }) {
+    if (!getters.activeNetwork) return;
     const price = await DexUtils.getTokenPrice(
-      "0x55e8b37a3c43b049dedf56c77f462db095108651"
+      getters.activeNetwork.contracts.oklg
     );
     commit("SET_OKLG_PRICE_USD", price);
   },

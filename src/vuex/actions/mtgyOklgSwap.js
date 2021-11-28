@@ -31,7 +31,7 @@ export default {
     const mtgyBal = new BigNumber(userMtgyBal);
     if (!mtgyBal.gt(0)) {
       throw new Error(
-        `You need to make sure you have at least 1 MTGY to swap for OKLG.`
+        `You need to make sure you have at least some MTGY in your wallet to swap for OKLG.`
       );
     }
 
