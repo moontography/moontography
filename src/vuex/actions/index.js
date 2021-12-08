@@ -265,10 +265,11 @@ export default {
     const activeNetwork = getters.activeNetwork;
     const nftContract = ERC721(web3, tokenAddress);
     const nftUtils = NftUtils(moralisApiKey);
+    console.log("INFO", activeNetwork.short_name);
     const allUserTokens = await nftUtils.getNftsOwnedByUser(
       tokenAddress,
       ownerAddress,
-      activeNetwork.network
+      activeNetwork.short_name
     );
     const checkOwns = await Promise.all(
       Object.values(allUserTokens).map(async (token) => {
