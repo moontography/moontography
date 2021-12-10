@@ -3,7 +3,9 @@
   .logo
     a.simple-text.logo-mini(href='/')
       .logo-image
-        img(:src='logo')
+        img(
+          style="border-radius: initial"
+          :src='logo')
     a.simple-text.logo-normal(href='/')
       | {{ title }}
     .navbar-minimize
@@ -25,7 +27,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: "Moontography",
+      default: "ok.let's.go.",
     },
     backgroundColor: {
       type: String,
@@ -47,7 +49,7 @@ export default {
     },
     logo: {
       type: String,
-      default: "img/logo-white-nn.png",
+      default: "img/logo-white2.png",
     },
     sidebarLinks: {
       type: Array,
