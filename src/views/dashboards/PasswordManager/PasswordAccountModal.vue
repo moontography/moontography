@@ -66,7 +66,7 @@
               div.text-center.text-danger(v-if="!accountId")
                 small
                   div
-                    | You will spend #[strong {{ cost || `CAN'T CALCULATE` }} MTGY]
+                    | You will spend #[strong {{ cost || `CAN'T CALCULATE` }} {{ nativeCurrencySymbol }}]
                     | to store this account on the blockchain. 
                   div 
                     | It will not cost anything to
@@ -113,6 +113,7 @@ export default {
     cost: (state) => state.passwordManager.cost,
     encryptionKey: (state) => state.passwordManager.encryptionKey,
     globalLoading: (state) => state.globalLoading,
+    nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
   }),
 
   methods: {

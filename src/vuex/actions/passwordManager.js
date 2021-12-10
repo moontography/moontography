@@ -17,11 +17,13 @@ export default {
     );
   },
 
-  async getPasswordManagerCost({ commit, getters, state }) {
-    const web3 = state.web3.instance;
-    const passwordManager = getters.activeNetwork.contracts.passwordManager;
-    const pwCont = MTGYPasswordManager(web3, passwordManager);
-    const cost = await pwCont.methods.mtgyServiceCost().call();
+  async getPasswordManagerCost({ commit, dispatch, getters, state }) {
+    const productContract = getters.activeNetwork.contracts.passwordManager;
+    const productID = state.productIds.passwordManager;
+    const cost = await dispatch("getProductCost", {
+      productID,
+      productContract,
+    });
     commit(
       "SET_PASSWORD_MANAGER_COST",
       new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
@@ -65,10 +67,11 @@ export default {
   ) {
     const userAddy = state.web3.address;
     const encryptionKey = state.passwordManager.encryptionKey;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const passwordManagerAddy = getters.activeNetwork.contracts.passwordManager;
+    const productContract = getters.activeNetwork.contracts.passwordManager;
+    const productID = state.productIds.passwordManager;
+    const nativeCurrencySymbol = getters.nativeCurrencySymbol;
     const web3 = state.web3.instance;
-    const pwCont = MTGYPasswordManager(web3, passwordManagerAddy);
+    const pwCont = MTGYPasswordManager(web3, productContract);
 
     const crypt = Cryptography();
     const encryptedAccounts = await Promise.all(
@@ -95,19 +98,22 @@ export default {
       })
     );
 
-    const basePwMgrCost = await pwCont.methods.mtgyServiceCost().call();
-    await dispatch("genericErc20Approval", {
-      spendAmount: new BigNumber(basePwMgrCost)
-        .times(accounts.length)
-        .div(2)
-        .toFixed(0),
-      tokenAddress: mtgyAddy,
-      delegateAddress: passwordManagerAddy,
-    });
+    const [nativeBalance, serviceCost] = await Promise.all([
+      state.web3.instance.eth.getBalance(userAddy),
+      dispatch("getProductCost", {
+        productID,
+        productContract,
+      }),
+    ]);
+    if (new BigNumber(nativeBalance).lt(serviceCost)) {
+      throw new Error(
+        `You do not have enough ${nativeCurrencySymbol} to cover the service cost. Please ensure you have enough ${nativeCurrencySymbol} in your wallet to cover the service fee and try again.`
+      );
+    }
 
     await pwCont.methods
       .bulkAddAccounts(encryptedAccounts)
-      .send({ from: userAddy });
+      .send({ from: userAddy, value: serviceCost });
 
     return { key: encryptedAccounts[0].key };
   },
@@ -115,10 +121,10 @@ export default {
   async sendPasswordManagerAccountTxn({ dispatch, getters, state }, account) {
     const userAddy = state.web3.address;
     const encryptionKey = state.passwordManager.encryptionKey;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const passwordManagerAddy = getters.activeNetwork.contracts.passwordManager;
+    const productContract = getters.activeNetwork.contracts.passwordManager;
+    const productID = state.productIds.passwordManager;
     const web3 = state.web3.instance;
-    const pwCont = MTGYPasswordManager(web3, passwordManagerAddy);
+    const pwCont = MTGYPasswordManager(web3, productContract);
 
     // store the account
     const crypt = Cryptography();
@@ -134,16 +140,15 @@ export default {
         .updateAccountById(account.id, ivBase64, ciphertextBase64)
         .send({ from: userAddy });
     } else {
-      // make sure the current user has allowed the appropriate amount of MTGY to
-      // spend on the service
-      await dispatch("genericErc20Approval", {
-        spendAmount: await pwCont.methods.mtgyServiceCost().call(),
-        tokenAddress: mtgyAddy,
-        delegateAddress: passwordManagerAddy,
-      });
       await pwCont.methods
         .addAccount(uuidv1(), ivBase64, ciphertextBase64)
-        .send({ from: userAddy });
+        .send({
+          from: userAddy,
+          value: await dispatch("getProductCost", {
+            productID,
+            productContract,
+          }),
+        });
     }
     return { iv: ivBase64, key: keyBase64, ciphertext: ciphertextBase64 };
   },

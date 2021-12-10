@@ -1,13 +1,15 @@
 import BigNumber from "bignumber.js";
-import MTGY from "../../factories/web3/MTGY";
-import MTGYAirdropper from "../../factories/web3/MTGYAirdropper";
+// import OKLG from "../../factories/web3/OKLG";
+import OKLGAirdropper from "@/factories/web3/OKLGAirdropper";
 
 export default {
-  async getAirdropperCost({ commit, getters, state }) {
-    const web3 = state.web3.instance;
-    const airdropperCont = getters.activeNetwork.contracts.airdropper;
-    const contract = MTGYAirdropper(web3, airdropperCont);
-    const cost = await contract.methods.mtgyServiceCost().call();
+  async getAirdropperCost({ commit, dispatch, getters, state }) {
+    const productContract = getters.activeNetwork.contracts.airdropper;
+    const productID = state.productIds.airdropper;
+    const cost = await dispatch("getProductCost", {
+      productID,
+      productContract,
+    });
     commit(
       "SET_AIRDROPPER_COST",
       new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
@@ -20,29 +22,26 @@ export default {
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const airdropAddy = getters.activeNetwork.contracts.airdropper;
-    const mtgyCont = MTGY(web3, mtgyAddy);
-    const airdropContract = MTGYAirdropper(web3, airdropAddy);
-    const [tokenInfo, mtgyBalance, serviceCost] = await Promise.all([
+    const airdropperProdId = state.productIds.airdropper;
+    const airdropperAddy = getters.activeNetwork.contracts.airdropper;
+    const nativeCurrencySymbol = getters.nativeCurrencySymbol;
+    const airdropContract = OKLGAirdropper(web3, airdropperAddy);
+    const [tokenInfo, nativeBalance, serviceCost] = await Promise.all([
       dispatch(
         isNft ? "getErc721TokenInfo" : "getErc20TokenInfo",
         tokenAddress
       ),
-      mtgyCont.methods.balanceOf(userAddy).call(),
-      airdropContract.methods.mtgyServiceCost().call(),
+      state.web3.instance.eth.getBalance(userAddy),
+      dispatch("getProductCost", {
+        productID: airdropperProdId,
+        productContract: airdropperAddy,
+      }),
     ]);
-    if (new BigNumber(mtgyBalance).lt(serviceCost)) {
+    if (new BigNumber(nativeBalance).lt(serviceCost)) {
       throw new Error(
-        `You do not have the amount of MTGY to cover the service cost. Please ensure you have enough MTGY in your wallet to cover the service fee and try again.`
+        `You do not have enough ${nativeCurrencySymbol} to cover the service cost. Please ensure you have enough ${nativeCurrencySymbol} in your wallet to cover the service fee and try again.`
       );
     }
-
-    await dispatch("genericErc20Approval", {
-      spendAmount: serviceCost,
-      tokenAddress: mtgyAddy,
-      delegateAddress: airdropAddy,
-    });
 
     const addressesFormatted = addresses.map(({ address, tokens }) => {
       return {
@@ -72,13 +71,13 @@ export default {
     if (isNft) {
       await dispatch("genericErc721Approval", {
         tokenAddress: tokenAddress,
-        delegateAddress: airdropAddy,
+        delegateAddress: airdropperAddy,
       });
     } else {
       await dispatch("genericErc20Approval", {
         spendAmount: totalAmount,
         tokenAddress: tokenAddress,
-        delegateAddress: airdropAddy,
+        delegateAddress: airdropperAddy,
       });
     }
 
@@ -92,6 +91,6 @@ export default {
         userAddress,
         amountToReceive,
       ])
-    ).send({ from: userAddy });
+    ).send({ from: userAddy, value: serviceCost });
   },
 };

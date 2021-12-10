@@ -59,11 +59,11 @@ export default {
     state.mtgyPriceUsd = price;
   },
 
-  SET_MTGY_TOKEN_INFO(state, info) {
+  SET_OKLG_TOKEN_INFO(state, info) {
     state.mtgyTokenInfo = info;
   },
 
-  SET_MTGY_TOKEN_CHART(state, prices) {
+  SET_OKLG_TOKEN_CHART(state, prices) {
     state.mtgyChart = prices;
   },
 

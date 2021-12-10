@@ -76,7 +76,7 @@
 
               div
                 div.text-danger
-                  | You will spend #[strong {{ costFormatted }}] MTGY on both sides to create your atomic swap bridge.
+                  | You will spend #[strong {{ createSwapCost }} {{ nativeCurrencySymbol }}] on both sides to create your atomic swap bridge.
                 n-button(
                   type="success"
                   size="lg"
@@ -142,6 +142,7 @@ export default {
       createSwapCost: (state) => state.asaas.createSwapCost,
       globalLoading: (state) => state.globalLoading,
       mtgyServiceCost: (state) => state.asaas.cost,
+      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
       gasRequirement: (state) => state.asaas.gas,
       web3: (state) => state.web3.instance,
       zeroAddy: (state) => state.zeroAddy,
@@ -152,12 +153,6 @@ export default {
         this.globalLoading ||
         !(this.tokenInfo && this.numberTokens && this.targetNetwork)
       );
-    },
-
-    costFormatted() {
-      return new BigNumber(this.createSwapCost || 0)
-        .div(new BigNumber(10).pow(18))
-        .toFormat(0);
     },
   },
 

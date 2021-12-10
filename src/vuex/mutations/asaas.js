@@ -1,6 +1,6 @@
 export default {
-  SET_ASAAS_COSTS(state, { mtgyServiceCost, gas }) {
-    state.asaas.createSwapCost = mtgyServiceCost;
+  SET_ASAAS_COSTS(state, { serviceCost, gas }) {
+    state.asaas.createSwapCost = serviceCost;
     state.asaas.gas = gas;
   },
 

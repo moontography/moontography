@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 // import sleep from "../../factories/Sleep";
-import MTGY from "../../factories/web3/MTGY";
+import OKLG from "../../factories/web3/OKLG";
 import ERC20 from "@/factories/web3/ERC20";
 import MTGYRaffler from "../../factories/web3/MTGYRaffler";
 
@@ -10,16 +10,24 @@ export default {
     await Promise.all([dispatch("rafflerCosts"), dispatch("getAllRaffles")]);
   },
 
-  async rafflerCosts({ commit, getters, state }) {
+  async rafflerCosts({ commit, dispatch, getters, state }) {
     const web3 = state.web3.instance;
-    // const userAddy = state.web3.address;
-    const rafflerAddy = getters.activeNetwork.contracts.raffler;
-    const contract = MTGYRaffler(web3, rafflerAddy);
-    const [mtgyServiceCost, entryFeePercentageCharge] = await Promise.all([
-      contract.methods.mtgyServiceCost().call(),
+    const productContract = getters.activeNetwork.contracts.raffler;
+    const productID = state.productIds.raffler;
+    const contract = MTGYRaffler(web3, productContract);
+    const [cost, entryFeePercentageCharge] = await Promise.all([
+      dispatch("getProductCost", {
+        productID,
+        productContract,
+      }),
       contract.methods.entryFeePercentageCharge().call(),
     ]);
-    commit("SET_RAFFLER_COSTS", { mtgyServiceCost, entryFeePercentageCharge });
+    commit("SET_RAFFLER_COSTS", {
+      serviceCost: new BigNumber(cost)
+        .div(new BigNumber(10).pow(18))
+        .toString(),
+      entryFeePercentageCharge,
+    });
   },
 
   async getAllRaffles({ commit, getters, state }) {
@@ -145,20 +153,23 @@ export default {
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const rafflerAddy = getters.activeNetwork.contracts.raffler;
-    const mtgyCont = MTGY(web3, mtgyAddy);
-    const contract = MTGYRaffler(web3, rafflerAddy);
+    const productContract = getters.activeNetwork.contracts.raffler;
+    const productID = state.productIds.raffler;
+    const nativeCurrencySymbol = getters.nativeCurrencySymbol;
+    const contract = MTGYRaffler(web3, productContract);
     const rewardCont = ERC20(web3, rewardTokenAddress);
     const [
-      mtgyServiceCost,
-      userMtgyBalance,
+      nativeBalance,
+      serviceCost,
       userRewardBalance,
       rewardTokenInfo,
       entryTokenInfo,
     ] = await Promise.all([
-      contract.methods.mtgyServiceCost().call(),
-      mtgyCont.methods.balanceOf(userAddy).call(),
+      state.web3.instance.eth.getBalance(userAddy),
+      dispatch("getProductCost", {
+        productID,
+        productContract,
+      }),
       rewardCont.methods.balanceOf(userAddy).call(),
       dispatch(
         isNft ? "getErc721TokenInfo" : "getErc20TokenInfo",
@@ -170,6 +181,12 @@ export default {
         }
       })(),
     ]);
+
+    if (new BigNumber(nativeBalance).lt(serviceCost)) {
+      throw new Error(
+        `You do not have enough ${nativeCurrencySymbol} to cover the service cost. Please ensure you have enough ${nativeCurrencySymbol} in your wallet to cover the service fee and try again.`
+      );
+    }
 
     if (!web3.utils.isAddress(rewardTokenAddress)) {
       throw new Error(
@@ -185,19 +202,10 @@ export default {
       );
     }
 
-    if (new BigNumber(mtgyServiceCost).gt(userMtgyBalance)) {
-      throw new Error(`You do not have enough MTGY to pay the service charge.`);
-    }
-    await dispatch("genericErc20Approval", {
-      spendAmount: mtgyServiceCost,
-      tokenAddress: mtgyAddy,
-      delegateAddress: rafflerAddy,
-    });
-
     await dispatch(isNft ? "genericErc721Approval" : "genericErc20Approval", {
       spendAmount: userRewardBalance,
       tokenAddress: rewardTokenAddress,
-      delegateAddress: rafflerAddy,
+      delegateAddress: productContract,
     });
 
     start = start instanceof Date ? dayjs(start).unix() : 0;
@@ -225,6 +233,6 @@ export default {
         entryFee,
         maxEntriesPerWallet
       )
-      .send({ from: userAddy });
+      .send({ from: userAddy, value: serviceCost });
   },
 };

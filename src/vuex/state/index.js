@@ -25,6 +25,17 @@ export default {
   moralisApiKey:
     "NSKfhloCF479195Dcy17lo4WWGyx4kQENDhK3iOlXpRSM8wto3aS64t10sfsrbFi",
 
+  productIds: {
+    airdropper: 1,
+    passwordManager: 2,
+    trustedTimestamping: 3,
+    raffler: 4,
+    tokenLocker: 5,
+    atomicSwap: 6,
+    atomicSwapInstance: 7,
+    faas: 8,
+  },
+
   activeNetwork: localStorage.activeNetwork || "eth",
   mtgyCircSupply: "0",
   mtgyTotSupply: "0",
@@ -81,8 +92,8 @@ export default {
         },
         logo: `img/bsc.png`,
         contracts: {
-          mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
-          mtgySpend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
+          oklg: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+          spend: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
           airdropper: "0xc3f2A5D962d86a6305c5F9BD0bAdF3af6a017272",
           atomicSwap: "0x5b88b0CFAF3f97fb1a66B16681F6E502Ec03627e",
           atomicSwap_V1: "0x3d2C8A4a5785fce1bCF86481510d505371c0556d",
@@ -92,8 +103,6 @@ export default {
           faas: "0xaA0c2852F5391919b8AcE9ac079cf3791E5fE7e7",
           faas_V12: "0xdBD8E0c519B0832a2037D18f32f304C3aDDEA723",
           faas_V13: "0x1e07f7ad3e722F434604e7617d6DAe0a9A48a878",
-          oklg: "0x55e8b37a3c43b049dedf56c77f462db095108651",
-          mtgyOklgSwap: "0x55e1D9D077Cbee2f39F9e1A45e9F73235891BD55",
         },
         buy: {
           link:
@@ -120,8 +129,8 @@ export default {
           balance: "",
         },
         contracts: {
-          mtgy: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
-          mtgySpend: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
+          oklg: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+          spend: "0x8A31f723FBfa371308e5f5Dd637246E0F6C573a5",
           airdropper: "0x87Db3450ae10aE95B4e683c2d4A2270A7cFc8a97",
           atomicSwap: "0xa6C81ea7a97432f330F878650A5d5d376795D919",
           atomicSwap_V1: "0x48d6F1Fa74ec4E752b5f7f3cf112aC783251713D",
@@ -160,8 +169,8 @@ export default {
         },
         logo: `img/kucoin.png`,
         contracts: {
-          mtgy: "0xee00ef5a7ec4fdbd04eee39d60fe11c0ded65e73",
-          mtgySpend: "0x2060539895f6ef746336471001cEC66BfBf591d9",
+          oklg: "0xee00ef5a7ec4fdbd04eee39d60fe11c0ded65e73",
+          spend: "0x2060539895f6ef746336471001cEC66BfBf591d9",
           airdropper: "0xCc52339e62A8e2297ebE5aD6C9389DAd69397808",
           atomicSwap: "0xae31AbAef5F7000E469AED538f8e2A2a88661fF1",
           atomicSwap_V1: "0x455D17B815f822F2D8aFd3Aa15F18518427E201e",
@@ -197,8 +206,8 @@ export default {
         },
         logo: `img/polygon.png`,
         contracts: {
-          mtgy: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
-          mtgySpend: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
+          oklg: "0x04113Df9713E857FF25c8D46295637ef4cBA7263",
+          spend: "0x025c9f1146d4d94F8F369B9d98104300A3c8ca23",
           airdropper: "0x59a170Ead85428E13bdDc4048D273eCe57CB8859",
           atomicSwap: "0x8F70517bc8D336dB91f5f3f8aBB4B58e61786B83",
           atomicSwap_V1: "0xc39E5a234Fe2CAD49263d985FF2178eeA1A06916",
@@ -248,14 +257,14 @@ export default {
       //     balance: "",
       //   },
       //   contracts: {
-      //     mtgy: "0xB0c227318439Aed30140e1E589a3c3b514d15BDF",
-      //     mtgySpend: "0xD3d649fB54266EB65693b051539295493e79836F",
-      //     airdropper: "0xE71Eb358845ac93aF96D5C340814D25663E3F4Ab",
-      //     atomicSwap: "0x9Ea2E96614931E7ad88F1FBcD83198e0cC98e471",
-      //     passwordManager: "0xAb6A86dE3B47A0e71a097a84ec8Bdf7AaB0A52b6",
-      //     raffler: "0x1E6a4476bB73b3ACff096840344d923D95D3Af3f",
-      //     trustedTimestamping: "0x2a1D590BC4C86bbb9118ED4f61e2D139c738cA0C",
-      //     faas: "0xEC517E8d195A62DEFEb30ce63CebfCE610bF39E4",
+      //     oklg: "0x5f67df361f568e185aA0304A57bdE4b8028d059E",
+      //     spend: "",
+      //     airdropper: "",
+      //     atomicSwap: "",
+      //     passwordManager: "",
+      //     raffler: "",
+      //     trustedTimestamping: "",
+      //     faas: "",
       //     kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
       //     ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
       //     ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",

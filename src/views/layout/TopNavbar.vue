@@ -238,7 +238,7 @@ export default {
     },
 
     async addMtgyToMetaMask() {
-      const tokenAddress = this.activeNetwork.contracts.mtgy;
+      const tokenAddress = this.activeNetwork.contracts.oklg;
       const tokenSymbol = "MTGY";
       const tokenDecimals = 18;
 

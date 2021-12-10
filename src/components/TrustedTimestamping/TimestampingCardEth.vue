@@ -30,7 +30,7 @@ div
             div Submit File Signature to Blockchain
         div.text-danger
           small 
-            | You will spend #[strong {{ timestampingCost || `CAN'T CALCULATE` }} MTGY]
+            | You will spend #[strong {{ timestampingCost || `CAN'T CALCULATE` }} {{ nativeCurrencySymbol }}]
             | to send this file signature to the blockchain.
 
       div.text-center(v-else)
@@ -68,6 +68,7 @@ export default {
       timestampingHashes: (state) => state.trustedTimestamping.hashes || [],
       globalLoading: (state) => state.globalLoading,
       activeNetwork: (_, getters) => getters.activeNetwork || {},
+      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
     }),
 
     fileHashString() {

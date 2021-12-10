@@ -114,7 +114,7 @@
                 small(v-if="!minAccounts") Please add at least 5 accounts to bulk upload.
                 small(v-else)
                   div
-                    | You will spend #[strong {{ bulkCost || `CAN'T CALCULATE` }} MTGY]
+                    | You will spend #[strong {{ bulkCost || `CAN'T CALCULATE` }} {{ nativeCurrencySymbol }}]
                     | to store these accounts on the blockchain. 
                   div 
                     | It will not cost anything to
@@ -142,6 +142,7 @@ export default {
       cost: (state) => state.passwordManager.cost,
       encryptionKey: (state) => state.passwordManager.encryptionKey,
       globalLoading: (state) => state.globalLoading,
+      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
     }),
 
     bulkCost() {

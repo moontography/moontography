@@ -2,7 +2,6 @@ import airdropper from "./airdropper";
 import asaas from "./asaas";
 import faas from "./faas";
 import kether from "./kether";
-import mtgyOklgSwap from "./mtgyOklgSwap";
 import passwordManager from "./passwordManager";
 import raffler from "./raffler";
 import trustedTimestamping from "./trustedTimestamping";
@@ -15,6 +14,7 @@ import NftUtils from "../../factories/NftUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
 import ERC721 from "../../factories/web3/ERC721";
+import OKLGSpend from "../../factories/web3/OKLGSpend";
 import { useToast } from "vue-toastification";
 import MTGYDataUtils from "@/factories/MTGYDataUtils";
 const toast = useToast();
@@ -24,7 +24,6 @@ export default {
   ...asaas,
   ...faas,
   ...kether,
-  ...mtgyOklgSwap,
   ...passwordManager,
   ...raffler,
   ...trustedTimestamping,
@@ -35,7 +34,7 @@ export default {
       commit("SET_GLOBAL_ERROR", null);
 
       // an error with this API will break the app if we await, so don't here
-      dispatch("getMtgyPriceUsd");
+      dispatch("getOklgPriceUsd");
       dispatch("getOklgPriceUsd");
 
       // Get MTGY info before having to connect wallet.
@@ -45,8 +44,8 @@ export default {
         await Promise.all([
           dispatch("getMTGYCirculatingSupply"),
           dispatch("getMTGYTotalSupply"),
-          dispatch("getMtgyTokenInfo"),
-          dispatch("getMtgyTokenChart"),
+          dispatch("getOklgTokenInfo"),
+          dispatch("getOklgTokenChart"),
           dispatch("getCurrentBlock"),
         ]);
       });
@@ -125,23 +124,23 @@ export default {
     const go = async () => {
       try {
         // an error with this API will break the app if we await, so don't here
-        dispatch("getMtgyPriceUsd");
+        dispatch("getOklgPriceUsd");
         dispatch("getOklgPriceUsd");
 
         await Promise.all([
           dispatch("getUserBalance"),
           dispatch("getMTGYCirculatingSupply"),
           dispatch("getMTGYTotalSupply"),
-          dispatch("getMtgyTokenInfo"),
-          dispatch("getMtgyTokenChart"),
+          dispatch("getOklgTokenInfo"),
+          dispatch("getOklgTokenChart"),
           dispatch("getCurrentBlock"),
         ]);
       } catch (err) {
         console.error(`Error refreshing data`, err);
       }
     };
-    state.refreshableInterval = setInterval(go, 10000);
-    await go();
+    // state.refreshableInterval = setInterval(go, 10000);
+    // await go();
   },
 
   disconnect({ commit }) {
@@ -164,7 +163,7 @@ export default {
   //   }
 
   //   const web3 = state.web3.instance;
-  //   const mtgyAddress = getters.activeNetwork.contracts.mtgy;
+  //   const mtgyAddress = getters.activeNetwork.contracts.oklg;
   //   const trustedTimestampingAddress =
   //     getters.activeNetwork.contracts.trustedTimestamping;
   //   const contract = MTGY(web3, mtgyAddress);
@@ -186,7 +185,7 @@ export default {
   //   try {
   //     const web3 = state.web3.instance;
   //     const userAddy = state.web3.address;
-  //     const mtgyAddress = getters.activeNetwork.contracts.mtgy;
+  //     const mtgyAddress = getters.activeNetwork.contracts.oklg;
   //     // const trustedTimestampingAddress =
   //     //   getters.activeNetwork.contracts.trustedTimestamping;
   //     const mtgyCont = MTGY(web3, mtgyAddress);
@@ -206,20 +205,12 @@ export default {
     commit("SET_CURRENT_BLOCK", block);
   },
 
-  async getMtgyPriceUsd({ commit, getters }) {
+  async getOklgPriceUsd({ commit, getters }) {
     if (!getters.activeNetwork) return;
     const price = await DexUtils.getTokenPrice(
       getters.activeNetwork.contracts.mtgy
     );
     commit("SET_MTGY_PRICE_USD", price);
-  },
-
-  async getOklgPriceUsd({ commit, getters }) {
-    if (!getters.activeNetwork) return;
-    const price = await DexUtils.getTokenPrice(
-      getters.activeNetwork.contracts.oklg
-    );
-    commit("SET_OKLG_PRICE_USD", price);
   },
 
   async getMTGYCirculatingSupply({ commit, state }, reset = false) {
@@ -234,15 +225,15 @@ export default {
     commit("SET_MTGY_TOT_SUPPLY", supply);
   },
 
-  async getMtgyTokenInfo({ commit }) {
-    const info = await MTGYDataUtils.getTokenInfo("moontography");
-    commit("SET_MTGY_TOKEN_INFO", info);
+  async getOklgTokenInfo({ commit }) {
+    const info = await MTGYDataUtils.getTokenInfo("ok-lets-go");
+    commit("SET_OKLG_TOKEN_INFO", info);
   },
 
-  async getMtgyTokenChart({ commit, state }, reset = false) {
+  async getOklgTokenChart({ commit, state }, reset = false) {
     if (state.mtgyChart && state.mtgyChart.length > 0 && !reset) return;
-    const prices = await MTGYDataUtils.getTokenChart("moontography");
-    commit("SET_MTGY_TOKEN_CHART", prices);
+    const prices = await MTGYDataUtils.getTokenChart("ok-lets-go");
+    commit("SET_OKLG_TOKEN_CHART", prices);
   },
 
   async setUserInfoForToken({ commit, dispatch }, tokenAddy) {
@@ -379,5 +370,16 @@ export default {
       symbol,
       userBalance,
     };
+  },
+
+  async getProductCost({ getters, state }, { productID, productContract }) {
+    const web3 = state.web3.instance;
+    const spendCont = getters.activeNetwork.contracts.spend;
+    const spend = OKLGSpend(web3, spendCont);
+    const [defaultCost, overrideCost] = await Promise.all([
+      spend.methods.defaultProductPriceWei(productID).call(),
+      spend.methods.overrideProductPriceWei(productContract).call(),
+    ]);
+    return new BigNumber(overrideCost).gt(0) ? overrideCost : defaultCost;
   },
 };
