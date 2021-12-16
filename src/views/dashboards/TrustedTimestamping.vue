@@ -1,12 +1,12 @@
 <template lang="pug">
-.row
-  .col-md-6.mx-auto
-    card
-      .text-center
-        loading-panel(v-if="isLoading")
-        component(
-          v-else
-          :is="blockchainHashComponent")
+//- .row
+//-   .col-md-6.mx-auto
+//-     card
+//-       .text-center
+//-         loading-panel(v-if="isLoading")
+//-         component(
+//-           v-else
+//-           :is="blockchainHashComponent")
 
 .row
   .col-md-12.mx-auto

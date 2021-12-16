@@ -3,12 +3,15 @@ div.panel-header
   div.header.text-center
     h2.title Atomic Swap as a Service
     p.category
-      div Provides a way to seamlessly swap pegged tokens across blockchains.
-    n-button(
-      type='primary'
-      round=''
-      data-toggle="modal"
-      data-target="#create-swap-modal") Create Atomic Swap Bridge for your Token
+      div.text-white Provides a way to seamlessly swap pegged tokens across blockchains.
+    p
+      a.text-white(href="https://app.oklg.io")
+        u Click Here Create Atomic Swap Bridge for your Token
+    //- n-button(
+    //-   type='primary'
+    //-   round=''
+    //-   data-toggle="modal"
+    //-   data-target="#create-swap-modal") Create Atomic Swap Bridge for your Token
 
 create-swap-modal#create-swap-modal
 </template>

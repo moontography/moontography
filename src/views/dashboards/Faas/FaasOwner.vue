@@ -2,137 +2,142 @@
 .row
   .col-md-10.mx-auto
     .row.mb-2
-      .col-lg-6
+      .col-lg-12
         card
           template(v-slot:header='')
-            div
-              div.d-flex.align-items-center
-                h4.card-title.mb-0
-                  | Token Users will Stake
-                checkbox.ml-3(v-model="isStakableTokenNft") Is this an NFT contract?
-              div.text-secondary
-                small The token users can stake to earn rewards from the rewards pool you've provided.
-          token-input-standalone(
-            v-model="stakableTokenInfo"
-            btn-size="sm"
-            btn-text="Find stakable token from contract"
-            :is-nft="isStakableTokenNft")
-      .col-lg-6
-        card
-          template(v-slot:header='')
-            div
-              div.d-flex.align-items-center
-                h4.card-title.mb-0
-                  | Rewards Token
-                checkbox.ml-3(
-                  v-if="!isStakableTokenNft"
-                  v-model="rewardsSameAsStakableToken") Same as token being staked
-              div.text-secondary
-                small The token you will send the staking contract for users to earn for staking
-          token-input-standalone(
-            v-model="rewardsTokenInfo"
-            ref="rewardsToken"
-            btn-size="sm"
-            btn-text="Find rewards token from contract")
-    .row.mb-2
-      .col-md-12.mx-auto
-        card
-          template(v-slot:header='')
-            h4.card-title
-              | Pool Information
-          form.form-horizontal
-            div.row.mb-4
-              label.col-4.col-md-2.col-form-label
-                | Rewards Supply (# tokens)
-              div.col-8.col-md-10
-                fg-input(
-                  v-model="rewardsSupply"
-                  type="number"
-                  placeholder='Rewards Supply (# tokens)')
-                    //- template(v-slot:helpblock='')
-                    //-   span.form-text
-                    //-     | Enter the number of tokens you will send the contract
-                    //-     | for users to be rewarded over the lifecycle of the pool.
+            h2 You cannot create staking pools
+          div Please create new staking pools at #[a(href="https://app.oklg.io") https://app.oklg.io].
+    //-   .col-lg-6
+    //-     card
+    //-       template(v-slot:header='')
+    //-         div
+    //-           div.d-flex.align-items-center
+    //-             h4.card-title.mb-0
+    //-               | Token Users will Stake
+    //-             checkbox.ml-3(v-model="isStakableTokenNft") Is this an NFT contract?
+    //-           div.text-secondary
+    //-             small The token users can stake to earn rewards from the rewards pool you've provided.
+    //-       token-input-standalone(
+    //-         v-model="stakableTokenInfo"
+    //-         btn-size="sm"
+    //-         btn-text="Find stakable token from contract"
+    //-         :is-nft="isStakableTokenNft")
+    //-   .col-lg-6
+    //-     card
+    //-       template(v-slot:header='')
+    //-         div
+    //-           div.d-flex.align-items-center
+    //-             h4.card-title.mb-0
+    //-               | Rewards Token
+    //-             checkbox.ml-3(
+    //-               v-if="!isStakableTokenNft"
+    //-               v-model="rewardsSameAsStakableToken") Same as token being staked
+    //-           div.text-secondary
+    //-             small The token you will send the staking contract for users to earn for staking
+    //-       token-input-standalone(
+    //-         v-model="rewardsTokenInfo"
+    //-         ref="rewardsToken"
+    //-         btn-size="sm"
+    //-         btn-text="Find rewards token from contract")
+    //- .row.mb-2
+    //-   .col-md-12.mx-auto
+    //-     card
+    //-       template(v-slot:header='')
+    //-         h4.card-title
+    //-           | Pool Information
+    //-       form.form-horizontal
+    //-         div.row.mb-4
+    //-           label.col-4.col-md-2.col-form-label
+    //-             | Rewards Supply (# tokens)
+    //-           div.col-8.col-md-10
+    //-             fg-input(
+    //-               v-model="rewardsSupply"
+    //-               type="number"
+    //-               placeholder='Rewards Supply (# tokens)')
+    //-                 //- template(v-slot:helpblock='')
+    //-                 //-   span.form-text
+    //-                 //-     | Enter the number of tokens you will send the contract
+    //-                 //-     | for users to be rewarded over the lifecycle of the pool.
 
-            div.row.mb-4
-              label.col-4.col-md-2.col-form-label
-                | When should pool expire?
-              div.col-8.col-md-4
-                div.form-group
-                  el-date-picker(
-                    :disabled="!(rewardsTokenInfo && rawRewardsSupply)"
-                    type="date"
-                    placeholder="Approximate pool end date"
-                    v-model="poolEndDate"
-                    @update:modelValue="setRawPerBlockNum")
-              label.col-4.col-md-2.col-form-label
-                | Rewards per block:
-              div.col-8.col-md-4
-                fg-input(
-                  :disabled="!(rewardsTokenInfo && rawRewardsSupply)"
-                  v-model="perBlockNumFormatted"
-                  type="number"
-                  placeholder='Tokens rewarded per block')
+    //-         div.row.mb-4
+    //-           label.col-4.col-md-2.col-form-label
+    //-             | When should pool expire?
+    //-           div.col-8.col-md-4
+    //-             div.form-group
+    //-               el-date-picker(
+    //-                 :disabled="!(rewardsTokenInfo && rawRewardsSupply)"
+    //-                 type="date"
+    //-                 placeholder="Approximate pool end date"
+    //-                 v-model="poolEndDate"
+    //-                 @update:modelValue="setRawPerBlockNum")
+    //-           label.col-4.col-md-2.col-form-label
+    //-             | Rewards per block:
+    //-           div.col-8.col-md-4
+    //-             fg-input(
+    //-               :disabled="!(rewardsTokenInfo && rawRewardsSupply)"
+    //-               v-model="perBlockNumFormatted"
+    //-               type="number"
+    //-               placeholder='Tokens rewarded per block')
             
-            div.row.mb-4
-              label.col-4.col-md-2.col-form-label
-                | Staker timelock (in days)
-              div.col-8.col-md-10
-                fg-input(
-                  v-model="userTimelockDays"
-                  type="number"
-                  placeholder='Minumum number of days user should stake (DEFAULT: 0)')
-                    //- template(v-slot:helpblock='')
-                    //-   span.form-text
-                    //-     | Enter the number of tokens you will send the contract
-                    //-     | for users to be rewarded over the lifecycle of the pool.
+    //-         div.row.mb-4
+    //-           label.col-4.col-md-2.col-form-label
+    //-             | Staker timelock (in days)
+    //-           div.col-8.col-md-10
+    //-             fg-input(
+    //-               v-model="userTimelockDays"
+    //-               type="number"
+    //-               placeholder='Minumum number of days user should stake (DEFAULT: 0)')
+    //-                 //- template(v-slot:helpblock='')
+    //-                 //-   span.form-text
+    //-                 //-     | Enter the number of tokens you will send the contract
+    //-                 //-     | for users to be rewarded over the lifecycle of the pool.
     
-    .row
-      .col-md-12.mx-auto
-        div.alert.alert-warning(v-if="!isFormValidated")
-          b Please fill out all details above to create a new pool for the token(s) you selected!
-        div.alert.alert-primary(v-else)
-          h3.m-0 Create New Pool!
-          div.mt-4
-            ol
-              li.mb-2
-                | Your new pool will require users to stake #[b {{ stakableTokenInfo.symbol }} ({{ stakableTokenInfo.name }})]
-                | and will reward users with #[b {{ rewardsTokenInfo.symbol }} ({{ rewardsTokenInfo.name }})]
-              li.mb-2
-                | Your pool will reward #[b {{ perBlockNumFormatted }} {{ rewardsTokenInfo.symbol }}]
-                | per block across all users in the pool until #[b {{ formattedRewardsSupply }} {{ rewardsTokenInfo.symbol }}]
-                | have been rewarded in total.
-              li.mb-2
-                | Your pool rewards will expire approximately on date #[b {{ formatDate(poolEndDate) }}]
-              li
-                | Your pool will require users to stake their tokens a minimum of
-                | #[b {{ userTimelockDays }} days] before they can unstake them.
-          div.mt-2
-            div.text-center
-              n-button(
-                type="success"
-                size="lg"
-                v-loading="globalLoading"
-                :disabled="globalLoading"
-                @click="createNewPool") Create New Pool
-          div.row.mt-2
-            div.col-lg-8.mx-auto.text-center
-              div You will spend #[b {{ createCost }} MTGY] to create this new pool.
-              div It will not cost anything for users to stake their tokens in your pool.
-      - // TODO REMOVE
-      .col-12(v-if="isScrooge")
-        n-button(
-          type="danger"
-          size="lg"
-          v-loading="globalLoading"
-          :disabled="globalLoading"
-          @click="removeWegoUpSingle") Remove WEGOUP single sided
-        n-button(
-          type="danger"
-          size="lg"
-          v-loading="globalLoading"
-          :disabled="globalLoading"
-          @click="removeWegoUpLp") Remove WEGOUP Cake-LP
+    //- .row
+    //-   .col-md-12.mx-auto
+    //-     div.alert.alert-warning(v-if="!isFormValidated")
+    //-       b Please fill out all details above to create a new pool for the token(s) you selected!
+    //-     div.alert.alert-primary(v-else)
+    //-       h3.m-0 Create New Pool!
+    //-       div.mt-4
+    //-         ol
+    //-           li.mb-2
+    //-             | Your new pool will require users to stake #[b {{ stakableTokenInfo.symbol }} ({{ stakableTokenInfo.name }})]
+    //-             | and will reward users with #[b {{ rewardsTokenInfo.symbol }} ({{ rewardsTokenInfo.name }})]
+    //-           li.mb-2
+    //-             | Your pool will reward #[b {{ perBlockNumFormatted }} {{ rewardsTokenInfo.symbol }}]
+    //-             | per block across all users in the pool until #[b {{ formattedRewardsSupply }} {{ rewardsTokenInfo.symbol }}]
+    //-             | have been rewarded in total.
+    //-           li.mb-2
+    //-             | Your pool rewards will expire approximately on date #[b {{ formatDate(poolEndDate) }}]
+    //-           li
+    //-             | Your pool will require users to stake their tokens a minimum of
+    //-             | #[b {{ userTimelockDays }} days] before they can unstake them.
+    //-       div.mt-2
+    //-         div.text-center
+    //-           n-button(
+    //-             type="success"
+    //-             size="lg"
+    //-             v-loading="globalLoading"
+    //-             :disabled="globalLoading"
+    //-             @click="createNewPool") Create New Pool
+    //-       div.row.mt-2
+    //-         div.col-lg-8.mx-auto.text-center
+    //-           div You will spend #[b {{ createCost }} MTGY] to create this new pool.
+    //-           div It will not cost anything for users to stake their tokens in your pool.
+    //-   - // TODO REMOVE
+    //-   .col-12(v-if="isScrooge")
+    //-     n-button(
+    //-       type="danger"
+    //-       size="lg"
+    //-       v-loading="globalLoading"
+    //-       :disabled="globalLoading"
+    //-       @click="removeWegoUpSingle") Remove WEGOUP single sided
+    //-     n-button(
+    //-       type="danger"
+    //-       size="lg"
+    //-       v-loading="globalLoading"
+    //-       :disabled="globalLoading"
+    //-       @click="removeWegoUpLp") Remove WEGOUP Cake-LP
 </template>
 
 <script>

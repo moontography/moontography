@@ -8,105 +8,110 @@
       .col-lg-12
         card
           template(v-slot:header='')
-            div.d-flex.align-items-center
-              h4.card-title.mb-0
-                | Token Contract Address You're Airdropping
-              checkbox.ml-3(v-model="isAirdroppingTokenNft") Are you airdropping NFTs from an ERC721 contract?
-              //- div.text-secondary
-              //-   small The token users can stake to earn rewards from the rewards pool you've provided.
-          token-input-standalone(
-            v-model="tokenInfo"
-            btn-text="Set Token to Airdrop"
-            :is-nft="isAirdroppingTokenNft")
+            h4.m-0 You cannot airdrop tokens here
+          div Please go to #[a(href="https://app.oklg.io") https://app.oklg.io] to airdrop tokens.
+    //-   .col-lg-12
+    //-     card
+    //-       template(v-slot:header='')
+    //-         div.d-flex.align-items-center
+    //-           h4.card-title.mb-0
+    //-             | Token Contract Address You're Airdropping
+    //-           checkbox.ml-3(v-model="isAirdroppingTokenNft") Are you airdropping NFTs from an ERC721 contract?
+    //-           //- div.text-secondary
+    //-           //-   small The token users can stake to earn rewards from the rewards pool you've provided.
+    //-       token-input-standalone(
+    //-         v-model="tokenInfo"
+    //-         btn-text="Set Token to Airdrop"
+    //-         :is-nft="isAirdroppingTokenNft")
 
-    .row.mb-2
-      .col-md-12.mx-auto
-        card
-          template(v-slot:header='')
-            h4.card-title
-              | Addresses to Send Tokens
-          div
-            div.text-center
-              div
-                a.clickable(@click="generateTemplate") Click here to download template.
-              input.form-control.input-block.mr-2(
-                :id="`bulk-upload-airdropper-addresses`"
-                type="file",
-                accept="text/csv, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx",
-                @change="parseFile")
-              button.btn.btn-primary(
-                v-loading="globalLoading"
-                :disabled="globalLoading"
-                @click.prevent="triggerFile")
-                  | #[i.now-ui-icons.arrows-1_share-66] Upload Spreadsheet (.csv or .xlsx)
+    //- .row.mb-2
+    //-   .col-md-12.mx-auto
+    //-     card
+    //-       template(v-slot:header='')
+    //-         h4.card-title
+    //-           | Addresses to Send Tokens
+    //-       div
+    //-         div.text-center
+    //-           div
+    //-             a.clickable(@click="generateTemplate") Click here to download template.
+    //-           input.form-control.input-block.mr-2(
+    //-             :id="`bulk-upload-airdropper-addresses`"
+    //-             type="file",
+    //-             accept="text/csv, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx",
+    //-             @change="parseFile")
+    //-           button.btn.btn-primary(
+    //-             v-loading="globalLoading"
+    //-             :disabled="globalLoading"
+    //-             @click.prevent="triggerFile")
+    //-               | #[i.now-ui-icons.arrows-1_share-66] Upload Spreadsheet (.csv or .xlsx)
 
-            div.mt-2
-              table.table.table-striped.table-bordered.m-0
-                thead
-                  tr
-                    th Address
-                    th
-                      | {{ isAirdroppingTokenNft ? 'Token IDs of' : 'Amount' }}
-                      | {{ tokenInfo && tokenInfo.symbol ? tokenInfo.symbol : 'Tokens' }} to send
-                    th
-                tbody
-                  tr(v-if="!addresses || addresses.length === 0")
-                    td(colspan="100%")
-                      i No addresses added yet...
-                  tr(v-for="(addy, ind) in addresses")
-                    td
-                      div {{ addy.address }}
-                      div.text-danger.mt-2(v-if="!isValidAddress(addy.address)")
-                        i Not a valid address, please make sure you entered it correctly!
-                    td {{ addy.tokens }}
-                    td.text-center
-                      button.btn.btn-sm.btn-danger(
-                        v-loading="globalLoading"
-                        :disabled="globalLoading"
-                        @click.prevent="removeAddress(ind)")
-                          | #[i.fa.fa-times-circle]
-                  tr  
-                    td
-                      fg-input(
-                        group-classes="mb-0"
-                        type="text"
-                        placeholder="Enter wallet address"
-                        v-model="newAddress.address")
-                    td
-                      fg-input(
-                        group-classes="mb-0"
-                        type="number"
-                        placeholder="Enter number of tokens to send"
-                        v-model="newAddress.tokens")
-                    td.text-center
-                      button.btn.btn-sm.btn-success(
-                        v-loading="globalLoading"
-                        :disabled="globalLoading"
-                        @click.prevent="addAddress(ind)")
-                          | #[i.fa.fa-plus-circle]
+    //-         div.mt-2
+    //-           table.table.table-striped.table-bordered.m-0
+    //-             thead
+    //-               tr
+    //-                 th Address
+    //-                 th
+    //-                   | {{ isAirdroppingTokenNft ? 'Token IDs of' : 'Amount' }}
+    //-                   | {{ tokenInfo && tokenInfo.symbol ? tokenInfo.symbol : 'Tokens' }} to send
+    //-                 th
+    //-             tbody
+    //-               tr(v-if="!addresses || addresses.length === 0")
+    //-                 td(colspan="100%")
+    //-                   i No addresses added yet...
+    //-               tr(v-for="(addy, ind) in addresses")
+    //-                 td
+    //-                   div {{ addy.address }}
+    //-                   div.text-danger.mt-2(v-if="!isValidAddress(addy.address)")
+    //-                     i Not a valid address, please make sure you entered it correctly!
+    //-                 td {{ addy.tokens }}
+    //-                 td.text-center
+    //-                   button.btn.btn-sm.btn-danger(
+    //-                     v-loading="globalLoading"
+    //-                     :disabled="globalLoading"
+    //-                     @click.prevent="removeAddress(ind)")
+    //-                       | #[i.fa.fa-times-circle]
+    //-               tr  
+    //-                 td
+    //-                   fg-input(
+    //-                     group-classes="mb-0"
+    //-                     type="text"
+    //-                     placeholder="Enter wallet address"
+    //-                     v-model="newAddress.address")
+    //-                 td
+    //-                   fg-input(
+    //-                     group-classes="mb-0"
+    //-                     type="number"
+    //-                     placeholder="Enter number of tokens to send"
+    //-                     v-model="newAddress.tokens")
+    //-                 td.text-center
+    //-                   button.btn.btn-sm.btn-success(
+    //-                     v-loading="globalLoading"
+    //-                     :disabled="globalLoading"
+    //-                     @click.prevent="addAddress(ind)")
+    //-                       | #[i.fa.fa-plus-circle]
     
-    .row
-      .col-md-12.mx-auto
-        div.alert.alert-warning(v-if="!isFormValidated")
-          b Please enter all information above in order to airdrop tokens to your users.
-        div.alert.alert-primary(v-else)
-          h3.m-0 Send Tokens!
-          div.mt-4
-            ol
-              li.mb-2
-                | You will be airdropping #[b {{ isAirdroppingTokenNft ? addresses.length : totalAmountToSend }} {{ tokenInfo.symbol }}]
-                | to a total of  #[b {{ addresses.length }}] wallet addresses.
-          div.mt-2
-            div.text-center
-              n-button(
-                type="success"
-                size="lg"
-                v-loading="globalLoading"
-                :disabled="globalLoading"
-                @click="airdropTokens") Airdrop Your {{ tokenInfo.symbol }} Now!
-          div.row.mt-2
-            div.col-lg-8.mx-auto.text-center
-              div You will spend #[b {{ airdropCost }} MTGY] to use the Airdropper service.
+    //- .row
+    //-   .col-md-12.mx-auto
+    //-     div.alert.alert-warning(v-if="!isFormValidated")
+    //-       b Please enter all information above in order to airdrop tokens to your users.
+    //-     div.alert.alert-primary(v-else)
+    //-       h3.m-0 Send Tokens!
+    //-       div.mt-4
+    //-         ol
+    //-           li.mb-2
+    //-             | You will be airdropping #[b {{ isAirdroppingTokenNft ? addresses.length : totalAmountToSend }} {{ tokenInfo.symbol }}]
+    //-             | to a total of  #[b {{ addresses.length }}] wallet addresses.
+    //-       div.mt-2
+    //-         div.text-center
+    //-           n-button(
+    //-             type="success"
+    //-             size="lg"
+    //-             v-loading="globalLoading"
+    //-             :disabled="globalLoading"
+    //-             @click="airdropTokens") Airdrop Your {{ tokenInfo.symbol }} Now!
+    //-       div.row.mt-2
+    //-         div.col-lg-8.mx-auto.text-center
+    //-           div You will spend #[b {{ airdropCost }} MTGY] to use the Airdropper service.
 </template>
 
 <script>

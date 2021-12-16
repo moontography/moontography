@@ -4,13 +4,13 @@
     card.p-2(v-if="encryptionKey")
       div.d-flex.align-items-center.mb-2
         h3.m-0 #[i.fa.fa-address-book.text-primary.mr-2] Your Accounts
-        div.ml-auto
-          button.btn.btn-primary(
-            data-toggle="modal"
-            data-target="#password-account-modal-add") #[i.fa.fa-plus-circle.mr-2] Add Account
-          button.btn.btn-info(
-            data-toggle="modal"
-            data-target="#bulk-password-account-modal-add") #[i.fa.fa-plus-circle.mr-2] Bulk Upload
+        //- div.ml-auto
+        //-   button.btn.btn-primary(
+        //-     data-toggle="modal"
+        //-     data-target="#password-account-modal-add") #[i.fa.fa-plus-circle.mr-2] Add Account
+        //-   button.btn.btn-info(
+        //-     data-toggle="modal"
+        //-     data-target="#bulk-password-account-modal-add") #[i.fa.fa-plus-circle.mr-2] Bulk Upload
       input.form-control(
         placeholder="Search accounts.."
         v-model="accountSearch")

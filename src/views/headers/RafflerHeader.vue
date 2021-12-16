@@ -4,11 +4,11 @@ div.panel-header
     h2.title Raffler
     p.category
       | Create raffles and lottery drawings for ERC-20 or ERC-721 (NFT) tokens.
-    div
-      router-link(to="/raffler/new")
-        n-button(
-          type='primary'
-          round='') Create New Raffle/Lottery
+    //- div
+    //-   router-link(to="/raffler/new")
+    //-     n-button(
+    //-       type='primary'
+    //-       round='') Create New Raffle/Lottery
 </template>
 
 <script>
