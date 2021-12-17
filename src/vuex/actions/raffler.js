@@ -1,9 +1,8 @@
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 // import sleep from "../../factories/Sleep";
-import OKLG from "../../factories/web3/OKLG";
 import ERC20 from "@/factories/web3/ERC20";
-import MTGYRaffler from "../../factories/web3/MTGYRaffler";
+import OKLGRaffler from "../../factories/web3/OKLGRaffler";
 
 export default {
   async initRaffler({ dispatch }) {
@@ -14,7 +13,7 @@ export default {
     const web3 = state.web3.instance;
     const productContract = getters.activeNetwork.contracts.raffler;
     const productID = state.productIds.raffler;
-    const contract = MTGYRaffler(web3, productContract);
+    const contract = OKLGRaffler(web3, productContract);
     const [cost, entryFeePercentageCharge] = await Promise.all([
       dispatch("getProductCost", {
         productID,
@@ -33,7 +32,7 @@ export default {
   async getAllRaffles({ commit, getters, state }) {
     const web3 = state.web3.instance;
     const rafflerAddy = getters.activeNetwork.contracts.raffler;
-    const contract = MTGYRaffler(web3, rafflerAddy);
+    const contract = OKLGRaffler(web3, rafflerAddy);
     const raffleIds = await contract.methods.getAllRaffles().call();
     commit("SET_ALL_RAFFLE_IDS", raffleIds);
   },
@@ -42,7 +41,7 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const rafflerAddy = getters.activeNetwork.contracts.raffler;
-    const contract = MTGYRaffler(web3, rafflerAddy);
+    const contract = OKLGRaffler(web3, rafflerAddy);
     const raffleInfo = await contract.methods.raffles(raffleId).call();
     const [
       rewardTokenInfo,
@@ -85,7 +84,7 @@ export default {
     const userAddy = state.web3.address;
     const rafflerAddy = getters.activeNetwork.contracts.raffler;
     const raffleInfo = state.raffler.raffleInfo[raffleId];
-    const contract = MTGYRaffler(web3, rafflerAddy);
+    const contract = OKLGRaffler(web3, rafflerAddy);
     if (
       new BigNumber(raffleInfo.entryFee).gt(0) &&
       new BigNumber(raffleInfo.entryToken.toLowerCase()).gt(0)
@@ -124,7 +123,7 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const rafflerAddy = getters.activeNetwork.contracts.raffler;
-    const contract = MTGYRaffler(web3, rafflerAddy);
+    const contract = OKLGRaffler(web3, rafflerAddy);
     await contract.methods
       .closeRaffleAndRefund(raffleId)
       .send({ from: userAddy });
@@ -134,7 +133,7 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const rafflerAddy = getters.activeNetwork.contracts.raffler;
-    const contract = MTGYRaffler(web3, rafflerAddy);
+    const contract = OKLGRaffler(web3, rafflerAddy);
     await contract.methods.drawWinner(raffleId).send({ from: userAddy });
   },
 
@@ -156,7 +155,7 @@ export default {
     const productContract = getters.activeNetwork.contracts.raffler;
     const productID = state.productIds.raffler;
     const nativeCurrencySymbol = getters.nativeCurrencySymbol;
-    const contract = MTGYRaffler(web3, productContract);
+    const contract = OKLGRaffler(web3, productContract);
     const rewardCont = ERC20(web3, rewardTokenAddress);
     const [
       nativeBalance,

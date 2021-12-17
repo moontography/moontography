@@ -1,17 +1,16 @@
 import BigNumber from "bignumber.js";
 import sleep from "../../factories/Sleep";
-// import MTGY from "../../factories/web3/MTGY";
 import AtomicSwapOracle from "../../factories/AtomicSwapOracle";
 import ERC20 from "@/factories/web3/ERC20";
-import MTGYAtomicSwapInstance from "@/factories/web3/MTGYAtomicSwapInstance";
-import MTGYAtomicSwap from "../../factories/web3/MTGYAtomicSwap";
+import OKLGAtomicSwapInstance from "@/factories/web3/OKLGAtomicSwapInstance";
+import OKLGAtomicSwap from "../../factories/web3/OKLGAtomicSwap";
 
 export default {
   async asaasCosts({ commit, dispatch, getters, state }) {
     const web3 = state.web3.instance;
     const productContract = getters.activeNetwork.contracts.atomicSwap;
     const productID = state.productIds.atomicSwap;
-    const contract = MTGYAtomicSwap(web3, productContract);
+    const contract = OKLGAtomicSwap(web3, productContract);
     const [serviceCost, gas] = await Promise.all([
       dispatch("getProductCost", {
         productID,
@@ -30,7 +29,7 @@ export default {
   async asaasInstanceGasCost({ commit, dispatch, state }, contractAddress) {
     const web3 = state.web3.instance;
     const productID = state.productIds.atomicSwapInstance;
-    const contract = MTGYAtomicSwapInstance(web3, contractAddress);
+    const contract = OKLGAtomicSwapInstance(web3, contractAddress);
     const [serviceCost, instanceGasCost] = await Promise.all([
       dispatch("getProductCost", {
         productID,
@@ -52,8 +51,8 @@ export default {
     }
     const asaasAddy = activeNetwork.contracts.atomicSwap;
     const asaasAddy_V1 = activeNetwork.contracts.atomicSwap_V1;
-    const contract = MTGYAtomicSwap(web3, asaasAddy);
-    const contract_V1 = asaasAddy_V1 && MTGYAtomicSwap(web3, asaasAddy_V1);
+    const contract = OKLGAtomicSwap(web3, asaasAddy);
+    const contract_V1 = asaasAddy_V1 && OKLGAtomicSwap(web3, asaasAddy_V1);
     const [allSwaps, allSwaps_V1] = await Promise.all([
       contract.methods.getAllSwapContracts().call(),
       (async () => {
@@ -66,7 +65,7 @@ export default {
     const mappedSwaps = await Promise.all(
       allSwaps.concat(allSwaps_V1).map(async (swap) => {
         try {
-          const sourceSwapInst = MTGYAtomicSwapInstance(
+          const sourceSwapInst = OKLGAtomicSwapInstance(
             web3,
             swap.sourceContract
           );
@@ -148,7 +147,7 @@ export default {
   async asaasGetLatestUserSwap({ state }, sourceContract) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const contract = MTGYAtomicSwapInstance(web3, sourceContract);
+    const contract = OKLGAtomicSwapInstance(web3, sourceContract);
     return await contract.methods.lastUserSwap(userAddy).call();
   },
 
@@ -160,7 +159,7 @@ export default {
     const userAddy = state.web3.address;
     const productID = state.productIds.atomicSwapInstance;
     const nativeCurrencySymbol = getters.nativeCurrencySymbol;
-    const contract = MTGYAtomicSwapInstance(web3, sourceContract);
+    const contract = OKLGAtomicSwapInstance(web3, sourceContract);
     const [nativeBalance, serviceCost] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
       dispatch("getProductCost", {
@@ -190,14 +189,21 @@ export default {
 
   async asaasCreateSwap(
     { dispatch, getters, state },
-    { tokenAddress, tokenSupply, maxSwapAmount, targetNetwork, targetContract }
+    {
+      tokenAddress,
+      tokenSupply,
+      maxSwapAmount,
+      targetNetwork,
+      targetContract,
+      targetDecimals,
+    }
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const productContract = getters.activeNetwork.contracts.atomicSwap;
     const productID = state.productIds.atomicSwap;
     const nativeCurrencySymbol = getters.nativeCurrencySymbol;
-    const contract = MTGYAtomicSwap(web3, productContract);
+    const contract = OKLGAtomicSwap(web3, productContract);
 
     const [nativeBalance, serviceCost, valueToCreate] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
@@ -227,7 +233,8 @@ export default {
         tokenSupply,
         maxSwapAmount,
         targetNetwork,
-        targetContract
+        targetContract,
+        targetDecimals
       )
       .send({ from: userAddy, value: totalNativeNeeded.toFixed() });
     return await contract.methods.getLastCreatedContract(userAddy).call();
@@ -240,7 +247,7 @@ export default {
     const web3 = state.web3.instance;
     const activeNetwork = getters.activeNetwork;
     const userAddy = state.web3.address;
-    const contract = MTGYAtomicSwapInstance(web3, instContract);
+    const contract = OKLGAtomicSwapInstance(web3, instContract);
     const [valueToSend, currentSwap] = await Promise.all([
       contract.methods.minimumGasForOperation().call(),
       contract.methods.swaps(id).call(),
@@ -292,7 +299,7 @@ export default {
     const web3 = state.web3.instance;
     const activeNetwork = getters.activeNetwork;
     const userAddy = state.web3.address;
-    const contract = MTGYAtomicSwapInstance(web3, instContract);
+    const contract = OKLGAtomicSwapInstance(web3, instContract);
     const [valueToSend, currentSwap] = await Promise.all([
       contract.methods.minimumGasForOperation().call(),
       contract.methods.swaps(id).call(),

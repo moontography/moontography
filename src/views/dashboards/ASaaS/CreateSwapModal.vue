@@ -149,10 +149,7 @@ export default {
     }),
 
     loadingOrNotValidated() {
-      return (
-        this.globalLoading ||
-        !(this.tokenInfo && this.numberTokens && this.targetNetwork)
-      );
+      return this.globalLoading || !(this.tokenInfo && this.targetNetwork);
     },
   },
 
@@ -179,7 +176,6 @@ export default {
         const maxSwap = Number();
         if (
           !(
-            this.numberTokens &&
             (this.maxSwap ||
               (typeof this.maxSwap === "number" && this.maxSwap >= 0)) &&
             this.targetNetwork
@@ -187,6 +183,18 @@ export default {
         ) {
           throw new Error("Please fill out ALL fields to create your bridge.");
         }
+
+        const selectedTargetContract =
+          (this.createdFirstAlready && this.contractAddress) || this.zeroAddy;
+        let selectedTargetContDecimals = 0;
+        if (new BigNumber(selectedTargetContract).gt(0)) {
+          const { decimals } = await this.$store.dispatch(
+            "getErc20TokenInfo",
+            selectedTargetContract
+          );
+          selectedTargetContDecimals = decimals;
+        }
+
         this.$store.commit("SET_GLOBAL_LOADING", true);
         const {
           id,
@@ -196,6 +204,7 @@ export default {
           sourceContract,
           targetNetwork,
           targetContract,
+          targetDecimals,
           isActive,
         } = await this.$store.dispatch("asaasCreateSwap", {
           tokenAddress: this.tokenInfo.address,
@@ -206,8 +215,8 @@ export default {
             .times(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFixed(),
           targetNetwork: this.targetNetwork,
-          targetContract:
-            (this.createdFirstAlready && this.contractAddress) || this.zeroAddy,
+          targetContract: selectedTargetContract,
+          targetDecimals: selectedTargetContDecimals,
         });
         await AtomicSwapOracle.createSwap({
           sourceTimestamp: timestamp,

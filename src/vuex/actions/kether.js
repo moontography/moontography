@@ -1,6 +1,5 @@
 import BigNumber from "bignumber.js";
 import exponentialBackoff from "../../factories/ExponentialBackoff";
-// import MTGY from "../../factories/web3/MTGY";
 import KetherHomepage from "../../factories/web3/KetherHomepage";
 import KetherNFT from "../../factories/web3/KetherNFT";
 import KetherNFTLoaner from "../../factories/web3/KetherNFTLoaner";

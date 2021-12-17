@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
-export default function MTGYAtomicSwap(web3: Web3, contractAddy: string) {
+export default function OKLGAtomicSwap(web3: Web3, contractAddy: string) {
   return new web3.eth.Contract(atomicSwapAbi, contractAddy);
 }
 
@@ -9,114 +9,13 @@ const atomicSwapAbi: AbiItem[] = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_newCost",
-        type: "uint256",
-      },
-    ],
-    name: "changeMtgyServiceCost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
-        name: "_tokenAddy",
+        name: "_tokenAddress",
         type: "address",
       },
-    ],
-    name: "changeMtgyTokenAddy",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_oracleAddress",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "_changeAll",
-        type: "bool",
-      },
-    ],
-    name: "changeOracleAddress",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
       {
         internalType: "address",
         name: "_spendAddress",
-        type: "address",
-      },
-    ],
-    name: "changeSpendAddress",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_tokenAddy",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_tokenSupply",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_maxSwapAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_targetNetwork",
-        type: "string",
-      },
-      {
-        internalType: "address",
-        name: "_targetContract",
-        type: "address",
-      },
-    ],
-    name: "createNewAtomicSwapContract",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_mtgyAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_mtgySpendAddress",
         type: "address",
       },
       {
@@ -148,36 +47,26 @@ const atomicSwapAbi: AbiItem[] = [
     type: "event",
   },
   {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
-        name: "newOwner",
+        name: "_tokenAddy",
         type: "address",
       },
-    ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
       {
         internalType: "uint256",
-        name: "_createdBlockTimestamp",
+        name: "_tokenSupply",
         type: "uint256",
       },
       {
-        internalType: "address",
-        name: "_sourceContract",
-        type: "address",
+        internalType: "uint256",
+        name: "_maxSwapAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_targetNetwork",
+        type: "string",
       },
       {
         internalType: "address",
@@ -185,40 +74,25 @@ const atomicSwapAbi: AbiItem[] = [
         type: "address",
       },
       {
-        internalType: "bool",
-        name: "_isActive",
-        type: "bool",
+        internalType: "uint8",
+        name: "_targetDecimals",
+        type: "uint8",
       },
     ],
-    name: "updateSwapContract",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
+    name: "createNewAtomicSwapContract",
+    outputs: [
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "",
         type: "uint256",
       },
-    ],
-    name: "updateSwapCreationGasLoadAmount",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "creator",
-    outputs: [
       {
         internalType: "address",
         name: "",
         type: "address",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -263,12 +137,17 @@ const atomicSwapAbi: AbiItem[] = [
             type: "address",
           },
           {
+            internalType: "uint8",
+            name: "targetDecimals",
+            type: "uint8",
+          },
+          {
             internalType: "bool",
             name: "isActive",
             type: "bool",
           },
         ],
-        internalType: "struct MTGYAtomicSwap.TargetSwapInfo[]",
+        internalType: "struct OKLGAtomicSwap.TargetSwapInfo[]",
         name: "",
         type: "tuple[]",
       },
@@ -324,12 +203,17 @@ const atomicSwapAbi: AbiItem[] = [
             type: "address",
           },
           {
+            internalType: "uint8",
+            name: "targetDecimals",
+            type: "uint8",
+          },
+          {
             internalType: "bool",
             name: "isActive",
             type: "bool",
           },
         ],
-        internalType: "struct MTGYAtomicSwap.TargetSwapInfo",
+        internalType: "struct OKLGAtomicSwap.TargetSwapInfo",
         name: "",
         type: "tuple",
       },
@@ -339,12 +223,25 @@ const atomicSwapAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "mtgyServiceCost",
+    name: "getSpendAddress",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "address",
         name: "",
-        type: "uint256",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTokenAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -374,6 +271,83 @@ const atomicSwapAbi: AbiItem[] = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "productID",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_oracleAddress",
+        type: "address",
+      },
+      {
+        internalType: "bool",
+        name: "_changeAll",
+        type: "bool",
+      },
+    ],
+    name: "setOracleAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "_newId",
+        type: "uint8",
+      },
+    ],
+    name: "setProductID",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_spendAddy",
+        type: "address",
+      },
+    ],
+    name: "setSpendAddy",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenAddy",
+        type: "address",
+      },
+    ],
+    name: "setTokenAddy",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -435,6 +409,11 @@ const atomicSwapAbi: AbiItem[] = [
         type: "address",
       },
       {
+        internalType: "uint8",
+        name: "targetDecimals",
+        type: "uint8",
+      },
+      {
         internalType: "bool",
         name: "isActive",
         type: "bool",
@@ -489,12 +468,106 @@ const atomicSwapAbi: AbiItem[] = [
         type: "address",
       },
       {
+        internalType: "uint8",
+        name: "targetDecimals",
+        type: "uint8",
+      },
+      {
         internalType: "bool",
         name: "isActive",
         type: "bool",
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_createdBlockTimestamp",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_sourceContract",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "_targetNetwork",
+        type: "string",
+      },
+      {
+        internalType: "address",
+        name: "_targetContract",
+        type: "address",
+      },
+      {
+        internalType: "uint8",
+        name: "_targetDecimals",
+        type: "uint8",
+      },
+      {
+        internalType: "bool",
+        name: "_isActive",
+        type: "bool",
+      },
+    ],
+    name: "updateSwapContract",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "updateSwapCreationGasLoadAmount",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdrawETH",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenAddy",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

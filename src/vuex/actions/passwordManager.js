@@ -2,8 +2,7 @@ import dayjs from "dayjs";
 import BigNumber from "bignumber.js";
 import Cryptography from "browser-cryptography";
 import { v1 as uuidv1 } from "uuid";
-// import MTGY from "../../factories/web3/MTGY";
-import MTGYPasswordManager from "../../factories/web3/MTGYPasswordManager";
+import OKLGPasswordManager from "../../factories/web3/OKLGPasswordManager";
 
 export default {
   async getPasswordManagerEncryptionKey({ commit }) {
@@ -36,7 +35,7 @@ export default {
     const web3 = state.web3.instance;
     const encryptionKey = state.passwordManager.encryptionKey;
     if (!encryptionKey) return;
-    const pwCont = MTGYPasswordManager(web3, pwMgrAddress);
+    const pwCont = OKLGPasswordManager(web3, pwMgrAddress);
     const accounts = await pwCont.methods.getAllAccounts(userAddy).call();
     const crypt = Cryptography();
     const decryptedAccounts = await Promise.all(
@@ -71,7 +70,7 @@ export default {
     const productID = state.productIds.passwordManager;
     const nativeCurrencySymbol = getters.nativeCurrencySymbol;
     const web3 = state.web3.instance;
-    const pwCont = MTGYPasswordManager(web3, productContract);
+    const pwCont = OKLGPasswordManager(web3, productContract);
 
     const crypt = Cryptography();
     const encryptedAccounts = await Promise.all(
@@ -124,7 +123,7 @@ export default {
     const productContract = getters.activeNetwork.contracts.passwordManager;
     const productID = state.productIds.passwordManager;
     const web3 = state.web3.instance;
-    const pwCont = MTGYPasswordManager(web3, productContract);
+    const pwCont = OKLGPasswordManager(web3, productContract);
 
     // store the account
     const crypt = Cryptography();
@@ -157,7 +156,7 @@ export default {
     const userAddy = state.web3.address;
     const passwordManagerAddy = getters.activeNetwork.contracts.passwordManager;
     const web3 = state.web3.instance;
-    const pwCont = MTGYPasswordManager(web3, passwordManagerAddy);
+    const pwCont = OKLGPasswordManager(web3, passwordManagerAddy);
     return await pwCont.methods
       .deleteAccount(accountId)
       .send({ from: userAddy });

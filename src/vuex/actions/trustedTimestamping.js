@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
+import OKLGTrustedTimestamping from "../../factories/web3/OKLGTrustedTimestamping";
 
 export default {
   async trustedTimestampingInit({ dispatch }) {
@@ -31,7 +31,7 @@ export default {
     const productID = state.productIds.trustedTimestamping;
     const nativeCurrencySymbol = getters.nativeCurrencySymbol;
     const web3 = state.web3.instance;
-    const ttCont = MTGYTrustedTimestamping(web3, productContract);
+    const ttCont = OKLGTrustedTimestamping(web3, productContract);
 
     const [nativeBalance, serviceCost] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
@@ -57,7 +57,7 @@ export default {
     const userAddy = state.web3.address;
     const trustedTimestampingAddress =
       getters.activeNetwork.contracts.trustedTimestamping;
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
+    const ttCont = OKLGTrustedTimestamping(web3, trustedTimestampingAddress);
     const hashes = await ttCont.methods.getHashesForAddress(userAddy).call();
     commit("SET_TRUSTED_TIMESTAMPING_HASHES", hashes);
   },

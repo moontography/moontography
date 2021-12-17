@@ -102,9 +102,8 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
-// import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
-import MTGYDataUtils from "../../../factories/MTGYDataUtils";
-import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
+import TokenDataUtils from "../../../factories/TokenDataUtils";
+import OKLGFaaSToken from "../../../factories/web3/OKLGFaaSToken";
 import DexUtils from "@/factories/DexUtils";
 
 export default {
@@ -354,8 +353,8 @@ export default {
         this.rewardsTokenPriceUSD = rp;
       } else {
         const [sp, rp] = await Promise.all([
-          MTGYDataUtils.getTokenPriceUSD(stakingTokenSymbol),
-          MTGYDataUtils.getTokenPriceUSD(rewardsTokenSymbol),
+          TokenDataUtils.getTokenPriceUSD(stakingTokenSymbol),
+          TokenDataUtils.getTokenPriceUSD(rewardsTokenSymbol),
         ]);
         this.stakingTokenPriceUSD = sp;
         this.rewardsTokenPriceUSD = rp;
@@ -403,7 +402,7 @@ export default {
 
     async getUnharvestedTokens() {
       try {
-        const stakingContract = MTGYFaaSToken(
+        const stakingContract = OKLGFaaSToken(
           this.web3,
           this.farmingTokenAddress
         );

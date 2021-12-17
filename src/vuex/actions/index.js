@@ -16,7 +16,7 @@ import ERC20 from "../../factories/web3/ERC20";
 import ERC721 from "../../factories/web3/ERC721";
 import OKLGSpend from "../../factories/web3/OKLGSpend";
 import { useToast } from "vue-toastification";
-import MTGYDataUtils from "@/factories/MTGYDataUtils";
+import TokenDataUtils from "@/factories/TokenDataUtils";
 const toast = useToast();
 
 export default {
@@ -215,24 +215,24 @@ export default {
 
   async getMTGYCirculatingSupply({ commit, state }, reset = false) {
     if (state.mtgyCircSupply != "0" && !reset) return;
-    const supply = await MTGYDataUtils.getCirculatingSupply();
+    const supply = await TokenDataUtils.getCirculatingSupply();
     commit("SET_MTGY_CIRC_SUPPLY", supply);
   },
 
   async getMTGYTotalSupply({ commit, state }, reset = false) {
     if (state.mtgyTotSupply != "0" && !reset) return;
-    const supply = await MTGYDataUtils.getTotalSupply();
+    const supply = await TokenDataUtils.getTotalSupply();
     commit("SET_MTGY_TOT_SUPPLY", supply);
   },
 
   async getOklgTokenInfo({ commit }) {
-    const info = await MTGYDataUtils.getTokenInfo("ok-lets-go");
+    const info = await TokenDataUtils.getTokenInfo("ok-lets-go");
     commit("SET_OKLG_TOKEN_INFO", info);
   },
 
   async getOklgTokenChart({ commit, state }, reset = false) {
     if (state.mtgyChart && state.mtgyChart.length > 0 && !reset) return;
-    const prices = await MTGYDataUtils.getTokenChart("ok-lets-go");
+    const prices = await TokenDataUtils.getTokenChart("ok-lets-go");
     commit("SET_OKLG_TOKEN_CHART", prices);
   },
 
