@@ -12,7 +12,7 @@ export default {
     const productID = state.productIds.atomicSwap;
     const contract = OKLGAtomicSwap(web3, productContract);
     const [serviceCost, gas] = await Promise.all([
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID,
         productContract,
       }),
@@ -22,7 +22,7 @@ export default {
       gas,
       serviceCost: new BigNumber(serviceCost)
         .div(new BigNumber(10).pow(18))
-        .toString(),
+        .toFixed(),
     });
   },
 
@@ -31,7 +31,7 @@ export default {
     const productID = state.productIds.atomicSwapInstance;
     const contract = OKLGAtomicSwapInstance(web3, contractAddress);
     const [serviceCost, instanceGasCost] = await Promise.all([
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID,
         productContract: contractAddress,
       }),
@@ -162,7 +162,7 @@ export default {
     const contract = OKLGAtomicSwapInstance(web3, sourceContract);
     const [nativeBalance, serviceCost] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID,
         productContract: sourceContract,
       }),
@@ -207,7 +207,7 @@ export default {
 
     const [nativeBalance, serviceCost, valueToCreate] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID,
         productContract,
       }),

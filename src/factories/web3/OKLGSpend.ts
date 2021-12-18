@@ -7,6 +7,17 @@ export default function OKLGSpend(web3: Web3, contractAddy: string) {
 
 const abi: AbiItem[] = [
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_linkPriceFeedContract",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -58,7 +69,39 @@ const abi: AbiItem[] = [
         type: "uint8",
       },
     ],
-    name: "defaultProductPriceWei",
+    name: "defaultProductPriceUSD",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getLatestETHPrice",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_productCostUSD",
+        type: "uint256",
+      },
+    ],
+    name: "getProductCostWei",
     outputs: [
       {
         internalType: "uint256",
@@ -77,7 +120,7 @@ const abi: AbiItem[] = [
         type: "address",
       },
     ],
-    name: "overrideProductPriceWei",
+    name: "overrideProductPriceUSD",
     outputs: [
       {
         internalType: "uint256",
@@ -149,11 +192,11 @@ const abi: AbiItem[] = [
       },
       {
         internalType: "uint256[]",
-        name: "_pricesWei",
+        name: "_pricesUSD",
         type: "uint256[]",
       },
     ],
-    name: "setDefaultProductPricesWeiBulk",
+    name: "setDefaultProductPricesUSDBulk",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -167,11 +210,11 @@ const abi: AbiItem[] = [
       },
       {
         internalType: "uint256",
-        name: "_priceWei",
+        name: "_priceUSD",
         type: "uint256",
       },
     ],
-    name: "setDefaultProductWeiPrice",
+    name: "setDefaultProductUSDPrice",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -185,11 +228,11 @@ const abi: AbiItem[] = [
       },
       {
         internalType: "uint256",
-        name: "_priceWei",
+        name: "_priceUSD",
         type: "uint256",
       },
     ],
-    name: "setOverrideProductPriceWei",
+    name: "setOverrideProductPriceUSD",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -203,11 +246,11 @@ const abi: AbiItem[] = [
       },
       {
         internalType: "uint256[]",
-        name: "_pricesWei",
+        name: "_pricesUSD",
         type: "uint256[]",
       },
     ],
-    name: "setOverrideProductPricesWeiBulk",
+    name: "setOverrideProductPricesUSDBulk",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -221,6 +264,19 @@ const abi: AbiItem[] = [
       },
     ],
     name: "setPaymentWallet",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_feedContract",
+        type: "address",
+      },
+    ],
+    name: "setPriceFeed",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

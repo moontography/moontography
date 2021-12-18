@@ -12,7 +12,7 @@ export default {
   async getTimestampingCost({ commit, dispatch, getters, state }) {
     const productContract = getters.activeNetwork.contracts.trustedTimestamping;
     const productID = state.productIds.trustedTimestamping;
-    const cost = await dispatch("getProductCost", {
+    const cost = await dispatch("getProductCostWei", {
       productID,
       productContract,
     });
@@ -35,7 +35,7 @@ export default {
 
     const [nativeBalance, serviceCost] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID,
         productContract,
       }),

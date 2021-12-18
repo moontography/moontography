@@ -372,14 +372,20 @@ export default {
     };
   },
 
-  async getProductCost({ getters, state }, { productID, productContract }) {
+  async getProductCostWei({ getters, state }, { productID, productContract }) {
     const web3 = state.web3.instance;
     const spendCont = getters.activeNetwork.contracts.spend;
     const spend = OKLGSpend(web3, spendCont);
-    const [defaultCost, overrideCost] = await Promise.all([
-      spend.methods.defaultProductPriceWei(productID).call(),
-      spend.methods.overrideProductPriceWei(productContract).call(),
+    const [defaultCostUSD, overrideCostUSD] = await Promise.all([
+      spend.methods.defaultProductPriceUSD(productID).call(),
+      spend.methods.overrideProductPriceUSD(productContract).call(),
     ]);
-    return new BigNumber(overrideCost).gt(0) ? overrideCost : defaultCost;
+    const [defaultCostWei, overrideCostWei] = await Promise.all([
+      spend.methods.getProductCostWei(defaultCostUSD).call(),
+      spend.methods.getProductCostWei(overrideCostUSD).call(),
+    ]);
+    return new BigNumber(overrideCostWei).gt(0)
+      ? overrideCostWei
+      : defaultCostWei;
   },
 };

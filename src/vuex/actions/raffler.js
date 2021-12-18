@@ -15,7 +15,7 @@ export default {
     const productID = state.productIds.raffler;
     const contract = OKLGRaffler(web3, productContract);
     const [cost, entryFeePercentageCharge] = await Promise.all([
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID,
         productContract,
       }),
@@ -165,7 +165,7 @@ export default {
       entryTokenInfo,
     ] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID,
         productContract,
       }),

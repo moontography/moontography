@@ -19,7 +19,7 @@ export default {
   async getPasswordManagerCost({ commit, dispatch, getters, state }) {
     const productContract = getters.activeNetwork.contracts.passwordManager;
     const productID = state.productIds.passwordManager;
-    const cost = await dispatch("getProductCost", {
+    const cost = await dispatch("getProductCostWei", {
       productID,
       productContract,
     });
@@ -99,7 +99,7 @@ export default {
 
     const [nativeBalance, serviceCost] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID,
         productContract,
       }),
@@ -143,7 +143,7 @@ export default {
         .addAccount(uuidv1(), ivBase64, ciphertextBase64)
         .send({
           from: userAddy,
-          value: await dispatch("getProductCost", {
+          value: await dispatch("getProductCostWei", {
             productID,
             productContract,
           }),

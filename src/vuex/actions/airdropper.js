@@ -6,7 +6,7 @@ export default {
   async getAirdropperCost({ commit, dispatch, getters, state }) {
     const productContract = getters.activeNetwork.contracts.airdropper;
     const productID = state.productIds.airdropper;
-    const cost = await dispatch("getProductCost", {
+    const cost = await dispatch("getProductCostWei", {
       productID,
       productContract,
     });
@@ -32,7 +32,7 @@ export default {
         tokenAddress
       ),
       state.web3.instance.eth.getBalance(userAddy),
-      dispatch("getProductCost", {
+      dispatch("getProductCostWei", {
         productID: airdropperProdId,
         productContract: airdropperAddy,
       }),
