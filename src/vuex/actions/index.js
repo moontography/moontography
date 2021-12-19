@@ -155,49 +155,6 @@ export default {
     Web3Modal.clearCachedProvider();
   },
 
-  // async ethCheckApprovalStatusForTokenContract({ getters, state, commit }) {
-  //   const userAddy = state.web3.address;
-  //   if (!userAddy) {
-  //     commit("SET_WEB3_IS_CONNECTED", false);
-  //     return;
-  //   }
-
-  //   const web3 = state.web3.instance;
-  //   const mtgyAddress = getters.activeNetwork.contracts.oklg;
-  //   const trustedTimestampingAddress =
-  //     getters.activeNetwork.contracts.trustedTimestamping;
-  //   const contract = MTGY(web3, mtgyAddress);
-  //   const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-  //   const [timestampAllowance, currentCost] = await Promise.all([
-  //     contract.methods.allowance(userAddy, trustedTimestampingAddress).call(),
-  //     ttCont.methods.mtgyServiceCost().call(),
-  //   ]);
-  //   const isApprovedAlready = new BigNumber(timestampAllowance).gte(
-  //     currentCost
-  //   );
-  //   commit("SET_WEB3_IS_APPROVED", isApprovedAlready);
-  // },
-
-  // async ethApproveTokenContract(
-  //   { getters, state, commit },
-  //   { address, amount }
-  // ) {
-  //   try {
-  //     const web3 = state.web3.instance;
-  //     const userAddy = state.web3.address;
-  //     const mtgyAddress = getters.activeNetwork.contracts.oklg;
-  //     // const trustedTimestampingAddress =
-  //     //   getters.activeNetwork.contracts.trustedTimestamping;
-  //     const mtgyCont = MTGY(web3, mtgyAddress);
-  //     await mtgyCont.methods.approve(address, amount).send({ from: userAddy });
-  //     commit("SET_WEB3_IS_APPROVED", true);
-  //   } catch (err) {
-  //     toast.error(err.message || err);
-  //     commit("SET_WEB3_IS_APPROVED", false);
-  //     commit("SET_GLOBAL_ERROR", err);
-  //   }
-  // },
-
   async getCurrentBlock({ state, commit }) {
     const web3 = state.web3.instance;
     if (!web3) return;

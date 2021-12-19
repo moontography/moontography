@@ -129,7 +129,7 @@ navbar#navigation(:show-navbar="showNavbar")
           | 1 MTGY = ${{ mtgyPriceUsd }} USD
       li.nav-item.d-none.d-xl-block
         a.nav-link.clickable(
-          @click="addMtgyToMetaMask")
+          @click="addTokenToMetaMask")
             img(
               style="max-height: 18px"
               src="img/metamask.png") 
@@ -237,10 +237,11 @@ export default {
       }
     },
 
-    async addMtgyToMetaMask() {
+    async addTokenToMetaMask() {
       const tokenAddress = this.activeNetwork.contracts.oklg;
-      const tokenSymbol = "MTGY";
-      const tokenDecimals = 18;
+      if (!tokenAddress) return;
+      const tokenSymbol = "OKLG";
+      const tokenDecimals = 9;
 
       if (!window.ethereum)
         return this.$toast.error(

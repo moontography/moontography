@@ -3,8 +3,7 @@ import axios from "axios";
 export default {
   client: axios.create({
     // baseURL: process.env.ATOMIC_SWAP_ENDPOINT || `https://as.moontography.com`,
-    // baseURL: `https://as.moontography.com`,
-    baseURL: `http://localhost:8000`,
+    baseURL: `https://as.oklg.io`,
   }),
 
   async getSwap({ userAddress, sourceNetwork, sourceContract }: any) {
