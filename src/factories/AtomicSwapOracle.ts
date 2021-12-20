@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default {
   client: axios.create({
-    // baseURL: process.env.ATOMIC_SWAP_ENDPOINT || `https://as.moontography.com`,
+    // baseURL: process.env.ATOMIC_SWAP_ENDPOINT || `https://as.oklg.io`,
     baseURL: `https://as.oklg.io`,
   }),
 

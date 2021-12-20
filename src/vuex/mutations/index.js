@@ -47,24 +47,20 @@ export default {
     };
   },
 
-  SET_MTGY_CIRC_SUPPLY(state, supply) {
-    state.mtgyCircSupply = supply;
+  SET_TOKEN_CIRC_SUPPLY(state, supply) {
+    state.tokenCircSupply = supply;
   },
 
-  SET_MTGY_TOT_SUPPLY(state, supply) {
-    state.mtgyTotSupply = supply;
+  SET_TOKEN_TOT_SUPPLY(state, supply) {
+    state.tokenTotSupply = supply;
   },
 
-  SET_MTGY_PRICE_USD(state, price) {
-    state.mtgyPriceUsd = price;
+  SET_TOKEN_INFO(state, info) {
+    state.platformTokenInfo = info;
   },
 
-  SET_OKLG_TOKEN_INFO(state, info) {
-    state.mtgyTokenInfo = info;
-  },
-
-  SET_OKLG_TOKEN_CHART(state, prices) {
-    state.mtgyChart = prices;
+  SET_TOKEN_CHART(state, prices) {
+    state.platformTokenChart = prices;
   },
 
   SET_WEB3_IS_CONNECTED(state, isConnected) {

@@ -126,14 +126,14 @@ navbar#navigation(:show-navbar="showNavbar")
           | Block: {{ currentBlock }}
       li.nav-item
         a.nav-link.no-hover
-          | 1 MTGY = ${{ mtgyPriceUsd }} USD
-      li.nav-item.d-none.d-xl-block
+          | 1 OKLG = ${{ oklgPriceUsd }} USD
+      li.nav-item.d-none.d-xl-block(v-if="hasOklgTokenContract")
         a.nav-link.clickable(
           @click="addTokenToMetaMask")
             img(
               style="max-height: 18px"
               src="img/metamask.png") 
-            span.ml-2 Add MTGY to MetaMask
+            span.ml-2 Add OKLG to MetaMask
       li.nav-item.d-none.d-xl-block(v-if="activeNetwork && activeNetwork.buy && activeNetwork.buy.link")
         a.nav-link.clickable(
           :href="activeNetwork.buy.link"
@@ -159,8 +159,16 @@ export default {
       activeNetwork: (_, getters) => getters.activeNetwork || {},
       allNetworks: (state) => state.eth.networks || [],
       currentBlock: (state) => state.currentBlock,
-      mtgyPriceUsd: (state) => new BigNumber(state.mtgyPriceUsd).toFixed(6),
+      oklgPriceUsd: (state) => new BigNumber(state.oklgPriceUsd).toFixed(6),
     }),
+
+    hasOklgTokenContract() {
+      return (
+        this.activeNetwork &&
+        this.activeNetwork.contracts &&
+        new BigNumber(this.activeNetwork.contracts.oklg).gt(0)
+      );
+    },
 
     routeName() {
       const { name } = this.$route;

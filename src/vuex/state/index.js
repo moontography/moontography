@@ -37,11 +37,11 @@ export default {
   },
 
   activeNetwork: localStorage.activeNetwork || "eth",
-  mtgyCircSupply: "0",
-  mtgyTotSupply: "0",
+  tokenCircSupply: "0",
+  tokenTotSupply: "0",
   mtgyPriceUsd: "0",
   currentBlock: "0",
-  mtgyTokenInfo: {
+  platformTokenInfo: {
     community_data: {},
     market_data: {
       market_cap: {},
@@ -49,7 +49,7 @@ export default {
       total_volume: {},
     },
   },
-  mtgyChart: [],
+  platformTokenChart: [],
 
   oklgPriceUsd: "0",
   mtgyOklgRatio: "0",
@@ -73,6 +73,35 @@ export default {
 
   eth: {
     networks: [
+      {
+        name: "Arbitrum",
+        short_name: "arbitrum",
+        chain: "arbitrum",
+        network: "arbitrum",
+        chain_id: 42161,
+        network_id: 42161,
+        explorer_url: "https://arbiscan.io/",
+        rpc_url: "https://arb1.arbitrum.io/rpc",
+        blocks_per_day: 6450,
+        native_currency: {
+          symbol: "ETH",
+          name: "ETH",
+          decimals: 18,
+          contractAddress: "",
+          balance: "",
+        },
+        logo: `img/arbitrum.png`,
+        contracts: {
+          oklg: "0x000000000000000000000000000000000000dEaD",
+          spend: "0xd9b6F6e53c60802d278efE0C643D9C01BBd93abc",
+          airdropper: "0x4aF14d5A9dba22eCAB3dCC05778d7ED229306F88",
+          atomicSwap: "0xA4d1EE16A0B80372735C9d80C8b1C7217B61F0D1",
+          passwordManager: "0xcC3c31a1FE9801A53604CD17c2b27fD68CABa528",
+          raffler: "0xc8238E9f4c81e9B3fCCd2c5D7D93AeE9e147Fdf4",
+          trustedTimestamping: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
+          faas: "0x657bBa69DB9bf06D5BB2D0403867b41c08181630",
+        },
+      },
       {
         name: "Avalanche",
         short_name: "avax",
@@ -203,41 +232,41 @@ export default {
           faas: "0xA4d1EE16A0B80372735C9d80C8b1C7217B61F0D1",
         },
       },
-      {
-        name: "Kucoin Mainnet",
-        short_name: "kcc",
-        chain: "KCC",
-        network: "mainnet",
-        chain_id: 321,
-        network_id: 1,
-        explorer_url: "https://explorer.kcc.io/en",
-        rpc_url: "https://rpc-mainnet.kcc.network",
-        blocks_per_day: 28800,
-        native_currency: {
-          symbol: "KCS",
-          name: "KCS",
-          decimals: 18,
-          contractAddress: "",
-          balance: "",
-        },
-        logo: `img/kucoin.png`,
-        contracts: {
-          oklg: "",
-          spend: "",
-          airdropper: "",
-          atomicSwap: "",
-          passwordManager: "",
-          raffler: "",
-          trustedTimestamping: "",
-          faas: "",
-        },
-        buy: {
-          link:
-            "https://koffeeswap.exchange/#/pro/KCS/0xeE00eF5a7EC4fDbD04eeE39d60Fe11C0DeD65e73",
-          img: "img/koffeeswap.png",
-          text: "KoffeeSwap",
-        },
-      },
+      // {
+      //   name: "Kucoin Community Chain",
+      //   short_name: "kcc",
+      //   chain: "KCC",
+      //   network: "mainnet",
+      //   chain_id: 321,
+      //   network_id: 1,
+      //   explorer_url: "https://explorer.kcc.io/en",
+      //   rpc_url: "https://rpc-mainnet.kcc.network",
+      //   blocks_per_day: 28800,
+      //   native_currency: {
+      //     symbol: "KCS",
+      //     name: "KCS",
+      //     decimals: 18,
+      //     contractAddress: "",
+      //     balance: "",
+      //   },
+      //   logo: `img/kucoin.png`,
+      //   contracts: {
+      //     oklg: "",
+      //     spend: "",
+      //     airdropper: "",
+      //     atomicSwap: "",
+      //     passwordManager: "",
+      //     raffler: "",
+      //     trustedTimestamping: "",
+      //     faas: "",
+      //   },
+      //   buy: {
+      //     link:
+      //       "https://koffeeswap.exchange/#/pro/KCS/0xeE00eF5a7EC4fDbD04eeE39d60Fe11C0DeD65e73",
+      //     img: "img/koffeeswap.png",
+      //     text: "KoffeeSwap",
+      //   },
+      // },
       {
         name: "Polygon Mainnet",
         short_name: "matic",

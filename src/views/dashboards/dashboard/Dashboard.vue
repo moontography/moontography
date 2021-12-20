@@ -188,10 +188,10 @@ export default {
   computed: {
     ...mapState({
       isInitLoading: (state) => state.initLoading,
-      circSupply: (state) => state.mtgyCircSupply,
-      totSupply: (state) => state.mtgyTotSupply,
+      circSupply: (state) => state.tokenCircSupply,
+      totSupply: (state) => state.tokenTotSupply,
       mtgyPriceUsd: (state) => state.mtgyPriceUsd,
-      tokenInfo: (state) => state.mtgyTokenInfo,
+      tokenInfo: (state) => state.platformTokenInfo,
     }),
 
     // circSupply() {

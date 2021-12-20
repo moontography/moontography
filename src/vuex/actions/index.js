@@ -35,15 +35,14 @@ export default {
 
       // an error with this API will break the app if we await, so don't here
       dispatch("getOklgPriceUsd");
-      dispatch("getOklgPriceUsd");
 
       // Get MTGY info before having to connect wallet.
       // Allows dashboard data to be shown even if user does not connect wallet.
 
       await ExponentialBackoff(async () => {
         await Promise.all([
-          dispatch("getMTGYCirculatingSupply"),
-          dispatch("getMTGYTotalSupply"),
+          dispatch("getTokenCirculatingSupply"),
+          dispatch("getTokenTotalSupply"),
           dispatch("getOklgTokenInfo"),
           dispatch("getOklgTokenChart"),
           dispatch("getCurrentBlock"),
@@ -125,12 +124,11 @@ export default {
       try {
         // an error with this API will break the app if we await, so don't here
         dispatch("getOklgPriceUsd");
-        dispatch("getOklgPriceUsd");
 
         await Promise.all([
           dispatch("getUserBalance"),
-          dispatch("getMTGYCirculatingSupply"),
-          dispatch("getMTGYTotalSupply"),
+          dispatch("getTokenCirculatingSupply"),
+          dispatch("getTokenTotalSupply"),
           dispatch("getOklgTokenInfo"),
           dispatch("getOklgTokenChart"),
           dispatch("getCurrentBlock"),
@@ -165,32 +163,37 @@ export default {
   async getOklgPriceUsd({ commit, getters }) {
     if (!getters.activeNetwork) return;
     const price = await DexUtils.getTokenPrice(
-      getters.activeNetwork.contracts.mtgy
+      getters.activeNetwork.contracts.oklg
     );
-    commit("SET_MTGY_PRICE_USD", price);
+    commit("SET_OKLG_PRICE_USD", price);
   },
 
-  async getMTGYCirculatingSupply({ commit, state }, reset = false) {
-    if (state.mtgyCircSupply != "0" && !reset) return;
+  async getTokenCirculatingSupply({ commit, state }, reset = false) {
+    if (state.tokenCircSupply != "0" && !reset) return;
     const supply = await TokenDataUtils.getCirculatingSupply();
-    commit("SET_MTGY_CIRC_SUPPLY", supply);
+    commit("SET_TOKEN_CIRC_SUPPLY", supply);
   },
 
-  async getMTGYTotalSupply({ commit, state }, reset = false) {
-    if (state.mtgyTotSupply != "0" && !reset) return;
+  async getTokenTotalSupply({ commit, state }, reset = false) {
+    if (state.tokenTotSupply != "0" && !reset) return;
     const supply = await TokenDataUtils.getTotalSupply();
-    commit("SET_MTGY_TOT_SUPPLY", supply);
+    commit("SET_TOKEN_TOT_SUPPLY", supply);
   },
 
   async getOklgTokenInfo({ commit }) {
     const info = await TokenDataUtils.getTokenInfo("ok-lets-go");
-    commit("SET_OKLG_TOKEN_INFO", info);
+    commit("SET_TOKEN_INFO", info);
   },
 
   async getOklgTokenChart({ commit, state }, reset = false) {
-    if (state.mtgyChart && state.mtgyChart.length > 0 && !reset) return;
+    if (
+      state.platformTokenChart &&
+      state.platformTokenChart.length > 0 &&
+      !reset
+    )
+      return;
     const prices = await TokenDataUtils.getTokenChart("ok-lets-go");
-    commit("SET_OKLG_TOKEN_CHART", prices);
+    commit("SET_TOKEN_CHART", prices);
   },
 
   async setUserInfoForToken({ commit, dispatch }, tokenAddy) {
