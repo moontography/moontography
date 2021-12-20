@@ -59,20 +59,29 @@
                 strong {{ activeNetwork.name }}
               div.text-left
                 label.m-0 Target bridge network:
-              network-selector.mb-4(v-model="targetNetwork")
+              network-selector.mb-4(
+                v-model="targetNetwork"
+                @update:modelValue="getTargetTokenInfo")
               
               card
-                checkbox.mb-3(v-model="createdFirstAlready")
-                  | Have you already created the first swap contract?
+                checkbox.mb-3(
+                  v-model="createdFirstAlready"
+                  @update:modelValue="getTargetTokenInfo")
+                    | Have you already created the first swap contract?
                 div(v-if="createdFirstAlready")
                   fg-input.mb-2(
                     type="text"
                     placeholder="First swap contract"
-                    v-model="contractAddress")
+                    v-model="contractAddress"
+                    @update:modelValue="getTargetTokenInfo")
                   fg-input.mb-2(
                     type="number"
                     placeholder="First swap unique identifier"
                     v-model="timestamp")
+                  div.text-left(v-if="targetTokenInfo")
+                    div #[strong Token Contract:] {{ targetTokenInfo.targetTokenAddress }}
+                    div #[strong Token:] {{ targetTokenInfo.targetTokenName }} ({{ targetTokenInfo.targetTokenSymbol }})
+                    div #[strong Decimals:] {{ targetTokenInfo.targetTokenDecimals }}
 
               div
                 div.text-danger
@@ -133,6 +142,7 @@ export default {
       contractAddress: null,
       isContractCached: false,
       createdFirstAlready: false,
+      targetTokenInfo: null,
     };
   },
 
@@ -145,6 +155,7 @@ export default {
       nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
       gasRequirement: (state) => state.asaas.gas,
       web3: (state) => state.web3.instance,
+      userAddress: (state) => state.web3.address,
       zeroAddy: (state) => state.zeroAddy,
     }),
 
@@ -171,9 +182,26 @@ export default {
       }
     },
 
+    async getTargetTokenInfo() {
+      try {
+        if (
+          !(
+            this.targetNetwork &&
+            this.web3.utils.isAddress(this.contractAddress)
+          )
+        )
+          return;
+        this.targetTokenInfo = await AtomicSwapOracle.getTokenInfoFromSwap({
+          targetNetwork: this.targetNetwork,
+          targetContract: this.contractAddress,
+        });
+      } catch (err) {
+        this.$toast.error(err.message);
+      }
+    },
+
     async createSwap() {
       try {
-        const maxSwap = Number();
         if (
           !(
             (this.maxSwap ||
@@ -187,12 +215,8 @@ export default {
         const selectedTargetContract =
           (this.createdFirstAlready && this.contractAddress) || this.zeroAddy;
         let selectedTargetContDecimals = 0;
-        if (new BigNumber(selectedTargetContract).gt(0)) {
-          const { decimals } = await this.$store.dispatch(
-            "getErc20TokenInfo",
-            selectedTargetContract
-          );
-          selectedTargetContDecimals = decimals;
+        if (this.targetTokenInfo && this.targetTokenInfo.targetTokenDecimals) {
+          selectedTargetContDecimals = this.targetTokenInfo.targetTokenDecimals;
         }
 
         this.$store.commit("SET_GLOBAL_LOADING", true);
