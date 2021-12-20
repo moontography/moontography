@@ -340,11 +340,14 @@ export default {
       spend.methods.defaultProductPriceUSD(productID).call(),
       spend.methods.overrideProductPriceUSD(productContract).call(),
     ]);
-    const [defaultCostWei, overrideCostWei] = await Promise.all([
+    const [defaultCostWei, overrideCostWei, isRemoved] = await Promise.all([
       spend.methods.getProductCostWei(defaultCostUSD).call(),
       spend.methods.getProductCostWei(overrideCostUSD).call(),
+      spend.methods.removeCost(productContract).call(),
     ]);
-    return new BigNumber(overrideCostWei).gt(0)
+    return isRemoved
+      ? "0"
+      : new BigNumber(overrideCostWei).gt(0)
       ? overrideCostWei
       : defaultCostWei;
   },
