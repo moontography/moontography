@@ -161,7 +161,7 @@ export default {
         },
         buy: {
           link:
-            "https://exchange.pancakeswap.finance/#/swap?inputCurrency=0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c&outputCurrency=0x025c9f1146d4d94f8f369b9d98104300a3c8ca23",
+            "https://exchange.pancakeswap.finance/#/swap?inputCurrency=0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c&outputCurrency=0x55e8b37a3c43b049dedf56c77f462db095108651",
           img: "img/pancakeswap.png",
           text: "PancakeSwap",
         },
@@ -198,7 +198,7 @@ export default {
         },
         buy: {
           link:
-            "https://app.uniswap.org/#/swap?outputCurrency=0x025c9f1146d4d94f8f369b9d98104300a3c8ca23",
+            "https://app.uniswap.org/#/swap?outputCurrency=0x5dbb9f64cd96e2dbbca58d14863d615b67b42f2e",
           img: "img/uniswap.png",
           text: "Uniswap",
         },
