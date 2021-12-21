@@ -1,6 +1,6 @@
 # ok.let's.go.
 
-Platform the holds all OKLG products and services, powered by $MTGY.
+Platform the holds all OKLG products and services, powered by OKLG.
 
 ## Deployment
 

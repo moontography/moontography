@@ -26,7 +26,7 @@ div.m-2.text-white.text-center
       rel="noopener noreferrer")
         i.fa.fa-2x.fa-github
 
-  div.small 1 MTGY = ${{ oklgPriceUsd }} USD
+  div.small 1 OKLG = ${{ oklgPriceUsd }} USD
 </template>
 <script>
 import { mapState } from "vuex";

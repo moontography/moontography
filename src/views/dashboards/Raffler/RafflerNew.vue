@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 
 export default {
