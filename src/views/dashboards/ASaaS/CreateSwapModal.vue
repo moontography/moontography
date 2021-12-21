@@ -19,7 +19,7 @@
             div.mb-4
               div.mb-4
                 div.mb-2
-                  | Creating a new atomic swap bridge using the moontography platform allows for your users
+                  | Creating a new atomic swap bridge using the OKLG platform allows for your users
                   | to swap tokens 1-to-1 between supported networks.
                 div.text-danger
                   //- strong

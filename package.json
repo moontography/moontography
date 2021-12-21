@@ -1,8 +1,8 @@
 {
-  "name": "moontography",
+  "name": "oklg",
   "version": "0.0.1",
   "private": true,
-  "description": "The moontography platform to find all products and services.",
+  "description": "The OKLG platform to find all products and services.",
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve --open",
