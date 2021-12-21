@@ -22,14 +22,14 @@ navbar#navigation(:show-navbar="showNavbar")
       li.nav-item
         a.nav-link(
           title="Website"
-          href="https://moontography.com"
+          href="https://oklg.io"
           target="_blank"
           rel="noopener noreferrer")
             i.fa.fa-2x.fa-globe
       li.nav-item
         a.nav-link(
           title="Telegram"
-          href="https://t.me/moontographyproject"
+          href="https://t.me/ok_lg"
           target="_blank"
           rel="noopener noreferrer")
             i.fa.fa-2x.fa-telegram
@@ -64,7 +64,7 @@ navbar#navigation(:show-navbar="showNavbar")
             span.ml-2 BscScan
         a.dropdown-item(
           title="CoinGecko"
-          href="https://www.coingecko.com/en/coins/moontography"
+          href="https://www.coingecko.com/en/coins/ok-lets-go"
           target="_blank"
           rel="noopener noreferrer")
             img(
@@ -82,7 +82,7 @@ navbar#navigation(:show-navbar="showNavbar")
         //-     span.ml-2 CoinMarketCap
         a.dropdown-item(
           title="DEXTools"
-          href="https://www.dextools.io/app/pancakeswap/pair-explorer/0xaabafd64feb2ec235b209a95d4dc9b08e225379c"
+          href="https://www.dextools.io/app/bsc/pair-explorer/0x6d1bd9731583191c76b5647736bb56540623e190"
           target="_blank"
           rel="noopener noreferrer")
             img(
@@ -91,7 +91,7 @@ navbar#navigation(:show-navbar="showNavbar")
             span.ml-2 DEXTools
         a.dropdown-item(
           title="Live Coin Watch"
-          href="https://www.livecoinwatch.com/price/TheMoontographyProject-MTGY"
+          href="https://www.livecoinwatch.com/price/okletsgo-OKLG"
           target="_blank"
           rel="noopener noreferrer")
             img(

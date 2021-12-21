@@ -39,7 +39,6 @@ export default {
   activeNetwork: localStorage.activeNetwork || "eth",
   tokenCircSupply: "0",
   tokenTotSupply: "0",
-  mtgyPriceUsd: "0",
   currentBlock: "0",
   platformTokenInfo: {
     community_data: {},
@@ -59,7 +58,7 @@ export default {
     isConnected: false,
     chainId: null,
     address: "",
-    userMtgyBalance: "",
+    userTokenBalance: "",
     mainCurrencyBalance: "",
   },
 

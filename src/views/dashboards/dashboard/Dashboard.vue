@@ -190,7 +190,7 @@ export default {
       isInitLoading: (state) => state.initLoading,
       circSupply: (state) => state.tokenCircSupply,
       totSupply: (state) => state.tokenTotSupply,
-      mtgyPriceUsd: (state) => state.mtgyPriceUsd,
+      oklgPriceUsd: (state) => state.oklgPriceUsd,
       tokenInfo: (state) => state.platformTokenInfo,
     }),
 
@@ -199,12 +199,12 @@ export default {
     // },
 
     marketCap() {
-      return new BigNumber(this.circSupply).times(this.mtgyPriceUsd).toFixed(2);
+      return new BigNumber(this.circSupply).times(this.oklgPriceUsd).toFixed(2);
     },
 
     fdMarketCap() {
       // return this.tokenInfo.market_data.fully_diluted_valuation.usd;
-      return new BigNumber(this.totSupply).times(this.mtgyPriceUsd).toFixed(2);
+      return new BigNumber(this.totSupply).times(this.oklgPriceUsd).toFixed(2);
     },
 
     totalVolume() {

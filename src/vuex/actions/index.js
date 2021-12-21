@@ -109,10 +109,10 @@ export default {
     if (!getters.activeNetwork) return;
     const { userBalance, decimals } = await dispatch(
       "getErc20TokenInfo",
-      getters.activeNetwork.contracts.mtgy
+      getters.activeNetwork.contracts.oklg
     );
     commit(
-      "SET_WEB3_USER_MTGY_BALANCE",
+      "SET_WEB3_USER_TOKEN_BALANCE",
       new BigNumber(userBalance).div(new BigNumber(10).pow(decimals)).toString()
     );
   },
@@ -137,8 +137,8 @@ export default {
         console.error(`Error refreshing data`, err);
       }
     };
-    // state.refreshableInterval = setInterval(go, 10000);
-    // await go();
+    state.refreshableInterval = setInterval(go, 10000);
+    await go();
   },
 
   disconnect({ commit }) {
@@ -160,11 +160,16 @@ export default {
     commit("SET_CURRENT_BLOCK", block);
   },
 
-  async getOklgPriceUsd({ commit, getters }) {
-    if (!getters.activeNetwork) return;
-    const price = await DexUtils.getTokenPrice(
-      getters.activeNetwork.contracts.oklg
-    );
+  async getOklgPriceUsd({ commit, getters, state }) {
+    if (
+      !(
+        getters.activeNetwork &&
+        new BigNumber(getters.activeNetwork.contracts.oklg).gt(0)
+      )
+    )
+      return;
+    const bscNet = state.eth.networks.find((n) => n.short_name == "bsc");
+    const price = await DexUtils.getTokenPrice(bscNet.contracts.oklg);
     commit("SET_OKLG_PRICE_USD", price);
   },
 
