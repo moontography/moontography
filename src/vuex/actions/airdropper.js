@@ -1,6 +1,9 @@
 import BigNumber from "bignumber.js";
 import MTGY from "../../factories/web3/MTGY";
 import MTGYAirdropper from "../../factories/web3/MTGYAirdropper";
+import TxnToast from "@/components/TxnToast";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 export default {
   async getAirdropperCost({ commit, getters, state }) {
@@ -50,18 +53,18 @@ export default {
         amountToReceive: isNft
           ? new BigNumber(tokens).toFixed(0)
           : new BigNumber(tokens)
-              .times(new BigNumber(10).pow(tokenInfo.decimals))
-              .toFixed(0),
+            .times(new BigNumber(10).pow(tokenInfo.decimals))
+            .toFixed(0),
       };
     });
 
     const totalAmount = isNft
       ? addressesFormatted.length
       : addressesFormatted.reduce(
-          (total, info) =>
-            new BigNumber(total).plus(info.amountToReceive).toFixed(0),
-          0
-        );
+        (total, info) =>
+          new BigNumber(total).plus(info.amountToReceive).toFixed(0),
+        0
+      );
     if (new BigNumber(tokenInfo.userBalance).lt(totalAmount)) {
       throw new Error(
         `You do not have the amount of ${tokenInfo.symbol} to airdrop this many tokens. Please ensure you have the appropriate amount of tokens and try again.`
@@ -86,12 +89,22 @@ export default {
     if (isNft) {
       airdropMethod = "bulkSendErc721Tokens";
     }
-    await airdropContract.methods[airdropMethod](
+
+    const tx = await airdropContract.methods[airdropMethod](
       tokenAddress,
       addressesFormatted.map(({ userAddress, amountToReceive }) => [
         userAddress,
         amountToReceive,
       ])
     ).send({ from: userAddy });
+
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
   },
 };

@@ -27,6 +27,7 @@ import TabPane from "./Tabs/TabPane";
 import Tabs from "./Tabs/Tabs";
 import TokenInput from "./TokenInput";
 import TokenInputStandalone from "./TokenInputStandalone";
+import TxnToast from "./TxnToast";
 import VeeInput from "./Inputs/VeeInput";
 
 export {
@@ -59,5 +60,6 @@ export {
   Tabs,
   TokenInput,
   TokenInputStandalone,
+  TxnToast,
   VeeInput,
 };

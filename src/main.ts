@@ -23,7 +23,7 @@ import DashboardPlugin from "./dashboard-plugin";
 
 const options: PluginOptions = {
   position: POSITION.TOP_RIGHT,
-  timeout: 4000,
+  timeout: 5000,
   containerClassName: "ct-notification",
 };
 

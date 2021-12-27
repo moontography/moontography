@@ -3,6 +3,9 @@ import MTGY from "../../factories/web3/MTGY";
 import MTGYFaaS from "../../factories/web3/MTGYFaaS";
 import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
 import MTGYFaaSToken_V3 from "../../factories/web3/MTGYFaaSToken_V3";
+import TxnToast from "@/components/TxnToast";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 export default {
   // async faasHarvestTokens({ state }, tokenAddy) {
@@ -143,7 +146,7 @@ export default {
   },
 
   async faasStakeTokens(
-    { dispatch, state },
+    { dispatch, state, getters },
     {
       farmingContractAddress,
       stakingContractAddress,
@@ -164,16 +167,24 @@ export default {
         delegateAddress: farmingContractAddress,
       }
     );
-    await faasToken.methods
+    const tx = await faasToken.methods
       .stakeTokens(
         amountTokens,
         nftTokenIds && nftTokenIds.length > 0 ? nftTokenIds : []
       )
       .send({ from: userAddy });
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
   },
 
   async faasStakeTokens_V3(
-    { dispatch, state },
+    { dispatch, state, getters },
     { farmingContractAddress, stakingContractAddress, amountTokens }
   ) {
     const web3 = state.web3.instance;
@@ -184,11 +195,21 @@ export default {
       tokenAddress: stakingContractAddress,
       delegateAddress: farmingContractAddress,
     });
-    await faasToken.methods.stakeTokens(amountTokens).send({ from: userAddy });
+    const tx = await faasToken.methods
+      .stakeTokens(amountTokens)
+      .send({ from: userAddy });
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
   },
 
   async faasUnstakeTokens(
-    { state },
+    { state, getters },
     { farmingContractAddress, amountTokens, harvestTokens }
   ) {
     const web3 = state.web3.instance;
@@ -197,19 +218,37 @@ export default {
     if (!amountTokens) {
       amountTokens = await faasToken.methods.balanceOf(userAddy).call();
     }
-    await faasToken.methods
+    const tx = await faasToken.methods
       .unstakeTokens(
         amountTokens,
         typeof harvestTokens === "boolean" ? harvestTokens : true
       )
       .send({ from: userAddy });
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
   },
 
-  async faasEmergencyUnstake({ state }, { farmingContractAddress }) {
+  async faasEmergencyUnstake({ state, getters }, { farmingContractAddress }) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
-    await faasToken.methods.emergencyUnstake().send({ from: userAddy });
+    const tx = await faasToken.methods
+      .emergencyUnstake()
+      .send({ from: userAddy });
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
   },
 
   async faasHarvestTokens({ state }, { farmingContractAddress }) {
@@ -268,7 +307,7 @@ export default {
       tokenAddress: rewardsToken,
       delegateAddress: faasAddy,
     });
-    await faasToken.methods
+    const tx = await faasToken.methods
       .createNewTokenContract(
         rewardsToken,
         stakableToken,
@@ -279,6 +318,14 @@ export default {
         isStakedTokenNft || false
       )
       .send({ from: userAddy });
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
   },
 
   async removeStakableTokens({ state }, farmContractAddress) {

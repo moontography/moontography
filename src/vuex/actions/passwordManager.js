@@ -4,6 +4,9 @@ import Cryptography from "browser-cryptography";
 import { v1 as uuidv1 } from "uuid";
 // import MTGY from "../../factories/web3/MTGY";
 import MTGYPasswordManager from "../../factories/web3/MTGYPasswordManager";
+import TxnToast from "@/components/TxnToast";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 export default {
   async getPasswordManagerEncryptionKey({ commit }) {
@@ -105,10 +108,17 @@ export default {
       delegateAddress: passwordManagerAddy,
     });
 
-    await pwCont.methods
+    const tx = await pwCont.methods
       .bulkAddAccounts(encryptedAccounts)
       .send({ from: userAddy });
-
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
     return { key: encryptedAccounts[0].key };
   },
 
@@ -129,8 +139,10 @@ export default {
     const ivBase64 = crypt.arrayBufferOrUint8ArrayToBase64(iv);
     const keyBase64 = await crypt.cryptoKeyToBase64(key);
     const ciphertextBase64 = crypt.arrayBufferOrUint8ArrayToBase64(ciphertext);
+
+    let tx;
     if (account.id) {
-      await pwCont.methods
+      tx = await pwCont.methods
         .updateAccountById(account.id, ivBase64, ciphertextBase64)
         .send({ from: userAddy });
     } else {
@@ -141,10 +153,19 @@ export default {
         tokenAddress: mtgyAddy,
         delegateAddress: passwordManagerAddy,
       });
-      await pwCont.methods
+
+      tx = await pwCont.methods
         .addAccount(uuidv1(), ivBase64, ciphertextBase64)
         .send({ from: userAddy });
     }
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
     return { iv: ivBase64, key: keyBase64, ciphertext: ciphertextBase64 };
   },
 
@@ -153,8 +174,17 @@ export default {
     const passwordManagerAddy = getters.activeNetwork.contracts.passwordManager;
     const web3 = state.web3.instance;
     const pwCont = MTGYPasswordManager(web3, passwordManagerAddy);
-    return await pwCont.methods
+    const tx = await pwCont.methods
       .deleteAccount(accountId)
       .send({ from: userAddy });
+    const content = {
+      component: TxnToast,
+      props: {
+        transactionHash: tx.transactionHash,
+        activeNetworkExplorerUrl: getters.activeNetworkExplorerUrl,
+      },
+    };
+    toast.success(content, { timeout: 10000 });
+    return tx;
   },
 };
