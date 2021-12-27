@@ -23,6 +23,25 @@ const mtgyBtsAbi: AbiItem[] = [
     type: "constructor",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -38,7 +57,7 @@ const mtgyBtsAbi: AbiItem[] = [
           },
           {
             internalType: "uint256",
-            name: "amountToReceive",
+            name: "amountOrTokenId",
             type: "uint256",
           },
         ],
@@ -61,6 +80,11 @@ const mtgyBtsAbi: AbiItem[] = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "_tokenAddress",
+        type: "address",
+      },
+      {
         components: [
           {
             internalType: "address",
@@ -69,7 +93,38 @@ const mtgyBtsAbi: AbiItem[] = [
           },
           {
             internalType: "uint256",
-            name: "amountToReceive",
+            name: "amountOrTokenId",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct MTGYAirdropper.Receiver[]",
+        name: "_addressesAndAmounts",
+        type: "tuple[]",
+      },
+    ],
+    name: "bulkSendErc721Tokens",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "userAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amountOrTokenId",
             type: "uint256",
           },
         ],
@@ -130,19 +185,6 @@ const mtgyBtsAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "creator",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "mtgyServiceCost",
     outputs: [
       {
@@ -178,6 +220,39 @@ const mtgyBtsAbi: AbiItem[] = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

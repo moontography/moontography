@@ -76,19 +76,7 @@ div
             //-         small $
             //-         animated-number(:value='tvl')
             //-       h6.stats-title Total Value Locked
-  .row    
-    .col-lg-4
-      card
-        .card-body.text-center
-          a(href="#/timestamping")
-            .statistics
-              .info
-                .icon.icon-success
-                  i.now-ui-icons.design_app
-                h3.info-title
-                  | Trusted Timestamping
-                h6.stats-title.text-success Live Now!
-    
+  .row
     .col-lg-4
       card
         .card-body.text-center
@@ -99,6 +87,54 @@ div
                   i.now-ui-icons.sport_trophy
                 h3.info-title
                   | Farming as a Service
+                h6.stats-title.text-success Live Now!
+    
+    .col-lg-4
+      card
+        .card-body.text-center
+          a(href="#/asaas")
+            .statistics
+              .info
+                .icon.icon-success
+                  i.now-ui-icons.arrows-1_refresh-69
+                h3.info-title
+                  | Atomic Swap/Bridging 
+                h6.stats-title.text-success Live Now!
+    .col-lg-4
+      card
+        .card-body.text-center
+          a(href="#/raffler")
+            .statistics
+              .info
+                .icon.icon-success
+                  i.now-ui-icons.arrows-1_refresh-69
+                h3.info-title
+                  | Raffler/Lottery
+                h6.stats-title.text-success Live Now!
+
+  .row    
+    .col-lg-4
+      card
+        .card-body.text-center
+          a(href="#/airdropper")
+            .statistics
+              .info
+                .icon.icon-success
+                  i.now-ui-icons.objects_spaceship
+                h3.info-title
+                  | Airdropper
+                h6.stats-title.text-success Live Now!
+      
+    .col-lg-4
+      card
+        .card-body.text-center
+          a(href="#/timestamping")
+            .statistics
+              .info
+                .icon.icon-success
+                  i.now-ui-icons.design_app
+                h3.info-title
+                  | Trusted Timestamping
                 h6.stats-title.text-success Live Now!
 
     .col-lg-4
@@ -112,32 +148,9 @@ div
                 h3.info-title
                   | Password Manager
                 h6.stats-title.text-success Live Now!
-    
-    .col-lg-12
-      card
-        .card-body.text-center
-          a(href="#/airdropper")
-            .statistics
-              .info
-                .icon.icon-success
-                  i.now-ui-icons.objects_spaceship
-                h3.info-title
-                  | Airdropper
-                h6.stats-title.text-success Live Now!
-    
-    .col-lg-4
-      card
-        .card-body.text-center
-          a(href="#/asaas")
-            .statistics
-              .info
-                .icon.icon-warning
-                  i.now-ui-icons.arrows-1_refresh-69
-                h3.info-title
-                  | Atomic Swapping Service
-                h6.stats-title.text-warning Coming Soon..
 
-    .col-lg-4
+  .row
+    .col-lg-6
       card
         .card-body.text-center
           a(href="#/paas")
@@ -149,7 +162,7 @@ div
                   | Polling as a Service
                 h6.stats-title.text-danger Coming Soon..
 
-    .col-lg-4
+    .col-lg-6
       card
         .card-body.text-center
           a(href="#/dtax")
@@ -190,7 +203,8 @@ export default {
     },
 
     fdMarketCap() {
-      return this.tokenInfo.market_data.fully_diluted_valuation.usd;
+      // return this.tokenInfo.market_data.fully_diluted_valuation.usd;
+      return new BigNumber(this.totSupply).times(this.mtgyPriceUsd).toFixed(2);
     },
 
     totalVolume() {

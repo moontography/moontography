@@ -99,7 +99,7 @@ export default {
     );
 
     const basePwMgrCost = await pwCont.methods.mtgyServiceCost().call();
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: new BigNumber(basePwMgrCost)
         .times(accounts.length)
         .div(2)
@@ -148,7 +148,7 @@ export default {
     } else {
       // make sure the current user has allowed the appropriate amount of MTGY to
       // spend on the service
-      await dispatch("genericTokenApproval", {
+      await dispatch("genericErc20Approval", {
         spendAmount: await pwCont.methods.mtgyServiceCost().call(),
         tokenAddress: mtgyAddy,
         delegateAddress: passwordManagerAddy,

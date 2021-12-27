@@ -15,4 +15,4 @@ following instructions to deploy after changes are made.
    - `npm run build`
 3. `aws s3 cp --recursive dist s3://app.moontography.com`
 4. Clear cloudfront distribution cache
-   - `aws cloudfront create-invalidation --distribution-id E2L1BGNWOUJYH7`
+   - `aws cloudfront create-invalidation --distribution-id DISTRIBUTION_ID`

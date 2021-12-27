@@ -7,7 +7,12 @@ import {
   Dropdown as DropDown,
   FormGroupInput as FgInput,
   LoadingPanel,
+  NetworkSelector,
+  NftSelector,
   Slider,
+  SliderInputPercent,
+  StatsCard,
+  Switch,
   Tabs,
   TabPane,
   Table as NTable,
@@ -48,8 +53,13 @@ const GlobalComponents = {
     app.component("n-pagination", NPagination);
     app.component("fg-input", FgInput);
     app.component("loading-panel", LoadingPanel);
+    app.component("n-switch", Switch);
     app.component("n-table", NTable);
+    app.component("network-selector", NetworkSelector);
+    app.component("nft-selector", NftSelector);
     app.component("slider", Slider);
+    app.component("slider-input-percent", SliderInputPercent);
+    app.component("stats-card", StatsCard);
     app.component("tabs", Tabs);
     app.component("tab-pane", TabPane);
     app.component("token-input", TokenInput);

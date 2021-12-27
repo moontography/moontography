@@ -12,30 +12,9 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Trusted Timestamping',
-          icon: 'now-ui-icons design_app',
-          path: '/timestamping',
-        }`
-      )
-      sidebar-item(
-        :link=`{
-          name: 'Farm Your Tokens (FaaS)',
+          name: 'Farming',
           icon: 'now-ui-icons sport_trophy',
           path: '/faas',
-        }`
-      )
-      sidebar-item(
-        :link=`{
-          name: 'Password Manager',
-          icon: 'now-ui-icons ui-1_lock-circle-open',
-          path: '/passwords',
-        }`
-      )
-      sidebar-item(
-        :link=`{
-          name: 'Airdropper',
-          icon: 'now-ui-icons objects_spaceship',
-          path: '/airdropper',
         }`
       )
       sidebar-item(
@@ -47,16 +26,58 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Polling as a Service (PaaS)',
+          name: 'Airdropper',
+          icon: 'now-ui-icons objects_spaceship',
+          path: '/airdropper',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Raffler/Lottery',
+          icon: 'now-ui-icons business_money-coins',
+          path: '/raffler',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Trusted Timestamping',
+          icon: 'now-ui-icons design_app',
+          path: '/timestamping',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Password Manager',
+          icon: 'now-ui-icons ui-1_lock-circle-open',
+          path: '/passwords',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Polling',
           icon: 'now-ui-icons business_chart-bar-32',
           path: '/paas',
         }`
       )
       sidebar-item(
         :link=`{
-          name: 'Decentralized Tax Reporting',
-          icon: 'now-ui-icons business_money-coins',
+          name: 'Tax Reporting',
+          icon: 'now-ui-icons business_briefcase-24',
           path: '/dtax',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Thousand Ether Homepage',
+          icon: 'now-ui-icons objects_globe',
+          path: '/1000ether',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Swap MTGY for OKLG',
+          icon: 'now-ui-icons ui-1_send',
+          path: '/mtgy-oklg-swap',
         }`
       )
 

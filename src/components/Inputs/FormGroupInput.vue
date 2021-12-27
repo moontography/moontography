@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group" :class="groupClassesAgg">
+  <div class="form-group m-0" :class="groupClassesAgg">
     <slot name="label">
       <label v-if="label" :class="labelClasses">
         {{ label }}
@@ -123,4 +123,14 @@ export default {
   },
 };
 </script>
-<style></style>
+<style lang="scss" scoped>
+input {
+  background-color: #ffffff;
+
+  &:focus {
+    ~ .input-group-addon {
+      background-color: #ffffff;
+    }
+  }
+}
+</style>

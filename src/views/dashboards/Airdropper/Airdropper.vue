@@ -8,14 +8,16 @@
       .col-lg-12
         card
           template(v-slot:header='')
-            div
+            div.d-flex.align-items-center
               h4.card-title.mb-0
                 | Token Contract Address You're Airdropping
+              checkbox.ml-3(v-model="isAirdroppingTokenNft") Are you airdropping NFTs from an ERC721 contract?
               //- div.text-secondary
               //-   small The token users can stake to earn rewards from the rewards pool you've provided.
           token-input-standalone(
             v-model="tokenInfo"
-            btn-text="Set Token to Airdrop")
+            btn-text="Set Token to Airdrop"
+            :is-nft="isAirdroppingTokenNft")
 
     .row.mb-2
       .col-md-12.mx-auto
@@ -43,7 +45,9 @@
                 thead
                   tr
                     th Address
-                    th Amount {{ tokenInfo && tokenInfo.symbol ? tokenInfo.symbol : 'Tokens' }} to send
+                    th
+                      | {{ isAirdroppingTokenNft ? 'Token IDs of' : 'Amount' }}
+                      | {{ tokenInfo && tokenInfo.symbol ? tokenInfo.symbol : 'Tokens' }} to send
                     th
                 tbody
                   tr(v-if="!addresses || addresses.length === 0")
@@ -90,7 +94,7 @@
           div.mt-4
             ol
               li.mb-2
-                | You will be airdropping #[b {{ totalAmountToSend }} {{ tokenInfo.symbol }}]
+                | You will be airdropping #[b {{ isAirdroppingTokenNft ? addresses.length : totalAmountToSend }} {{ tokenInfo.symbol }}]
                 | to a total of  #[b {{ addresses.length }}] wallet addresses.
           div.mt-2
             div.text-center
@@ -114,6 +118,7 @@ export default {
   data() {
     return {
       localError: null,
+      isAirdroppingTokenNft: false,
       tokenInfo: null,
       addresses: [],
       newAddress: {
@@ -125,21 +130,23 @@ export default {
 
   computed: {
     ...mapState({
-      activeNetwork: (_, getters) => getters.activeNetwork,
+      activeNetwork: (_, getters) => getters.activeNetwork || {},
       airdropCost: (state) => new BigNumber(state.airdropper.cost).toFormat(0),
       globalLoading: (state) => state.globalLoading,
       web3: (state) => state.web3.instance,
     }),
 
     airdropCont() {
-      return this.activeNetwork.contracts.airdropper;
+      return (
+        this.activeNetwork.contracts && this.activeNetwork.contracts.airdropper
+      );
     },
 
     isFormValidated() {
       return (
         this.tokenInfo &&
         this.tokenInfo.address &&
-        this.tokenInfo.decimals &&
+        (this.isAirdroppingTokenNft || this.tokenInfo.decimals) &&
         this.addresses &&
         this.addresses.length > 0 &&
         this.addresses.reduce(
@@ -217,6 +224,7 @@ export default {
         await this.$store.dispatch("airdropTokens", {
           tokenAddress: this.tokenInfo.address,
           addresses: this.addresses,
+          isNft: this.isAirdroppingTokenNft,
         });
         this.$toast.success(`Successfully airdropped your tokens!`);
       } catch (err) {

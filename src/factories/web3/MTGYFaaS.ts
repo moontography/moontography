@@ -23,35 +23,23 @@ const mtgyFaasAbi: AbiItem[] = [
     type: "constructor",
   },
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: true,
         internalType: "address",
-        name: "_addy",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
         type: "address",
       },
     ],
-    name: "addUserAsStaking",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_stakingContract",
-        type: "address",
-      },
-    ],
-    name: "addUserToContract",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    name: "OwnershipTransferred",
+    type: "event",
   },
   {
     inputs: [
@@ -62,25 +50,6 @@ const mtgyFaasAbi: AbiItem[] = [
       },
     ],
     name: "allFarmingContracts",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "allUsersStaking",
     outputs: [
       {
         internalType: "address",
@@ -136,47 +105,15 @@ const mtgyFaasAbi: AbiItem[] = [
         name: "_timelockSeconds",
         type: "uint256",
       },
+      {
+        internalType: "bool",
+        name: "_isStakedNft",
+        type: "bool",
+      },
     ],
     name: "createNewTokenContract",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "creator",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_stakingContract",
-        type: "address",
-      },
-    ],
-    name: "doesUserHaveContract",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -212,25 +149,6 @@ const mtgyFaasAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-    ],
-    name: "getUserStakingContracts",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "mtgyServiceCost",
     outputs: [
@@ -244,21 +162,16 @@ const mtgyFaasAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "owner",
+    outputs: [
       {
         internalType: "address",
-        name: "_userAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_stakingAddy",
+        name: "",
         type: "address",
       },
     ],
-    name: "removeContractFromUser",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -275,14 +188,8 @@ const mtgyFaasAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_addy",
-        type: "address",
-      },
-    ],
-    name: "removeUserAsStaking",
+    inputs: [],
+    name: "renounceOwnership",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -328,43 +235,13 @@ const mtgyFaasAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "_addy",
+        name: "newOwner",
         type: "address",
       },
     ],
-    name: "userInd",
-    outputs: [
-      {
-        internalType: "int256",
-        name: "",
-        type: "int256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "userStakes",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];

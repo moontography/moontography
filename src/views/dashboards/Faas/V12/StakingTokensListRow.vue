@@ -31,7 +31,7 @@ td.text-left
           rel="noopener noreferrer") {{ stakedBalance }} {{ stakedTokenSymbol }} staked
   div.text-secondary
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
-td
+td.d-none.d-lg-table-cell
   div
     strong {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}% APR` : 'APR Coming Soon' }}
   div.text-secondary
@@ -42,8 +42,8 @@ td
           target="_blank"
           rel="noopener noreferrer") {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
       div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} staked
-td
-  div {{ row.item.lastStakableBlock }}
+td.d-none.d-lg-table-cell
+  div Block: {{ row.item.lastStakableBlock }}
   div.text-secondary(v-if="estimateExpirationTime")
     small Est: {{ estimateExpirationTime }}
   div.text-danger(v-if="isFarmExpired")
@@ -66,11 +66,10 @@ td.td-actions.text-right
   small
     n-button(
       type="success"
-      icon
       round
       data-toggle="modal"
       :data-target="`#stake-modal-${farmingTokenAddress}`")
-        i.fa.fa-play
+        span #[i.fa.fa-minus] / #[i.fa.fa-plus]
     //- a.text-danger.clickable.mr-1(
     //-   v-if="isInFarm"
     //-   data-toggle="modal"
@@ -95,7 +94,7 @@ import dayjs from "dayjs";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken";
+import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken_V3";
 
 export default {
   props: {

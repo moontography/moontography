@@ -1,5 +1,4 @@
 import BigNumber from "bignumber.js";
-// import MTGY from "../../factories/web3/MTGY";
 import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
 import TxnToast from "@/components/TxnToast";
 import { useToast } from "vue-toastification";
@@ -26,7 +25,7 @@ export default {
 
     // make sure the current user has allowed the appropriate amount of MTGY to
     // spend on the timestamping service
-    await dispatch("genericTokenApproval", {
+    await dispatch("genericErc20Approval", {
       spendAmount: await ttCont.methods.mtgyServiceCost().call(),
       tokenAddress: mtgyAddy,
       delegateAddress: trustedTimestampingAddress,

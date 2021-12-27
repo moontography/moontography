@@ -4,7 +4,6 @@ navbar#navigation(:show-navbar="showNavbar")
     div.navbar-toggle(:class="{ toggled: $sidebar.showSidebar }")
       navbar-toggle-button(@click="toggleSidebar")
     router-link.navbar-brand(to="/") {{ $route.name }}
-  
   //- button(
   //-   @click="toggleNavbar"
   //-   class="navbar-toggler"
@@ -65,7 +64,7 @@ navbar#navigation(:show-navbar="showNavbar")
             span.ml-2 BscScan
         a.dropdown-item(
           title="CoinGecko"
-          href="https://www.coingecko.com/en/coins/the-moontography-project"
+          href="https://www.coingecko.com/en/coins/moontography"
           target="_blank"
           rel="noopener noreferrer")
             img(
@@ -99,20 +98,22 @@ navbar#navigation(:show-navbar="showNavbar")
               style="max-height: 20px"
               src="img/livecoinwatch.png")
             span.ml-2 Live Coin Watch
-        a.dropdown-item(
-          title="PancakeSwap"
-          href="https://exchange.pancakeswap.finance/#/swap?inputCurrency=0x025c9f1146d4d94F8F369B9d98104300A3c8ca23"
-          target="_blank"
-          rel="noopener noreferrer")
-            img(
-              style="max-height: 20px"
-              src="img/pancakeswap-logo.png")
-            span.ml-2 PancakeSwap
+        template(v-for="network in allNetworks")
+          a.dropdown-item(
+            v-if="network && network.buy"
+            :title="network.name"
+            :href="network.buy.link"
+            target="_blank"
+            rel="noopener noreferrer")
+              img(
+                style="max-height: 20px"
+                :src="network.buy.img")
+              span.ml-2 {{ network.buy.text }}
       drop-down.d-none.d-xl-block(
         tag="li"
         position="right"
         class="nav-item"
-        :title="activeNetwork.name || 'Switch Network'")
+        :title="`Network: ${activeNetwork.name}` || 'Switch Network'")
           a.dropdown-item.clickable(
             v-for="network in allNetworks"
             @click="switchNetwork(network)")
@@ -133,6 +134,15 @@ navbar#navigation(:show-navbar="showNavbar")
               style="max-height: 18px"
               src="img/metamask.png") 
             span.ml-2 Add MTGY to MetaMask
+      li.nav-item.d-none.d-xl-block(v-if="activeNetwork && activeNetwork.buy && activeNetwork.buy.link")
+        a.nav-link.clickable(
+          :href="activeNetwork.buy.link"
+          target="_blank"
+          rel="noopener noreferrer")
+            img(
+              style="max-height: 18px"
+              :src="activeNetwork.buy.img") 
+            span.ml-2 Buy on {{ activeNetwork.buy.text }}
 </template>
 <script>
 import BigNumber from "bignumber.js";

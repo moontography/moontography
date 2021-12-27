@@ -6,14 +6,17 @@
         card
           template(v-slot:header='')
             div
-              h4.card-title.mb-0
-                | Token Users will Stake
+              div.d-flex.align-items-center
+                h4.card-title.mb-0
+                  | Token Users will Stake
+                checkbox.ml-3(v-model="isStakableTokenNft") Is this an NFT contract?
               div.text-secondary
                 small The token users can stake to earn rewards from the rewards pool you've provided.
           token-input-standalone(
             v-model="stakableTokenInfo"
             btn-size="sm"
-            btn-text="Find stakable token from contract")
+            btn-text="Find stakable token from contract"
+            :is-nft="isStakableTokenNft")
       .col-lg-6
         card
           template(v-slot:header='')
@@ -21,7 +24,9 @@
               div.d-flex.align-items-center
                 h4.card-title.mb-0
                   | Rewards Token
-                checkbox.ml-3(v-model="rewardsSameAsStakableToken") Same as token being staked
+                checkbox.ml-3(
+                  v-if="!isStakableTokenNft"
+                  v-model="rewardsSameAsStakableToken") Same as token being staked
               div.text-secondary
                 small The token you will send the staking contract for users to earn for staking
           token-input-standalone(
@@ -145,6 +150,7 @@ export default {
       activeTab: "Profile",
       stakableTokenInfo: null,
       rewardsTokenInfo: null,
+      isStakableTokenNft: false,
       rewardsSameAsStakableToken: false,
       rewardsSupply: null,
       poolEndDate: null,
@@ -165,7 +171,7 @@ export default {
 
   computed: {
     ...mapState({
-      activeNetwork: (_, getters) => getters.activeNetwork,
+      activeNetwork: (_, getters) => getters.activeNetwork || {},
       createCost: (state) => new BigNumber(state.faas.cost).toFormat(0),
       globalLoading: (state) => state.globalLoading,
       userAddy: (state) => state.web3.address,
@@ -305,6 +311,7 @@ export default {
           rewardsSupply: this.rawRewardsSupply,
           perBlockNum: this.rawPerBlockNum,
           timelockSeconds: this.userTimelockSeconds,
+          isStakedTokenNft: this.isStakableTokenNft,
         });
         await this.$store.dispatch("getAllStakingContracts");
         this.$router.push("/faas");

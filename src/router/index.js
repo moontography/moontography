@@ -1,6 +1,9 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
+import store from "../vuex/store";
+
 import DashboardLayout from "../views/layout/DashboardLayout.vue";
+import GlobalLoader from "../views/layout/GlobalLoader";
 
 // Page Headers
 // import DefaultHeader from "../views/headers/DefaultHeader";
@@ -9,8 +12,11 @@ import AirdropperHeader from "../views/headers/AirdropperHeader";
 import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import DtaxHeader from "../views/headers/DtaxHeader";
 import FaasHeader from "../views/headers/FaasHeader";
+import KetherHeader from "../views/headers/KetherHeader";
+import MtgyOklgSwapHeader from "../views/headers/MtgyOklgSwapHeader";
 import PaasHeader from "../views/headers/PaasHeader";
 import PasswordManagerHeader from "../views/headers/PasswordManagerHeader";
+import RafflerHeader from "../views/headers/RafflerHeader";
 import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeader";
 
 // Dashboard pages
@@ -20,8 +26,15 @@ import Airdropper from "../views/dashboards/Airdropper/Airdropper.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
+import KetherStats from "../views/dashboards/Kether/KetherStats";
+import MtgyOklgSwapCard from "../views/dashboards/MtgyOklgSwapCard.vue";
 import PasswordManager from "../views/dashboards/PasswordManager/PasswordManager.vue";
 import PasswordManagerLayout from "../views/layout/PasswordManagerLayout.vue";
+import Raffler from "../views/dashboards/Raffler/Raffler.vue";
+import RafflerNew from "../views/dashboards/Raffler/RafflerNew.vue";
+import RafflerUnique from "../views/dashboards/Raffler/RafflerUnique.vue";
+import RafflerLayout from "../views/layout/RafflerLayout.vue";
+import SwapsListView from "../views/dashboards/ASaaS/SwapsListView.vue";
 import TrustedTimestamping from "../views/dashboards/TrustedTimestamping.vue";
 import TrustedTimestampingLayout from "../views/layout/TrustedTimestampingLayout.vue";
 
@@ -42,9 +55,14 @@ const routes = [
         components: { default: Dashboard, header: DashboardHeader },
       },
       {
+        path: "mtgy-oklg-swap",
+        name: "Swap MTGY for OKLG",
+        components: { default: MtgyOklgSwapCard, header: MtgyOklgSwapHeader },
+      },
+      {
         path: "asaas",
         name: "Atomic Swapping",
-        components: { default: ComingSoon, header: AsaasHeader },
+        components: { default: SwapsListView, header: AsaasHeader },
       },
       {
         path: "timestamping",
@@ -56,36 +74,36 @@ const routes = [
         children: [
           {
             path: "",
-            name: "Timestamping",
+            name: "Trusted Timestamping",
             component: TrustedTimestamping,
           },
         ],
       },
       {
         path: "faas",
-        name: "Faas",
+        name: "Farming as a Service",
         components: { default: FaasLayout, header: FaasHeader },
         children: [
           {
             path: "owner",
-            name: "Faas Owner",
+            name: "Farm Owner",
             component: FaasOwner,
           },
           {
             path: "owner/:tokenAddress",
-            name: "Faas Owner Token",
+            name: "Farm Owner Token",
             component: FaasOwner,
             props: true,
           },
           {
             path: ":tokenAddress",
-            name: "Faas Staker Token",
+            name: "Farm Staker Token",
             component: FaasStaker,
             props: true,
           },
           {
             path: "",
-            name: "Faas Staker",
+            name: "Farm Staker",
             component: FaasStaker,
           },
         ],
@@ -117,14 +135,51 @@ const routes = [
         ],
       },
       {
+        path: "raffler",
+        name: "Raffler",
+        components: {
+          default: RafflerLayout,
+          header: RafflerHeader,
+        },
+        children: [
+          {
+            path: ":raffleId",
+            name: "Raffle",
+            component: RafflerUnique,
+            props: true,
+          },
+          {
+            path: "new",
+            name: "New Raffle",
+            component: RafflerNew,
+          },
+          {
+            path: "",
+            name: "Raffler",
+            component: Raffler,
+          },
+        ],
+      },
+      {
         path: "paas",
-        name: "Polling as a Service",
+        name: "Polling",
         components: { default: ComingSoon, header: PaasHeader },
       },
       {
         path: "dtax",
         name: "Dtax",
         components: { default: ComingSoon, header: DtaxHeader },
+      },
+      {
+        path: "redirecting",
+        name: "Redirecting",
+        components: { default: GlobalLoader, header: GlobalLoader },
+      },
+
+      {
+        path: "1000ether",
+        name: "1000ether",
+        components: { default: KetherStats, header: KetherHeader },
       },
     ],
   },
@@ -135,6 +190,11 @@ const router = createRouter({
   history: createWebHashHistory(),
   linkActiveClass: "active",
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  store.commit("SET_ROUTE", to.fullPath);
+  next();
 });
 
 export default router;

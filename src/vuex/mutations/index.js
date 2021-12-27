@@ -1,12 +1,18 @@
 import airdropper from "./airdropper";
+import asaas from "./asaas";
 import faas from "./faas";
-import trustedTimestamping from "./trustedTimestamping";
+import kether from "./kether";
 import passwordManager from "./passwordManager";
+import raffler from "./raffler";
+import trustedTimestamping from "./trustedTimestamping";
 
 export default {
   ...airdropper,
+  ...asaas,
   ...faas,
+  ...kether,
   ...passwordManager,
+  ...raffler,
   ...trustedTimestamping,
 
   SET_GLOBAL_ERROR(state, error) {
@@ -19,6 +25,14 @@ export default {
 
   SET_INIT_LOADING(state, isLoading) {
     state.initLoading = isLoading;
+  },
+
+  SET_INIT_FINISHED(state, isFinished) {
+    state.initFinished = isFinished;
+  },
+
+  SET_ROUTE(state, to) {
+    state.route = to;
   },
 
   SET_SELECTED_ADDRESS(state, address) {
@@ -83,5 +97,13 @@ export default {
 
   SET_CURRENT_BLOCK(state, block) {
     state.currentBlock = block;
+  },
+
+  SET_OKLG_PRICE_USD(state, price) {
+    state.oklgPriceUsd = price;
+  },
+
+  SET_MTGY_OKLG_RATIO(state, ratio) {
+    state.mtgyOklgRatio = ratio;
   },
 };

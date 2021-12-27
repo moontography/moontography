@@ -3,23 +3,23 @@ div
   div.alert.alert-danger(v-if="!isConnected")
     | Make sure you connect to your wallet before searching for a token.
   div(v-else)
-    div.px-3
+    div
       div.alert.alert-danger(v-if="localError")
         | {{ localError.message }}
       //- fg-input(
       //-   placeholder="Token Contract"
       //-   v-model="insertedTokenAddy")
-    div.px-3
+    div
       input.form-control(
-        placeholder="Token Contract"
+        placeholder="Token Contract Address"
         v-model="insertedTokenAddy")
-    div.text-center
-      n-button(
-        type="primary"
-        :size="btnSize"
-        v-loading="globalLoading"
-        :disabled="globalLoading"
-        @click="selectAndGetToken") {{ btnText }}
+    //- div.text-center
+    //-   n-button(
+    //-     type="primary"
+    //-     :size="btnSize"
+    //-     v-loading="globalLoading"
+    //-     :disabled="globalLoading"
+    //-     @click="selectAndGetToken") {{ btnText }}
     template(v-if="modelValue && modelValue.address")
       hr
       div.row.pb-3
@@ -45,6 +45,7 @@ export default {
     modelValue: { type: Object, default: null },
     btnSize: { type: String, default: null },
     btnText: { type: String, default: "Get Token Info" },
+    isNft: { type: Boolean, default: false },
   },
 
   emits: ["update:modelValue"],
@@ -62,6 +63,10 @@ export default {
       web3: (state) => state.web3.instance,
     }),
 
+    tokenInfoDispatcher() {
+      return this.isNft ? "getErc721TokenInfo" : "getErc20TokenInfo";
+    },
+
     insertedTokenAddy: {
       get() {
         return this.modelValue && this.modelValue.address;
@@ -72,7 +77,7 @@ export default {
         if (!this.web3.utils.isAddress(newAddy))
           return this.$emit("update:modelValue", { address: newAddy });
         const newTokenInfo = await this.$store.dispatch(
-          "getErc20TokenInfo",
+          this.tokenInfoDispatcher,
           newAddy
         );
         this.$emit("update:modelValue", newTokenInfo);
@@ -80,13 +85,14 @@ export default {
     },
 
     tokenUserBalance() {
-      return (
-        this.modelValue &&
-        this.modelValue.userBalance &&
-        new BigNumber(this.modelValue.userBalance)
-          .div(new BigNumber(10).pow(this.modelValue.decimals))
-          .toFormat(2)
-      );
+      if (this.modelValue && this.modelValue.userBalance) {
+        return this.isNft
+          ? this.modelValue.userBalance
+          : new BigNumber(this.modelValue.userBalance)
+              .div(new BigNumber(10).pow(this.modelValue.decimals))
+              .toFormat(2);
+      }
+      return 0;
     },
   },
 
@@ -96,7 +102,7 @@ export default {
         const tokenAddy = this.insertedTokenAddy;
         if (!tokenAddy && !allowCleared) return;
         const newTokenInfo = await this.$store.dispatch(
-          "getErc20TokenInfo",
+          this.tokenInfoDispatcher,
           tokenAddy
         );
         this.$emit("update:modelValue", newTokenInfo);

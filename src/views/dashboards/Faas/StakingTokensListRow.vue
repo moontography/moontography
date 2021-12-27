@@ -6,7 +6,9 @@ td
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${tokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer") {{ stakedTokenSymbol }}
+          rel="noopener noreferrer")
+            | {{ row.item.poolInfo.isStakedNft ? 'NFT -' : '' }}
+            | {{ stakedTokenSymbol }}
   div.text-secondary
     small {{ tokenName }}
   div.text-danger(v-if="timelockDays && timelockDays > 0")
@@ -28,23 +30,26 @@ td.text-left
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${farmingTokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer") {{ stakedBalance }} {{ stakedTokenSymbol }} staked
+          rel="noopener noreferrer")
+            | {{ stakedBalance }} {{ stakedTokenSymbol }} {{ frozenOrStaked }}
   div.text-secondary
     small {{ remainingTokenBalance }} {{ stakedTokenSymbol }} balance
-td
-  div
+td.d-none.d-lg-table-cell
+  div(v-if="!isFrozen")
     strong
-      | {{ stakedTokenSymbol == rewardTokenSymbol ? `${stakingApr || 0}% APR` : 'APR Coming Soon' }}
+      | {{ `${stakingApr || 0}% APR` }}
   div.text-secondary
     small
       div
         a(
           :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${rewardsTokenAddress}`"
           target="_blank"
-          rel="noopener noreferrer") {{ perBlockNumTokens }} {{ rewardTokenSymbol }}/block
-      div {{ totalTokensStaked[1] }} {{ stakedTokenSymbol }} staked
-td
-  div {{ row.item.lastStakableBlock }}
+          rel="noopener noreferrer") {{ perBlockTokensRewarded }} {{ rewardTokenSymbol }}/block
+      div
+        | {{ row.item.poolInfo.isStakedNft ? totalTokensStaked[0] : totalTokensStaked[1] }}
+        | {{ stakedTokenSymbol }} {{ frozenOrStaked }}
+td.d-none.d-lg-table-cell
+  div Block: {{ row.item.lastStakableBlock }}
   div.text-secondary(v-if="estimateExpirationTime")
     small Est: {{ estimateExpirationTime }}
   div.text-danger(v-if="isFarmExpired")
@@ -58,20 +63,21 @@ td
         i.fa.fa-refresh
     div.text-dark(v-else)
       i Removed
-    //- button.ml-3.btn.btn-sm.btn-primary(
-    //-   v-loading="globalLoading"
-    //-   :disabled="globalLoading"
-    //-   @click="claimTokens") Claim
   div(v-else) ---
 td.td-actions.text-right
   small
+    n-button.mr-2(
+      v-if="row.item.farmingTokenBalance > 0 && isPastTimelock"
+      type="info"
+      round
+      @click="harvestTokens")
+        i.fa.fa-money
     n-button(
       type="success"
-      icon
       round
       data-toggle="modal"
       :data-target="`#stake-modal-${farmingTokenAddress}`")
-        i.fa.fa-play
+        span #[i.fa.fa-minus] / #[i.fa.fa-plus]
     //- a.text-danger.clickable.mr-1(
     //-   v-if="isInFarm"
     //-   data-toggle="modal"
@@ -93,10 +99,13 @@ add-remove-stake-modal(
 import $ from "jquery";
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 // import MTGYFaaS from "../../../factories/web3/MTGYFaaS";
+import MTGYDataUtils from "../../../factories/MTGYDataUtils";
 import MTGYFaaSToken from "../../../factories/web3/MTGYFaaSToken";
+import DexUtils from "@/factories/DexUtils";
 
 export default {
   props: {
@@ -112,16 +121,29 @@ export default {
   data() {
     return {
       isInFarm: false,
-      tokensStakedPerBlock: [],
+      tokensRewardedPerBlock: [],
       amountUnharvested: [],
       totalTokensStaked: [],
+
+      rewardsTokenPriceUSD: 0,
+      stakingTokenPriceUSD: 0,
+
+      harvestAlert: Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-primary",
+          cancelButton: "btn btn-secondary",
+        },
+        buttonsStyling: false,
+      }),
     };
   },
 
   computed: {
     ...mapState({
+      activeNetwork: (_, getters) => getters.activeNetwork,
       activeNetworkExplorerUrl: (_, getters) =>
         getters.activeNetworkExplorerUrl,
+      tokenRoute: (_, getters) => getters.tokenRoute,
       blocksPerDay: (_, getters) => getters.activeNetwork.blocks_per_day,
       currentBlock: (state) => state.currentBlock,
       globalLoading: (state) => state.globalLoading,
@@ -129,10 +151,37 @@ export default {
       web3: (state) => state.web3.instance,
     }),
 
-    tokenRoute() {
-      return this.activeNetworkExplorerUrl === "https://explorer.kcc.io/en"
-        ? "tokentxns"
-        : "token";
+    isFrozen() {
+      return [
+        "0xFB7D9c478b2F8B1d07Ad196076c881f11F370Ca4".toLowerCase(),
+      ].includes(this.row.item.farmingTokenAddy.toLowerCase());
+    },
+
+    isPastTimelock() {
+      const stakingInfo = this.row.item;
+      if (!stakingInfo) return true;
+
+      const timelockSeconds = stakingInfo.poolInfo.stakeTimeLockSec;
+      if (!timelockSeconds) return true;
+
+      const userStakedTime =
+        stakingInfo.stakerInfo && stakingInfo.stakerInfo.timeOriginallyStaked;
+      if (!userStakedTime) return true;
+
+      const isPastTime = dayjs(
+        new BigNumber(userStakedTime).times(1e3).toNumber()
+      )
+        .add(timelockSeconds, "seconds")
+        .isBefore(dayjs());
+      if (isPastTime) return true;
+
+      if (this.isFarmExpired) return true;
+
+      return false;
+    },
+
+    frozenOrStaked() {
+      return !this.isFrozen ? "staked" : "frozen";
     },
 
     isFarmExpired() {
@@ -163,8 +212,8 @@ export default {
       return dayjs().add(secondsFromNow, "seconds").format("MMM D, YYYY HH:mm");
     },
 
-    perBlockNumTokens() {
-      return new BigNumber(this.tokensStakedPerBlock[0] || 0)
+    perBlockTokensRewarded() {
+      return new BigNumber(this.tokensRewardedPerBlock[0] || 0)
         .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
         .times(
           new BigNumber(10).pow(
@@ -180,6 +229,10 @@ export default {
 
     farmingTokenAddress() {
       return this.row.item.farmingTokenAddy;
+    },
+
+    farmingTokenSymbol() {
+      return this.row.item.farmingTokenSymbol;
     },
 
     tokenAddress() {
@@ -210,25 +263,37 @@ export default {
       return this.row.item.rewardTokenSymbol;
     },
 
+    stakedTokenDecimals() {
+      return this.row.item.currentTokenDecimals;
+    },
+
+    stakedTokenAddress() {
+      return this.tokenAddress;
+    },
+
     stakedTokenSymbol() {
       return this.row.item.currentTokenSymbol;
     },
 
     stakedBalance() {
-      return new BigNumber(this.row.item.farmingTokenBalance)
-        .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
-        .times(
-          new BigNumber(10).pow(
-            this.row.item.farmingTokenDecimals - this.tokenDecimals
-          )
-        )
-        .toFormat(0, BigNumber.ROUND_DOWN);
+      return this.row.item.poolInfo.isStakedNft
+        ? this.row.item.farmingTokenBalance
+        : new BigNumber(this.row.item.farmingTokenBalance)
+            .div(new BigNumber(10).pow(this.row.item.farmingTokenDecimals))
+            .times(
+              new BigNumber(10).pow(
+                this.row.item.farmingTokenDecimals - this.tokenDecimals
+              )
+            )
+            .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
     remainingTokenBalance() {
-      return new BigNumber(this.row.item.currentTokenBalance)
-        .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
-        .toFormat(0, BigNumber.ROUND_DOWN);
+      return this.row.item.poolInfo.isStakedNft
+        ? this.row.item.currentTokenBalance
+        : new BigNumber(this.row.item.currentTokenBalance)
+            .div(new BigNumber(10).pow(this.row.item.currentTokenDecimals))
+            .toFormat(0, BigNumber.ROUND_DOWN);
     },
 
     stakingApr() {
@@ -238,15 +303,24 @@ export default {
           ? this.row.item.farmingTokenBalance
           : new BigNumber(this.totalTokensStaked[0]).div(500)
       );
-      const totalStakedBalance = new BigNumber(this.totalTokensStaked[0] || 0);
-      const perBlockAmount = new BigNumber(this.tokensStakedPerBlock[0] || 0);
-      if (totalStakedBalance.toString() === "0") return 0;
+      const totalStakedBalanceUSD = new BigNumber(
+        this.totalTokensStaked[0] || 0
+      )
+        .times(this.stakingTokenPriceUSD)
+        .div(new BigNumber(10).pow(this.stakedTokenDecimals));
+      const perBlockRewardedAmountUSD = new BigNumber(
+        this.tokensRewardedPerBlock[0] || 0
+      )
+        .times(this.rewardsTokenPriceUSD)
+        .div(new BigNumber(10).pow(this.rewardsTokenDecimals));
+      if (totalStakedBalanceUSD.eq(0) || perBlockRewardedAmountUSD.eq(0))
+        return 0;
 
-      const tokensStakablePerYear = perBlockAmount
+      const tokensStakablePerYear = perBlockRewardedAmountUSD
         .times(blocksPerDay)
         .times(365);
       const userStakablePerYear = userStakedTokens
-        .div(totalStakedBalance)
+        .div(totalStakedBalanceUSD)
         .times(tokensStakablePerYear);
       const apr = userStakablePerYear
         .div(userStakedTokens)
@@ -257,26 +331,74 @@ export default {
   },
 
   methods: {
-    // async claimTokens() {
-    //   try {
-    //     this.$store.commit("SET_GLOBAL_LOADING", true);
+    async getBothTokenPricesUSD() {
+      // TODO check if either token is an LP token and handle it separately
 
-    //     await this.$store.dispatch(
-    //       "faasHarvestTokens",
-    //       this.farmingTokenAddress
-    //     );
-    //     this.$toast.success(`Successfully claimed your tokens!`);
-    //     this.$emit("harvested");
-    //   } catch (err) {
-    //     this.$toast.error(err.message);
-    //   } finally {
-    //     this.$store.commit("SET_GLOBAL_LOADING", false);
-    //   }
-    // },
+      // 1. get both staking and rewards token information
+      const [stakingTokenAddress, stakingTokenSymbol] = [
+        this.stakedTokenAddress,
+        this.stakedTokenSymbol,
+      ];
+      const [rewardsTokenAddress, rewardsTokenSymbol] = [
+        this.rewardsTokenAddress,
+        this.rewardTokenSymbol,
+      ];
+
+      // 2. check if BSC and use DexUtils to get price in USD, otherwise use api.moontography.com
+      if (this.activeNetwork.short_name === "bsc") {
+        const [sp, rp] = await Promise.all([
+          DexUtils.getTokenPrice(stakingTokenAddress),
+          DexUtils.getTokenPrice(rewardsTokenAddress),
+        ]);
+        this.stakingTokenPriceUSD = sp;
+        this.rewardsTokenPriceUSD = rp;
+      } else {
+        const [sp, rp] = await Promise.all([
+          MTGYDataUtils.getTokenPriceUSD(stakingTokenSymbol),
+          MTGYDataUtils.getTokenPriceUSD(rewardsTokenSymbol),
+        ]);
+        this.stakingTokenPriceUSD = sp;
+        this.rewardsTokenPriceUSD = rp;
+      }
+    },
 
     async init() {
       await this.$store.dispatch("getAllStakingContracts");
       await this.getUnharvestedTokens();
+      await this.getBothTokenPricesUSD();
+    },
+
+    async harvestTokens() {
+      try {
+        const { isConfirmed } = await this.harvestAlert.fire({
+          title: "<span class='text-primary'>Claim Rewards!</span>",
+          html: `
+                <div>
+                  By confirming you will retrieve any unclaimed rewards, but
+                  this will not unstake currently staked tokens nor compound
+                  the rewards for you (compounding will come in the future).
+                </div>
+              `,
+          confirmButtonText: "Yes, claim my rewards!",
+          cancelButtonText: "Cancel, do not claim.",
+          showCancelButton: true,
+        });
+        if (!isConfirmed) return;
+
+        this.$store.commit("SET_GLOBAL_LOADING", true);
+        if (new BigNumber(this.row.item.farmingTokenBalance).lte(0))
+          throw new Error(`You do not have any rewards to harvest.`);
+
+        await this.$store.dispatch("faasHarvestTokens", {
+          farmingContractAddress: this.farmingTokenAddress,
+        });
+        await this.init();
+      } catch (err) {
+        console.error(`Error harvesting tokens`, err);
+        this.$toast.error(err.message);
+      } finally {
+        this.$store.commit("SET_GLOBAL_LOADING", false);
+      }
     },
 
     async getUnharvestedTokens() {
@@ -306,7 +428,7 @@ export default {
             .div(new BigNumber(10).pow(this.tokenDecimals))
             .toFormat(2),
         ];
-        this.tokensStakedPerBlock = [
+        this.tokensRewardedPerBlock = [
           pool.perBlockNum,
           new BigNumber(pool.perBlockNum)
             .div(new BigNumber(10).pow(this.tokenDecimals))

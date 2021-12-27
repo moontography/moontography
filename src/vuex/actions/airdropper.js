@@ -19,7 +19,7 @@ export default {
 
   async airdropTokens(
     { dispatch, getters, state },
-    { tokenAddress, addresses }
+    { tokenAddress, addresses, isNft }
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
@@ -28,7 +28,10 @@ export default {
     const mtgyCont = MTGY(web3, mtgyAddy);
     const airdropContract = MTGYAirdropper(web3, airdropAddy);
     const [tokenInfo, mtgyBalance, serviceCost] = await Promise.all([
-      dispatch("getErc20TokenInfo", tokenAddress),
+      dispatch(
+        isNft ? "getErc721TokenInfo" : "getErc20TokenInfo",
+        tokenAddress
+      ),
       mtgyCont.methods.balanceOf(userAddy).call(),
       airdropContract.methods.mtgyServiceCost().call(),
     ]);
@@ -37,7 +40,8 @@ export default {
         `You do not have the amount of MTGY to cover the service cost. Please ensure you have enough MTGY in your wallet to cover the service fee and try again.`
       );
     }
-    await dispatch("genericTokenApproval", {
+
+    await dispatch("genericErc20Approval", {
       spendAmount: serviceCost,
       tokenAddress: mtgyAddy,
       delegateAddress: airdropAddy,
@@ -46,29 +50,53 @@ export default {
     const addressesFormatted = addresses.map(({ address, tokens }) => {
       return {
         userAddress: address,
-        amountToReceive: new BigNumber(tokens)
-          .times(new BigNumber(10).pow(tokenInfo.decimals))
-          .toFixed(0),
+        amountToReceive: isNft
+          ? new BigNumber(tokens).toFixed(0)
+          : new BigNumber(tokens)
+            .times(new BigNumber(10).pow(tokenInfo.decimals))
+            .toFixed(0),
       };
     });
-    const totalAmount = addressesFormatted.reduce(
-      (total, info) =>
-        new BigNumber(total).plus(info.amountToReceive).toFixed(0),
-      0
-    );
+
+    const totalAmount = isNft
+      ? addressesFormatted.length
+      : addressesFormatted.reduce(
+        (total, info) =>
+          new BigNumber(total).plus(info.amountToReceive).toFixed(0),
+        0
+      );
     if (new BigNumber(tokenInfo.userBalance).lt(totalAmount)) {
       throw new Error(
         `You do not have the amount of ${tokenInfo.symbol} to airdrop this many tokens. Please ensure you have the appropriate amount of tokens and try again.`
       );
     }
-    await dispatch("genericTokenApproval", {
-      spendAmount: totalAmount,
-      tokenAddress: tokenAddress,
-      delegateAddress: airdropAddy,
-    });
-    const tx = await airdropContract.methods
-      .bulkSendErc20Tokens(tokenAddress, addressesFormatted)
-      .send({ from: userAddy });
+
+    // Approve airdrop contract to send rewards token from airdropper
+    if (isNft) {
+      await dispatch("genericErc721Approval", {
+        tokenAddress: tokenAddress,
+        delegateAddress: airdropAddy,
+      });
+    } else {
+      await dispatch("genericErc20Approval", {
+        spendAmount: totalAmount,
+        tokenAddress: tokenAddress,
+        delegateAddress: airdropAddy,
+      });
+    }
+
+    let airdropMethod = "bulkSendErc20Tokens";
+    if (isNft) {
+      airdropMethod = "bulkSendErc721Tokens";
+    }
+
+    const tx = await airdropContract.methods[airdropMethod](
+      tokenAddress,
+      addressesFormatted.map(({ userAddress, amountToReceive }) => [
+        userAddress,
+        amountToReceive,
+      ])
+    ).send({ from: userAddy });
 
     const content = {
       component: TxnToast,

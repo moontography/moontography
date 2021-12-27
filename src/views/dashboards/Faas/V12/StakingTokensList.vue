@@ -14,7 +14,7 @@ div
       | No staking contracts available {{ isAddyValid ? 'for this token' : '' }} yet.
   div.table-full-width.table-responsive.pb-0(v-else)
     n-table.mb-0(
-      :columns="['Staked Token', 'Balances', 'Rewards', 'Expiration Block', 'Rewards', '']"
+      :columns="columns"
       :data='filteredStakingContracts')
         template(v-slot:columns)
         template(v-slot:default='row')
@@ -27,8 +27,8 @@ div
 import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 import StakingTokensListRow from "./StakingTokensListRow";
-import MTGYFaaS from "../../../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken";
+import MTGYFaaS from "../../../../factories/web3/MTGYFaaS_V3";
+import MTGYFaaSToken from "../../../../factories/web3/MTGYFaaSToken_V3";
 
 export default {
   components: {
@@ -40,6 +40,32 @@ export default {
       isLoadingLocal: false,
       showStakingTokens: false,
       tokenStakingContracts: [],
+
+      columns: [
+        { value: "staked", text: "Staked", classes: "" },
+
+        {
+          value: "balances",
+          text: "Balances",
+          classes: "",
+        },
+
+        {
+          value: "rewards",
+          text: "Rewards",
+          classes: "d-none d-lg-table-cell",
+        },
+
+        {
+          value: "expiration",
+          text: "Expiration",
+          classes: "d-none d-lg-table-cell",
+        },
+
+        { value: "earned", text: "Earned", classes: "" },
+
+        { value: "empty", text: "", classes: "" },
+      ],
     };
   },
 
@@ -128,7 +154,12 @@ export default {
                   userBalance: rewardUserBalance,
                 },
               ] = await Promise.all([
-                this.$store.dispatch("getErc20TokenInfo", tokenAddy),
+                this.$store.dispatch(
+                  poolInfo.isStakedNft
+                    ? "getErc721TokenInfo"
+                    : "getErc20TokenInfo",
+                  tokenAddy
+                ),
                 this.$store.dispatch("getErc20TokenInfo", rewardAddy),
               ]);
               return {
