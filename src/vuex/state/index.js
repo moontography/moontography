@@ -151,6 +151,7 @@ export default {
         contracts: {
           oklg: "0x55e8b37a3c43b049dedf56c77f462db095108651",
           spend: "0x3B971D415671D9e909562aA02b02f0BfbD572c07",
+          buybackAndBurn: "0x2796844A84D8eef9aE02e60C18Cd713Dd29659B7",
           airdropper: "0xFEA788C8e1C60b9C911265cAc63f4067AC1Ce42F",
           atomicSwap: "0x5d4785428B292e971155797C2C0a244DF10df8FB",
           passwordManager: "0x31FE24955A0de9c5a9818DAA8d7A614eFEdb5F34",
@@ -185,6 +186,7 @@ export default {
         contracts: {
           oklg: "0x5dbb9f64cd96e2dbbca58d14863d615b67b42f2e",
           spend: "0x5bDE378E0a0ceBc941B03a579DA0088DC1616FAF",
+          buybackAndBurn: "0xd501812C4FF29B0B95566a146078A218B1f7B78F",
           airdropper: "0x46510e381823Fe82d77d8F25ba78b0abD50eD444",
           atomicSwap: "0x83770f465a37Ef74732eB8Eb9b8009C62C48eC9B",
           passwordManager: "0x026132e2104ED39d9767334648052A731D0d483E",
