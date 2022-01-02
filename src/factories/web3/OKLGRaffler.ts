@@ -1,11 +1,11 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
-export default function MTGYRaffler(web3: Web3, contractAddy: string) {
-  return new web3.eth.Contract(mtgyRafflerAbi, contractAddy);
+export default function OKLGRaffler(web3: Web3, contractAddy: string) {
+  return new web3.eth.Contract(rafflerAbi, contractAddy);
 }
 
-const mtgyRafflerAbi: AbiItem[] = [
+const rafflerAbi: AbiItem[] = [
   {
     inputs: [
       {

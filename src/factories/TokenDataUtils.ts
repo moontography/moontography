@@ -42,7 +42,7 @@ export default {
   async getTotalSupply() {
     try {
       const { data: totalSupply } = await axios.get(
-        `https://api.moontography.com/supply`,
+        `https://api.oklg.io/total`,
         {
           responseType: "text",
         }
@@ -57,7 +57,7 @@ export default {
   async getCirculatingSupply() {
     try {
       const { data: circulatingSupply } = await axios.get(
-        `https://api.moontography.com/circulating`,
+        `https://api.oklg.io/circulating`,
         {
           responseType: "text",
         }

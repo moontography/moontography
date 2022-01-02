@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import MTGYTrustedTimestamping from "../../factories/web3/MTGYTrustedTimestamping";
+import OKLGTrustedTimestamping from "../../factories/web3/OKLGTrustedTimestamping";
 
 export default {
   async trustedTimestampingInit({ dispatch }) {
@@ -9,29 +9,47 @@ export default {
     ]);
   },
 
+  async getTimestampingCost({ commit, dispatch, getters, state }) {
+    const productContract = getters.activeNetwork.contracts.trustedTimestamping;
+    const productID = state.productIds.trustedTimestamping;
+    const cost = await dispatch("getProductCostWei", {
+      productID,
+      productContract,
+    });
+    commit(
+      "SET_TRUSTED_TIMESTAMPING_COST",
+      new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
+    );
+  },
+
   async sendTrustedTimestampTxn(
     { dispatch, getters, state },
     { hash, fileName, fileSize }
   ) {
     const userAddy = state.web3.address;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const trustedTimestampingAddress =
-      getters.activeNetwork.contracts.trustedTimestamping;
+    const productContract = getters.activeNetwork.contracts.trustedTimestamping;
+    const productID = state.productIds.trustedTimestamping;
+    const nativeCurrencySymbol = getters.nativeCurrencySymbol;
     const web3 = state.web3.instance;
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
+    const ttCont = OKLGTrustedTimestamping(web3, productContract);
 
-    // make sure the current user has allowed the appropriate amount of MTGY to
-    // spend on the timestamping service
-    await dispatch("genericErc20Approval", {
-      spendAmount: await ttCont.methods.mtgyServiceCost().call(),
-      tokenAddress: mtgyAddy,
-      delegateAddress: trustedTimestampingAddress,
-    });
+    const [nativeBalance, serviceCost] = await Promise.all([
+      state.web3.instance.eth.getBalance(userAddy),
+      dispatch("getProductCostWei", {
+        productID,
+        productContract,
+      }),
+    ]);
+    if (new BigNumber(nativeBalance).lt(serviceCost)) {
+      throw new Error(
+        `You do not have enough ${nativeCurrencySymbol} to cover the service cost. Please ensure you have enough ${nativeCurrencySymbol} in your wallet to cover the service fee and try again.`
+      );
+    }
 
     // store the hash if we haven't bombed out yet
     await ttCont.methods
       .storeHash(hash, fileName, fileSize)
-      .send({ from: userAddy });
+      .send({ from: userAddy, value: serviceCost });
   },
 
   async getTimestampingHashes({ commit, state, getters }) {
@@ -39,20 +57,8 @@ export default {
     const userAddy = state.web3.address;
     const trustedTimestampingAddress =
       getters.activeNetwork.contracts.trustedTimestamping;
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
+    const ttCont = OKLGTrustedTimestamping(web3, trustedTimestampingAddress);
     const hashes = await ttCont.methods.getHashesForAddress(userAddy).call();
     commit("SET_TRUSTED_TIMESTAMPING_HASHES", hashes);
-  },
-
-  async getTimestampingCost({ commit, getters, state }) {
-    const web3 = state.web3.instance;
-    const trustedTimestampingAddress =
-      getters.activeNetwork.contracts.trustedTimestamping;
-    const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-    const cost = await ttCont.methods.mtgyServiceCost().call();
-    commit(
-      "SET_TRUSTED_TIMESTAMPING_COST",
-      new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
-    );
   },
 };

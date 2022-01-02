@@ -185,7 +185,7 @@ export default {
     getEntryFeesUserWillSpend() {
       if (this.entryFeeFormatted == 0) return 0;
       return new BigNumber(this.numberOfEntries)
-        .times(this.entryFeeFormatted)
+        .times(this.entryFeeFormatted.replace(/,/g, ""))
         .toFormat(2);
     },
 

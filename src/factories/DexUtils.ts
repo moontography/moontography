@@ -13,7 +13,7 @@ export default {
       params: {
         buyToken: usdBuyToken,
         sellToken: tokenAddy,
-        sellAmount: new BigNumber(10).pow(18).toString(),
+        sellAmount: new BigNumber(10).pow(9).toString(),
         excludedSources:
           "BakerySwap,Belt,DODO,DODO_V2,Ellipsis,Mooniswap,MultiHop,Nerve,SushiSwap,Smoothy,ApeSwap,CafeSwap,CheeseSwap,JulSwap,LiquidityProvider",
         slippagePercentage: 0,

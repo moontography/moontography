@@ -1,17 +1,20 @@
 import BigNumber from "bignumber.js";
-import MTGY from "../../factories/web3/MTGY";
-import MTGYFaaS from "../../factories/web3/MTGYFaaS";
-import MTGYFaaSToken from "../../factories/web3/MTGYFaaSToken";
-import MTGYFaaSToken_V3 from "../../factories/web3/MTGYFaaSToken_V3";
+import OKLGFaaS from "../../factories/web3/OKLGFaaS";
+import OKLGFaaSToken from "../../factories/web3/OKLGFaaSToken";
 
 export default {
-  // async faasHarvestTokens({ state }, tokenAddy) {
-  //   const userAddy = state.web3.address;
-  //   // const faasAddress = getters.activeNetwork.contracts.faas;
-  //   const web3 = state.web3.instance;
-  //   const contract = MTGYFaaSToken(web3, tokenAddy);
-  //   await contract.methods.harvestTokens().send({ from: userAddy });
-  // },
+  async getFaasPoolCreationCost({ commit, dispatch, getters, state }) {
+    const productContract = getters.activeNetwork.contracts.faas;
+    const productID = state.productIds.faas;
+    const cost = await dispatch("getProductCostWei", {
+      productID,
+      productContract,
+    });
+    commit(
+      "SET_FAAS_POOL_CREATION_COST",
+      new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
+    );
+  },
 
   async getAllStakingContracts({ commit, dispatch, getters, state }) {
     const web3 = state.web3.instance;
@@ -20,7 +23,7 @@ export default {
     const selectedTokenAddress = state.selectedAddressInfo.address;
 
     let tokenAddresses;
-    const contract = MTGYFaaS(web3, faasAddy);
+    const contract = OKLGFaaS(web3, faasAddy);
     if (selectedTokenAddress && web3.utils.isAddress(selectedTokenAddress)) {
       tokenAddresses = await contract.methods
         .getTokensForStaking(selectedTokenAddress)
@@ -32,7 +35,7 @@ export default {
     const stakingContracts = await Promise.all(
       tokenAddresses.map(async (farmingTokenAddy) => {
         try {
-          const farmingCont = MTGYFaaSToken(web3, farmingTokenAddy);
+          const farmingCont = OKLGFaaSToken(web3, farmingTokenAddy);
           const [
             tokenAddy,
             rewardAddy,
@@ -101,7 +104,7 @@ export default {
   async getFaasStakingInfo({ dispatch, state }, farmingAddy) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const faasToken = MTGYFaaSToken(web3, farmingAddy);
+    const faasToken = OKLGFaaSToken(web3, farmingAddy);
     const [
       userStakingAmount,
       stakingContract,
@@ -153,7 +156,7 @@ export default {
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
+    const faasToken = OKLGFaaSToken(web3, farmingContractAddress);
     await dispatch(
       nftTokenIds && nftTokenIds.length > 0
         ? "genericErc721Approval"
@@ -172,28 +175,13 @@ export default {
       .send({ from: userAddy });
   },
 
-  async faasStakeTokens_V3(
-    { dispatch, state },
-    { farmingContractAddress, stakingContractAddress, amountTokens }
-  ) {
-    const web3 = state.web3.instance;
-    const userAddy = state.web3.address;
-    const faasToken = MTGYFaaSToken_V3(web3, farmingContractAddress);
-    await dispatch("genericErc20Approval", {
-      spendAmount: amountTokens,
-      tokenAddress: stakingContractAddress,
-      delegateAddress: farmingContractAddress,
-    });
-    await faasToken.methods.stakeTokens(amountTokens).send({ from: userAddy });
-  },
-
   async faasUnstakeTokens(
     { state },
     { farmingContractAddress, amountTokens, harvestTokens }
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
+    const faasToken = OKLGFaaSToken(web3, farmingContractAddress);
     if (!amountTokens) {
       amountTokens = await faasToken.methods.balanceOf(userAddy).call();
     }
@@ -208,26 +196,15 @@ export default {
   async faasEmergencyUnstake({ state }, { farmingContractAddress }) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
+    const faasToken = OKLGFaaSToken(web3, farmingContractAddress);
     await faasToken.methods.emergencyUnstake().send({ from: userAddy });
   },
 
   async faasHarvestTokens({ state }, { farmingContractAddress }) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const faasToken = MTGYFaaSToken(web3, farmingContractAddress);
+    const faasToken = OKLGFaaSToken(web3, farmingContractAddress);
     await faasToken.methods.harvestForUser(userAddy).send({ from: userAddy });
-  },
-
-  async getFaasPoolCreationCost({ commit, getters, state }) {
-    const web3 = state.web3.instance;
-    const addy = getters.activeNetwork.contracts.faas;
-    const faasCont = MTGYFaaS(web3, addy);
-    const cost = await faasCont.methods.mtgyServiceCost().call();
-    commit(
-      "SET_FAAS_POOL_CREATION_COST",
-      new BigNumber(cost).div(new BigNumber(10).pow(18)).toString()
-    );
   },
 
   async faasCreateNewPool(
@@ -243,30 +220,26 @@ export default {
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const faasAddy = getters.activeNetwork.contracts.faas;
-    const mtgyCont = MTGY(web3, mtgyAddy);
-    const faasToken = MTGYFaaS(web3, faasAddy);
-    const [mtgyBalance, serviceCost] = await Promise.all([
-      mtgyCont.methods.balanceOf(userAddy).call(),
-      faasToken.methods.mtgyServiceCost().call(),
+    const productContract = getters.activeNetwork.contracts.faas;
+    const productID = state.productIds.faas;
+    const nativeCurrencySymbol = getters.nativeCurrencySymbol;
+    const faasToken = OKLGFaaS(web3, productContract);
+    const [nativeBalance, serviceCost] = await Promise.all([
+      state.web3.instance.eth.getBalance(userAddy),
+      dispatch("getProductCostWei", {
+        productID,
+        productContract,
+      }),
     ]);
-    if (new BigNumber(mtgyBalance).lt(serviceCost)) {
+    if (new BigNumber(nativeBalance).lt(serviceCost)) {
       throw new Error(
-        `You do not have the amount of MTGY to cover the service cost.
-        Please ensure you have enough MTGY in your wallet to cover 
-        the service fee and try again.`
+        `You do not have enough ${nativeCurrencySymbol} to cover the service cost. Please ensure you have enough ${nativeCurrencySymbol} in your wallet to cover the service fee and try again.`
       );
     }
     await dispatch("genericErc20Approval", {
-      spendAmount: serviceCost,
-      tokenAddress: mtgyAddy,
-      delegateAddress: faasAddy,
-    });
-    await dispatch("genericErc20Approval", {
       spendAmount: rewardsSupply,
       tokenAddress: rewardsToken,
-      delegateAddress: faasAddy,
+      delegateAddress: productContract,
     });
     await faasToken.methods
       .createNewTokenContract(
@@ -278,13 +251,13 @@ export default {
         timelockSeconds,
         isStakedTokenNft || false
       )
-      .send({ from: userAddy });
+      .send({ from: userAddy, value: serviceCost });
   },
 
   async removeStakableTokens({ state }, farmContractAddress) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const stakingContract = MTGYFaaSToken(web3, farmContractAddress);
+    const stakingContract = OKLGFaaSToken(web3, farmContractAddress);
     const pool = await stakingContract.methods.pool().call();
     if (!pool || pool.tokenOwner.toLowerCase() !== userAddy.toLowerCase()) {
       throw new Error(

@@ -22,14 +22,14 @@ navbar#navigation(:show-navbar="showNavbar")
       li.nav-item
         a.nav-link(
           title="Website"
-          href="https://moontography.com"
+          href="https://oklg.io"
           target="_blank"
           rel="noopener noreferrer")
             i.fa.fa-2x.fa-globe
       li.nav-item
         a.nav-link(
           title="Telegram"
-          href="https://t.me/moontographyproject"
+          href="https://t.me/ok_lg"
           target="_blank"
           rel="noopener noreferrer")
             i.fa.fa-2x.fa-telegram
@@ -64,7 +64,7 @@ navbar#navigation(:show-navbar="showNavbar")
             span.ml-2 BscScan
         a.dropdown-item(
           title="CoinGecko"
-          href="https://www.coingecko.com/en/coins/moontography"
+          href="https://www.coingecko.com/en/coins/ok-lets-go"
           target="_blank"
           rel="noopener noreferrer")
             img(
@@ -82,7 +82,7 @@ navbar#navigation(:show-navbar="showNavbar")
         //-     span.ml-2 CoinMarketCap
         a.dropdown-item(
           title="DEXTools"
-          href="https://www.dextools.io/app/pancakeswap/pair-explorer/0xaabafd64feb2ec235b209a95d4dc9b08e225379c"
+          href="https://www.dextools.io/app/bsc/pair-explorer/0x6d1bd9731583191c76b5647736bb56540623e190"
           target="_blank"
           rel="noopener noreferrer")
             img(
@@ -91,7 +91,7 @@ navbar#navigation(:show-navbar="showNavbar")
             span.ml-2 DEXTools
         a.dropdown-item(
           title="Live Coin Watch"
-          href="https://www.livecoinwatch.com/price/TheMoontographyProject-MTGY"
+          href="https://www.livecoinwatch.com/price/okletsgo-OKLG"
           target="_blank"
           rel="noopener noreferrer")
             img(
@@ -126,14 +126,14 @@ navbar#navigation(:show-navbar="showNavbar")
           | Block: {{ currentBlock }}
       li.nav-item
         a.nav-link.no-hover
-          | 1 MTGY = ${{ mtgyPriceUsd }} USD
-      li.nav-item.d-none.d-xl-block
+          | 1 OKLG = ${{ oklgPriceUsd }} USD
+      li.nav-item.d-none.d-xl-block(v-if="hasOklgTokenContract")
         a.nav-link.clickable(
-          @click="addMtgyToMetaMask")
+          @click="addTokenToMetaMask")
             img(
               style="max-height: 18px"
               src="img/metamask.png") 
-            span.ml-2 Add MTGY to MetaMask
+            span.ml-2 Add OKLG to MetaMask
       li.nav-item.d-none.d-xl-block(v-if="activeNetwork && activeNetwork.buy && activeNetwork.buy.link")
         a.nav-link.clickable(
           :href="activeNetwork.buy.link"
@@ -159,8 +159,16 @@ export default {
       activeNetwork: (_, getters) => getters.activeNetwork || {},
       allNetworks: (state) => state.eth.networks || [],
       currentBlock: (state) => state.currentBlock,
-      mtgyPriceUsd: (state) => new BigNumber(state.mtgyPriceUsd).toFixed(6),
+      oklgPriceUsd: (state) => new BigNumber(state.oklgPriceUsd).toFixed(6),
     }),
+
+    hasOklgTokenContract() {
+      return (
+        this.activeNetwork &&
+        this.activeNetwork.contracts &&
+        new BigNumber(this.activeNetwork.contracts.oklg).gt(0)
+      );
+    },
 
     routeName() {
       const { name } = this.$route;
@@ -237,10 +245,11 @@ export default {
       }
     },
 
-    async addMtgyToMetaMask() {
-      const tokenAddress = this.activeNetwork.contracts.mtgy;
-      const tokenSymbol = "MTGY";
-      const tokenDecimals = 18;
+    async addTokenToMetaMask() {
+      const tokenAddress = this.activeNetwork.contracts.oklg;
+      if (!tokenAddress) return;
+      const tokenSymbol = "OKLG";
+      const tokenDecimals = 9;
 
       if (!window.ethereum)
         return this.$toast.error(

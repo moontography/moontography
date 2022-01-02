@@ -1,11 +1,11 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
-export default function MTGYFaaSToken(web3: Web3, contractAddy: string) {
-  return new web3.eth.Contract(mtgyFaasTokenAbi, contractAddy);
+export default function OKLGFaaSToken(web3: Web3, contractAddy: string) {
+  return new web3.eth.Contract(faasTokenAbi, contractAddy);
 }
 
-const mtgyFaasTokenAbi: AbiItem[] = [
+const faasTokenAbi: AbiItem[] = [
   {
     inputs: [
       {

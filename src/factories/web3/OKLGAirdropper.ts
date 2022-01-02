@@ -1,21 +1,21 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
-export default function MTGYAirdropper(web3: Web3, contractAddy: string) {
-  return new web3.eth.Contract(mtgyBtsAbi, contractAddy);
+export default function OKLGAirdropper(web3: Web3, contractAddy: string) {
+  return new web3.eth.Contract(abi, contractAddy);
 }
 
-const mtgyBtsAbi: AbiItem[] = [
+const abi: AbiItem[] = [
   {
     inputs: [
       {
         internalType: "address",
-        name: "_mtgyTokenAddy",
+        name: "_tokenAddy",
         type: "address",
       },
       {
         internalType: "address",
-        name: "_mtgySpendAddy",
+        name: "_spendContractAddy",
         type: "address",
       },
     ],
@@ -61,7 +61,7 @@ const mtgyBtsAbi: AbiItem[] = [
             type: "uint256",
           },
         ],
-        internalType: "struct MTGYAirdropper.Receiver[]",
+        internalType: "struct OKLGAirdropper.Receiver[]",
         name: "_addressesAndAmounts",
         type: "tuple[]",
       },
@@ -74,7 +74,7 @@ const mtgyBtsAbi: AbiItem[] = [
         type: "bool",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -97,7 +97,7 @@ const mtgyBtsAbi: AbiItem[] = [
             type: "uint256",
           },
         ],
-        internalType: "struct MTGYAirdropper.Receiver[]",
+        internalType: "struct OKLGAirdropper.Receiver[]",
         name: "_addressesAndAmounts",
         type: "tuple[]",
       },
@@ -110,7 +110,7 @@ const mtgyBtsAbi: AbiItem[] = [
         type: "bool",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -128,7 +128,7 @@ const mtgyBtsAbi: AbiItem[] = [
             type: "uint256",
           },
         ],
-        internalType: "struct MTGYAirdropper.Receiver[]",
+        internalType: "struct OKLGAirdropper.Receiver[]",
         name: "_addressesAndAmounts",
         type: "tuple[]",
       },
@@ -145,60 +145,8 @@ const mtgyBtsAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_spendAddy",
-        type: "address",
-      },
-    ],
-    name: "changeMtgySpendAddy",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_tokenAddy",
-        type: "address",
-      },
-    ],
-    name: "changeMtgyTokenAddy",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_newCost",
-        type: "uint256",
-      },
-    ],
-    name: "changeServiceCost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
-    name: "mtgyServiceCost",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "mtgySpendAddy",
+    name: "getSpendAddress",
     outputs: [
       {
         internalType: "address",
@@ -211,7 +159,7 @@ const mtgyBtsAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "mtgyTokenAddy",
+    name: "getTokenAddress",
     outputs: [
       {
         internalType: "address",
@@ -237,7 +185,59 @@ const mtgyBtsAbi: AbiItem[] = [
   },
   {
     inputs: [],
+    name: "productID",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "_newId",
+        type: "uint8",
+      },
+    ],
+    name: "setProductID",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_spendAddy",
+        type: "address",
+      },
+    ],
+    name: "setSpendAddy",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenAddy",
+        type: "address",
+      },
+    ],
+    name: "setTokenAddy",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -251,6 +251,31 @@ const mtgyBtsAbi: AbiItem[] = [
       },
     ],
     name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdrawETH",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenAddy",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawTokens",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

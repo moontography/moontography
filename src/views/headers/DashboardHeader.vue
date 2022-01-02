@@ -24,7 +24,7 @@ export default {
 
   computed: {
     ...mapState({
-      chartData: (state) => state.mtgyChart,
+      chartData: (state) => state.platformTokenChart,
     }),
   },
 

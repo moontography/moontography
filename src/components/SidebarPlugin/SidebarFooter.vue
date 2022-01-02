@@ -3,13 +3,13 @@ div.m-2.text-white.text-center
   div.mb-2.d-flex.align-items-center.justify-content-center
     a.mr-2.text-white(
       title="Website"
-      href="https://moontography.com"
+      href="https://oklg.io"
       target="_blank"
       rel="noopener noreferrer")
         i.fa.fa-2x.fa-globe
     a.mr-2.text-white(
       title="Telegram"
-      href="https://t.me/moontographyproject"
+      href="https://t.me/ok_lg"
       target="_blank"
       rel="noopener noreferrer")
         i.fa.fa-2x.fa-telegram
@@ -26,7 +26,7 @@ div.m-2.text-white.text-center
       rel="noopener noreferrer")
         i.fa.fa-2x.fa-github
 
-  div.small 1 MTGY = ${{ mtgyPriceUsd }} USD
+  div.small 1 OKLG = ${{ oklgPriceUsd }} USD
 </template>
 <script>
 import { mapState } from "vuex";
@@ -35,7 +35,7 @@ import BigNumber from "bignumber.js";
 export default {
   computed: {
     ...mapState({
-      mtgyPriceUsd: (state) => new BigNumber(state.mtgyPriceUsd).toFixed(6),
+      oklgPriceUsd: (state) => new BigNumber(state.oklgPriceUsd).toFixed(6),
     }),
   },
 };

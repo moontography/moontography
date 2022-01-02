@@ -76,7 +76,7 @@
                 v-model='endDateTime')
         div.d-flex.flex-column.align-items-center
           div.text-danger.text-center.mb-2
-            div You will spend #[strong {{ costFormatted }}] MTGY to create this new raffle.
+            div You will spend #[strong {{ createRaffleCost }}] {{ nativeCurrencySymbol }} to create this new raffle.
             div.mt-1(v-if="entryFeePercentageCharge && entryFeePercentageCharge > 0")
               | #[strong {{ entryFeePercentageCharge }}%] will also be charged from all entry fees.
           n-button(
@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
 
 export default {
@@ -115,13 +114,8 @@ export default {
       entryFeePercentageCharge: (state) =>
         state.raffler.entryFeePercentageCharge,
       globalLoading: (state) => state.globalLoading,
+      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
     }),
-
-    costFormatted() {
-      return new BigNumber(this.createRaffleCost || 0)
-        .div(new BigNumber(10).pow(18))
-        .toFormat(0);
-    },
 
     isRaffleInfoValid() {
       return (

@@ -105,10 +105,10 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
           slider-input-percent(v-model="percAmountToSend")
           div.text-warning.text-center
             div.mt-3
-              | When you send your tokens you will also send #[strong {{ instanceGasCostEther }} {{ (activeNetwork.native_currency || {}).symbol || 'ETH' }}]
-              | to fund the oracle that executes the swap.
-            div(v-if="mtgyServiceCost > 0")
-              | You will also send #[strong {{ costFormatted }}] MTGY to use this atomic swap service.
+              | When you send your tokens you will also send #[strong {{ instanceGasCostEther }} {{ nativeCurrencySymbol }}]
+              | to fund the relay that executes the swap.
+            div(v-if="bridgeCostFormatted > 0")
+              | You will also send #[strong {{ bridgeCostFormatted }} {{ nativeCurrencySymbol }}] to use this atomic swap service.
           div.mt-3.d-flex.align-items-center.justify-content-center(v-if="!latestSwap")
             n-button(
               v-if="sendTokenAmount && sendTokenAmount > 0"
@@ -165,20 +165,21 @@ export default {
       activeNetwork: (_, getters) => getters.activeNetwork || {},
       activeNetworkLogo: (_, getters) => getters.activeNetworkLogo,
       globalLoading: (state) => state.globalLoading,
+      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
       networks: (state) => state.eth.networks,
       instanceGasCost(state) {
         return state.asaas.instanceGasCost[this.swap.sourceContract];
       },
-      mtgyServiceCost(state) {
+      bridgeServiceCost(state) {
         return state.asaas.instanceServiceCost[this.swap.sourceContract];
       },
       web3: (state) => state.web3.instance,
     }),
 
-    costFormatted() {
-      return new BigNumber(this.mtgyServiceCost || 0)
+    bridgeCostFormatted() {
+      return new BigNumber(this.bridgeServiceCost || 0)
         .div(new BigNumber(10).pow(18))
-        .toFormat(0);
+        .toFixed();
     },
 
     hasUnclaimedSentFromSource() {

@@ -56,7 +56,7 @@ export default {
               to host blockchain-trusted-timestamping app yourself. You are welcome to fork and run locally or
               host it yourself online and use with your own public key target account and the
               only cost would be the associated transaction fees on the blockchain.
-              If you want to use this app hosted here (without hosting yourself) you will spend MTGY in order
+              If you want to use this app hosted here (without hosting yourself) you will spend native token in order
               to store the digital signatures of your files on chain.
             </p>
           `,

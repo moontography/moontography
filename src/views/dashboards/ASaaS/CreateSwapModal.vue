@@ -19,7 +19,7 @@
             div.mb-4
               div.mb-4
                 div.mb-2
-                  | Creating a new atomic swap bridge using the moontography platform allows for your users
+                  | Creating a new atomic swap bridge using the OKLG platform allows for your users
                   | to swap tokens 1-to-1 between supported networks.
                 div.text-danger
                   //- strong
@@ -59,24 +59,33 @@
                 strong {{ activeNetwork.name }}
               div.text-left
                 label.m-0 Target bridge network:
-              network-selector.mb-4(v-model="targetNetwork")
+              network-selector.mb-4(
+                v-model="targetNetwork"
+                @update:modelValue="getTargetTokenInfo")
               
               card
-                checkbox.mb-3(v-model="createdFirstAlready")
-                  | Have you already created the first swap contract?
+                checkbox.mb-3(
+                  v-model="createdFirstAlready"
+                  @update:modelValue="getTargetTokenInfo")
+                    | Have you already created the first swap contract?
                 div(v-if="createdFirstAlready")
                   fg-input.mb-2(
                     type="text"
                     placeholder="First swap contract"
-                    v-model="contractAddress")
+                    v-model="contractAddress"
+                    @update:modelValue="getTargetTokenInfo")
                   fg-input.mb-2(
                     type="number"
                     placeholder="First swap unique identifier"
                     v-model="timestamp")
+                  div.text-left(v-if="targetTokenInfo")
+                    div #[strong Token Contract:] {{ targetTokenInfo.targetTokenAddress }}
+                    div #[strong Token:] {{ targetTokenInfo.targetTokenName }} ({{ targetTokenInfo.targetTokenSymbol }})
+                    div #[strong Decimals:] {{ targetTokenInfo.targetTokenDecimals }}
 
               div
                 div.text-danger
-                  | You will spend #[strong {{ costFormatted }}] MTGY on both sides to create your atomic swap bridge.
+                  | You will spend #[strong {{ createSwapCost }} {{ nativeCurrencySymbol }}] on both sides to create your atomic swap bridge.
                 n-button(
                   type="success"
                   size="lg"
@@ -133,6 +142,7 @@ export default {
       contractAddress: null,
       isContractCached: false,
       createdFirstAlready: false,
+      targetTokenInfo: null,
     };
   },
 
@@ -142,22 +152,15 @@ export default {
       createSwapCost: (state) => state.asaas.createSwapCost,
       globalLoading: (state) => state.globalLoading,
       mtgyServiceCost: (state) => state.asaas.cost,
+      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
       gasRequirement: (state) => state.asaas.gas,
       web3: (state) => state.web3.instance,
+      userAddress: (state) => state.web3.address,
       zeroAddy: (state) => state.zeroAddy,
     }),
 
     loadingOrNotValidated() {
-      return (
-        this.globalLoading ||
-        !(this.tokenInfo && this.numberTokens && this.targetNetwork)
-      );
-    },
-
-    costFormatted() {
-      return new BigNumber(this.createSwapCost || 0)
-        .div(new BigNumber(10).pow(18))
-        .toFormat(0);
+      return this.globalLoading || !(this.tokenInfo && this.targetNetwork);
     },
   },
 
@@ -179,12 +182,28 @@ export default {
       }
     },
 
-    async createSwap() {
+    async getTargetTokenInfo() {
       try {
-        const maxSwap = Number();
         if (
           !(
-            this.numberTokens &&
+            this.targetNetwork &&
+            this.web3.utils.isAddress(this.contractAddress)
+          )
+        )
+          return;
+        this.targetTokenInfo = await AtomicSwapOracle.getTokenInfoFromSwap({
+          targetNetwork: this.targetNetwork,
+          targetContract: this.contractAddress,
+        });
+      } catch (err) {
+        this.$toast.error(err.message);
+      }
+    },
+
+    async createSwap() {
+      try {
+        if (
+          !(
             (this.maxSwap ||
               (typeof this.maxSwap === "number" && this.maxSwap >= 0)) &&
             this.targetNetwork
@@ -192,6 +211,14 @@ export default {
         ) {
           throw new Error("Please fill out ALL fields to create your bridge.");
         }
+
+        const selectedTargetContract =
+          (this.createdFirstAlready && this.contractAddress) || this.zeroAddy;
+        let selectedTargetContDecimals = 0;
+        if (this.targetTokenInfo && this.targetTokenInfo.targetTokenDecimals) {
+          selectedTargetContDecimals = this.targetTokenInfo.targetTokenDecimals;
+        }
+
         this.$store.commit("SET_GLOBAL_LOADING", true);
         const {
           id,
@@ -201,6 +228,7 @@ export default {
           sourceContract,
           targetNetwork,
           targetContract,
+          targetDecimals,
           isActive,
         } = await this.$store.dispatch("asaasCreateSwap", {
           tokenAddress: this.tokenInfo.address,
@@ -211,8 +239,8 @@ export default {
             .times(new BigNumber(10).pow(this.tokenInfo.decimals))
             .toFixed(),
           targetNetwork: this.targetNetwork,
-          targetContract:
-            (this.createdFirstAlready && this.contractAddress) || this.zeroAddy,
+          targetContract: selectedTargetContract,
+          targetDecimals: selectedTargetContDecimals,
         });
         await AtomicSwapOracle.createSwap({
           sourceTimestamp: timestamp,

@@ -23,6 +23,12 @@ export default {
     }
   },
 
+  nativeCurrencySymbol(_, getters) {
+    return (
+      getters.activeNetwork && getters.activeNetwork.native_currency.symbol
+    );
+  },
+
   tokenRoute(_, getters) {
     return getters.activeNetworkExplorerUrl === "https://explorer.kcc.io/en"
       ? "address"

@@ -2,7 +2,6 @@ import airdropper from "./airdropper";
 import asaas from "./asaas";
 import faas from "./faas";
 import kether from "./kether";
-import mtgyOklgSwap from "./mtgyOklgSwap";
 import passwordManager from "./passwordManager";
 import raffler from "./raffler";
 import trustedTimestamping from "./trustedTimestamping";
@@ -15,8 +14,9 @@ import NftUtils from "../../factories/NftUtils";
 import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
 import ERC721 from "../../factories/web3/ERC721";
+import OKLGSpend from "../../factories/web3/OKLGSpend";
 import { useToast } from "vue-toastification";
-import MTGYDataUtils from "@/factories/MTGYDataUtils";
+import TokenDataUtils from "@/factories/TokenDataUtils";
 const toast = useToast();
 
 export default {
@@ -24,7 +24,6 @@ export default {
   ...asaas,
   ...faas,
   ...kether,
-  ...mtgyOklgSwap,
   ...passwordManager,
   ...raffler,
   ...trustedTimestamping,
@@ -35,7 +34,6 @@ export default {
       commit("SET_GLOBAL_ERROR", null);
 
       // an error with this API will break the app if we await, so don't here
-      dispatch("getMtgyPriceUsd");
       dispatch("getOklgPriceUsd");
 
       // Get MTGY info before having to connect wallet.
@@ -43,10 +41,10 @@ export default {
 
       await ExponentialBackoff(async () => {
         await Promise.all([
-          dispatch("getMTGYCirculatingSupply"),
-          dispatch("getMTGYTotalSupply"),
-          dispatch("getMtgyTokenInfo"),
-          dispatch("getMtgyTokenChart"),
+          dispatch("getTokenCirculatingSupply"),
+          dispatch("getTokenTotalSupply"),
+          dispatch("getOklgTokenInfo"),
+          dispatch("getOklgTokenChart"),
           dispatch("getCurrentBlock"),
         ]);
       });
@@ -111,10 +109,10 @@ export default {
     if (!getters.activeNetwork) return;
     const { userBalance, decimals } = await dispatch(
       "getErc20TokenInfo",
-      getters.activeNetwork.contracts.mtgy
+      getters.activeNetwork.contracts.oklg
     );
     commit(
-      "SET_WEB3_USER_MTGY_BALANCE",
+      "SET_WEB3_USER_TOKEN_BALANCE",
       new BigNumber(userBalance).div(new BigNumber(10).pow(decimals)).toString()
     );
   },
@@ -125,15 +123,14 @@ export default {
     const go = async () => {
       try {
         // an error with this API will break the app if we await, so don't here
-        dispatch("getMtgyPriceUsd");
         dispatch("getOklgPriceUsd");
 
         await Promise.all([
           dispatch("getUserBalance"),
-          dispatch("getMTGYCirculatingSupply"),
-          dispatch("getMTGYTotalSupply"),
-          dispatch("getMtgyTokenInfo"),
-          dispatch("getMtgyTokenChart"),
+          dispatch("getTokenCirculatingSupply"),
+          dispatch("getTokenTotalSupply"),
+          dispatch("getOklgTokenInfo"),
+          dispatch("getOklgTokenChart"),
           dispatch("getCurrentBlock"),
         ]);
       } catch (err) {
@@ -156,49 +153,6 @@ export default {
     Web3Modal.clearCachedProvider();
   },
 
-  // async ethCheckApprovalStatusForTokenContract({ getters, state, commit }) {
-  //   const userAddy = state.web3.address;
-  //   if (!userAddy) {
-  //     commit("SET_WEB3_IS_CONNECTED", false);
-  //     return;
-  //   }
-
-  //   const web3 = state.web3.instance;
-  //   const mtgyAddress = getters.activeNetwork.contracts.mtgy;
-  //   const trustedTimestampingAddress =
-  //     getters.activeNetwork.contracts.trustedTimestamping;
-  //   const contract = MTGY(web3, mtgyAddress);
-  //   const ttCont = MTGYTrustedTimestamping(web3, trustedTimestampingAddress);
-  //   const [timestampAllowance, currentCost] = await Promise.all([
-  //     contract.methods.allowance(userAddy, trustedTimestampingAddress).call(),
-  //     ttCont.methods.mtgyServiceCost().call(),
-  //   ]);
-  //   const isApprovedAlready = new BigNumber(timestampAllowance).gte(
-  //     currentCost
-  //   );
-  //   commit("SET_WEB3_IS_APPROVED", isApprovedAlready);
-  // },
-
-  // async ethApproveTokenContract(
-  //   { getters, state, commit },
-  //   { address, amount }
-  // ) {
-  //   try {
-  //     const web3 = state.web3.instance;
-  //     const userAddy = state.web3.address;
-  //     const mtgyAddress = getters.activeNetwork.contracts.mtgy;
-  //     // const trustedTimestampingAddress =
-  //     //   getters.activeNetwork.contracts.trustedTimestamping;
-  //     const mtgyCont = MTGY(web3, mtgyAddress);
-  //     await mtgyCont.methods.approve(address, amount).send({ from: userAddy });
-  //     commit("SET_WEB3_IS_APPROVED", true);
-  //   } catch (err) {
-  //     toast.error(err.message || err);
-  //     commit("SET_WEB3_IS_APPROVED", false);
-  //     commit("SET_GLOBAL_ERROR", err);
-  //   }
-  // },
-
   async getCurrentBlock({ state, commit }) {
     const web3 = state.web3.instance;
     if (!web3) return;
@@ -206,43 +160,45 @@ export default {
     commit("SET_CURRENT_BLOCK", block);
   },
 
-  async getMtgyPriceUsd({ commit, getters }) {
-    if (!getters.activeNetwork) return;
-    const price = await DexUtils.getTokenPrice(
-      getters.activeNetwork.contracts.mtgy
-    );
-    commit("SET_MTGY_PRICE_USD", price);
-  },
-
-  async getOklgPriceUsd({ commit, getters }) {
-    if (!getters.activeNetwork) return;
-    const price = await DexUtils.getTokenPrice(
-      getters.activeNetwork.contracts.oklg
-    );
+  async getOklgPriceUsd({ commit, getters, state }) {
+    if (
+      !(
+        getters.activeNetwork &&
+        new BigNumber(getters.activeNetwork.contracts.oklg).gt(0)
+      )
+    )
+      return;
+    const bscNet = state.eth.networks.find((n) => n.short_name == "bsc");
+    const price = await DexUtils.getTokenPrice(bscNet.contracts.oklg);
     commit("SET_OKLG_PRICE_USD", price);
   },
 
-  async getMTGYCirculatingSupply({ commit, state }, reset = false) {
-    if (state.mtgyCircSupply != "0" && !reset) return;
-    const supply = await MTGYDataUtils.getCirculatingSupply();
-    commit("SET_MTGY_CIRC_SUPPLY", supply);
+  async getTokenCirculatingSupply({ commit, state }, reset = false) {
+    if (state.tokenCircSupply != "0" && !reset) return;
+    const supply = await TokenDataUtils.getCirculatingSupply();
+    commit("SET_TOKEN_CIRC_SUPPLY", supply);
   },
 
-  async getMTGYTotalSupply({ commit, state }, reset = false) {
-    if (state.mtgyTotSupply != "0" && !reset) return;
-    const supply = await MTGYDataUtils.getTotalSupply();
-    commit("SET_MTGY_TOT_SUPPLY", supply);
+  async getTokenTotalSupply({ commit, state }, reset = false) {
+    if (state.tokenTotSupply != "0" && !reset) return;
+    const supply = await TokenDataUtils.getTotalSupply();
+    commit("SET_TOKEN_TOT_SUPPLY", supply);
   },
 
-  async getMtgyTokenInfo({ commit }) {
-    const info = await MTGYDataUtils.getTokenInfo("moontography");
-    commit("SET_MTGY_TOKEN_INFO", info);
+  async getOklgTokenInfo({ commit }) {
+    const info = await TokenDataUtils.getTokenInfo("ok-lets-go");
+    commit("SET_TOKEN_INFO", info);
   },
 
-  async getMtgyTokenChart({ commit, state }, reset = false) {
-    if (state.mtgyChart && state.mtgyChart.length > 0 && !reset) return;
-    const prices = await MTGYDataUtils.getTokenChart("moontography");
-    commit("SET_MTGY_TOKEN_CHART", prices);
+  async getOklgTokenChart({ commit, state }, reset = false) {
+    if (
+      state.platformTokenChart &&
+      state.platformTokenChart.length > 0 &&
+      !reset
+    )
+      return;
+    const prices = await TokenDataUtils.getTokenChart("ok-lets-go");
+    commit("SET_TOKEN_CHART", prices);
   },
 
   async setUserInfoForToken({ commit, dispatch }, tokenAddy) {
@@ -379,5 +335,25 @@ export default {
       symbol,
       userBalance,
     };
+  },
+
+  async getProductCostWei({ getters, state }, { productID, productContract }) {
+    const web3 = state.web3.instance;
+    const spendCont = getters.activeNetwork.contracts.spend;
+    const spend = OKLGSpend(web3, spendCont);
+    const [defaultCostUSD, overrideCostUSD] = await Promise.all([
+      spend.methods.defaultProductPriceUSD(productID).call(),
+      spend.methods.overrideProductPriceUSD(productContract).call(),
+    ]);
+    const [defaultCostWei, overrideCostWei, isRemoved] = await Promise.all([
+      spend.methods.getProductCostWei(defaultCostUSD).call(),
+      spend.methods.getProductCostWei(overrideCostUSD).call(),
+      spend.methods.removeCost(productContract).call(),
+    ]);
+    return isRemoved
+      ? "0"
+      : new BigNumber(overrideCostWei).gt(0)
+      ? overrideCostWei
+      : defaultCostWei;
   },
 };

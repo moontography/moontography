@@ -106,7 +106,7 @@
                 @click="airdropTokens") Airdrop Your {{ tokenInfo.symbol }} Now!
           div.row.mt-2
             div.col-lg-8.mx-auto.text-center
-              div You will spend #[b {{ airdropCost }} MTGY] to use the Airdropper service.
+              div You will spend #[b {{ airdropCost }} {{ nativeCurrencySymbol }}] to use the Airdropper service.
 </template>
 
 <script>
@@ -131,8 +131,9 @@ export default {
   computed: {
     ...mapState({
       activeNetwork: (_, getters) => getters.activeNetwork || {},
-      airdropCost: (state) => new BigNumber(state.airdropper.cost).toFormat(0),
+      airdropCost: (state) => new BigNumber(state.airdropper.cost).toFormat(),
       globalLoading: (state) => state.globalLoading,
+      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
       web3: (state) => state.web3.instance,
     }),
 

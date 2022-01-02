@@ -117,7 +117,7 @@
                 @click="createNewPool") Create New Pool
           div.row.mt-2
             div.col-lg-8.mx-auto.text-center
-              div You will spend #[b {{ createCost }} MTGY] to create this new pool.
+              div You will spend #[b {{ createCost }} {{ nativeCurrencySymbol }}] to create this new pool.
               div It will not cost anything for users to stake their tokens in your pool.
       - // TODO REMOVE
       .col-12(v-if="isScrooge")
@@ -172,8 +172,9 @@ export default {
   computed: {
     ...mapState({
       activeNetwork: (_, getters) => getters.activeNetwork || {},
-      createCost: (state) => new BigNumber(state.faas.cost).toFormat(0),
+      createCost: (state) => state.faas.cost,
       globalLoading: (state) => state.globalLoading,
+      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
       userAddy: (state) => state.web3.address,
       web3: (state) => state.web3.instance,
     }),

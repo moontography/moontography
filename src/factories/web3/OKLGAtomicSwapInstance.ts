@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
-export default function MTGYAtomicSwapInstance(
+export default function OKLGAtomicSwapInstance(
   web3: Web3,
   contractAddy: string
 ) {
@@ -13,12 +13,12 @@ const atomicSwapInstAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "_mtgyAddress",
+        name: "_costToken",
         type: "address",
       },
       {
         internalType: "address",
-        name: "_mtgySpendAddress",
+        name: "_spendAddress",
         type: "address",
       },
       {
@@ -35,6 +35,11 @@ const atomicSwapInstAbi: AbiItem[] = [
         internalType: "address",
         name: "_tokenAddy",
         type: "address",
+      },
+      {
+        internalType: "uint8",
+        name: "_targetTokenDecimals",
+        type: "uint8",
       },
       {
         internalType: "uint256",
@@ -167,71 +172,6 @@ const atomicSwapInstAbi: AbiItem[] = [
   {
     inputs: [
       {
-        internalType: "bool",
-        name: "_isActive",
-        type: "bool",
-      },
-    ],
-    name: "changeActiveState",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_newCost",
-        type: "uint256",
-      },
-    ],
-    name: "changeMtgyServiceCost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_oracleAddress",
-        type: "address",
-      },
-    ],
-    name: "changeOracleAddress",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "creator",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
-    ],
-    name: "depositTokens",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "bytes32",
         name: "_id",
         type: "bytes32",
@@ -254,7 +194,33 @@ const atomicSwapInstAbi: AbiItem[] = [
   },
   {
     inputs: [],
+    name: "getSpendAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getSwapTokenAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTokenAddress",
     outputs: [
       {
         internalType: "address",
@@ -365,19 +331,6 @@ const atomicSwapInstAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "mtgyServiceCost",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "oracleAddress",
     outputs: [
       {
@@ -391,12 +344,12 @@ const atomicSwapInstAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "originalSupply",
+    name: "owner",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "address",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -404,12 +357,12 @@ const atomicSwapInstAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "owner",
+    name: "productID",
     outputs: [
       {
-        internalType: "address",
+        internalType: "uint8",
         name: "",
-        type: "address",
+        type: "uint8",
       },
     ],
     stateMutability: "view",
@@ -481,6 +434,128 @@ const atomicSwapInstAbi: AbiItem[] = [
   {
     inputs: [
       {
+        internalType: "bool",
+        name: "_isActive",
+        type: "bool",
+      },
+    ],
+    name: "setActiveState",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_amountGas",
+        type: "uint256",
+      },
+    ],
+    name: "setMinimumGasForOperation",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_oracleAddress",
+        type: "address",
+      },
+    ],
+    name: "setOracleAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "_newId",
+        type: "uint8",
+      },
+    ],
+    name: "setProductID",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_spendAddy",
+        type: "address",
+      },
+    ],
+    name: "setSpendAddy",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "_id",
+        type: "bytes32",
+      },
+      {
+        internalType: "bool",
+        name: "_isComplete",
+        type: "bool",
+      },
+    ],
+    name: "setSwapCompletionStatus",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "_decimals",
+        type: "uint8",
+      },
+    ],
+    name: "setTargetTokenDecimals",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenAddy",
+        type: "address",
+      },
+    ],
+    name: "setTokenAddy",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "setTokenOwner",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "bytes32",
         name: "",
         type: "bytes32",
@@ -539,6 +614,19 @@ const atomicSwapInstAbi: AbiItem[] = [
   },
   {
     inputs: [],
+    name: "targetTokenDecimals",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "tokenOwner",
     outputs: [
       {
@@ -577,39 +665,8 @@ const atomicSwapInstAbi: AbiItem[] = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_amountGas",
-        type: "uint256",
-      },
-    ],
-    name: "updateMinimumGasForOperation",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
-    name: "updateSupply",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "_id",
-        type: "bytes32",
-      },
-      {
-        internalType: "bool",
-        name: "_isComplete",
-        type: "bool",
-      },
-    ],
-    name: "updateSwapCompletionStatus",
+    name: "withdrawETH",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -618,11 +675,16 @@ const atomicSwapInstAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "newOwner",
+        name: "_tokenAddy",
         type: "address",
       },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
     ],
-    name: "updateTokenOwner",
+    name: "withdrawTokens",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

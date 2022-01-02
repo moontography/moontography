@@ -1,11 +1,11 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
-export default function MTGYPasswordManager(web3: Web3, contractAddy: string) {
-  return new web3.eth.Contract(mtgyPwAbi, contractAddy);
+export default function OKLGPasswordManager(web3: Web3, contractAddy: string) {
+  return new web3.eth.Contract(pwAbi, contractAddy);
 }
 
-const mtgyPwAbi: AbiItem[] = [
+const pwAbi: AbiItem[] = [
   {
     inputs: [
       {

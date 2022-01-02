@@ -1,32 +1,41 @@
 import BigNumber from "bignumber.js";
 import sleep from "../../factories/Sleep";
-// import MTGY from "../../factories/web3/MTGY";
 import AtomicSwapOracle from "../../factories/AtomicSwapOracle";
 import ERC20 from "@/factories/web3/ERC20";
-import MTGYAtomicSwapInstance from "@/factories/web3/MTGYAtomicSwapInstance";
-import MTGYAtomicSwap from "../../factories/web3/MTGYAtomicSwap";
+import OKLGAtomicSwapInstance from "@/factories/web3/OKLGAtomicSwapInstance";
+import OKLGAtomicSwap from "../../factories/web3/OKLGAtomicSwap";
 
 export default {
-  async asaasCosts({ commit, getters, state }) {
+  async asaasCosts({ commit, dispatch, getters, state }) {
     const web3 = state.web3.instance;
-    // const userAddy = state.web3.address;
-    const asaasAddy = getters.activeNetwork.contracts.atomicSwap;
-    const contract = MTGYAtomicSwap(web3, asaasAddy);
-    const [mtgyServiceCost, gas] = await Promise.all([
-      contract.methods.mtgyServiceCost().call(),
+    const productContract = getters.activeNetwork.contracts.atomicSwap;
+    const productID = state.productIds.atomicSwap;
+    const contract = OKLGAtomicSwap(web3, productContract);
+    const [serviceCost, gas] = await Promise.all([
+      dispatch("getProductCostWei", {
+        productID,
+        productContract,
+      }),
       contract.methods.swapCreationGasLoadAmount().call(),
     ]);
-    commit("SET_ASAAS_COSTS", { mtgyServiceCost, gas });
+    commit("SET_ASAAS_COSTS", {
+      gas,
+      serviceCost: new BigNumber(serviceCost)
+        .div(new BigNumber(10).pow(18))
+        .toFixed(),
+    });
   },
 
-  async asaasInstanceGasCost({ commit, state }, contractAddress) {
+  async asaasInstanceGasCost({ commit, dispatch, state }, contractAddress) {
     const web3 = state.web3.instance;
-    // const userAddy = state.web3.address;
-    // const activeNetwork = getters.activeNetwork;
-    const contract = MTGYAtomicSwapInstance(web3, contractAddress);
-    const [instanceGasCost, serviceCost] = await Promise.all([
+    const productID = state.productIds.atomicSwapInstance;
+    const contract = OKLGAtomicSwapInstance(web3, contractAddress);
+    const [serviceCost, instanceGasCost] = await Promise.all([
+      dispatch("getProductCostWei", {
+        productID,
+        productContract: contractAddress,
+      }),
       contract.methods.minimumGasForOperation().call(),
-      contract.methods.mtgyServiceCost().call(),
     ]);
     commit("SET_ASAAS_INSTANCE_GAS_COST", { contractAddress, instanceGasCost });
     commit("SET_ASAAS_INSTANCE_SERVICE_COST", { contractAddress, serviceCost });
@@ -42,8 +51,8 @@ export default {
     }
     const asaasAddy = activeNetwork.contracts.atomicSwap;
     const asaasAddy_V1 = activeNetwork.contracts.atomicSwap_V1;
-    const contract = MTGYAtomicSwap(web3, asaasAddy);
-    const contract_V1 = asaasAddy_V1 && MTGYAtomicSwap(web3, asaasAddy_V1);
+    const contract = OKLGAtomicSwap(web3, asaasAddy);
+    const contract_V1 = asaasAddy_V1 && OKLGAtomicSwap(web3, asaasAddy_V1);
     const [allSwaps, allSwaps_V1] = await Promise.all([
       contract.methods.getAllSwapContracts().call(),
       (async () => {
@@ -56,7 +65,7 @@ export default {
     const mappedSwaps = await Promise.all(
       allSwaps.concat(allSwaps_V1).map(async (swap) => {
         try {
-          const sourceSwapInst = MTGYAtomicSwapInstance(
+          const sourceSwapInst = OKLGAtomicSwapInstance(
             web3,
             swap.sourceContract
           );
@@ -138,7 +147,7 @@ export default {
   async asaasGetLatestUserSwap({ state }, sourceContract) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const contract = MTGYAtomicSwapInstance(web3, sourceContract);
+    const contract = OKLGAtomicSwapInstance(web3, sourceContract);
     return await contract.methods.lastUserSwap(userAddy).call();
   },
 
@@ -148,44 +157,25 @@ export default {
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const mtgyCont = ERC20(web3, mtgyAddy);
-    const contract = MTGYAtomicSwapInstance(web3, sourceContract);
-    const [instanceServiceCost, userMtgyBal] = await Promise.all([
-      contract.methods.mtgyServiceCost().call(),
-      mtgyCont.methods.balanceOf(userAddy).call(),
+    const productID = state.productIds.atomicSwapInstance;
+    const nativeCurrencySymbol = getters.nativeCurrencySymbol;
+    const contract = OKLGAtomicSwapInstance(web3, sourceContract);
+    const [nativeBalance, serviceCost] = await Promise.all([
+      state.web3.instance.eth.getBalance(userAddy),
+      dispatch("getProductCostWei", {
+        productID,
+        productContract: sourceContract,
+      }),
     ]);
-
-    // validate amount is valid
-    const servCostHumanReadable = new BigNumber(instanceServiceCost)
-      .div(new BigNumber(10).pow(18))
-      .toFormat();
-    if (new BigNumber(instanceServiceCost).gt(userMtgyBal)) {
+    const totalNativeNeeded = new BigNumber(
+      state.asaas.instanceGasCost[sourceContract] || 0
+    ).plus(serviceCost || 0);
+    if (new BigNumber(nativeBalance).lt(totalNativeNeeded)) {
       throw new Error(
-        `You need to make sure you have at least ${servCostHumanReadable} MTGY to spend to use this service.`
+        `You do not have enough ${nativeCurrencySymbol} to cover the service cost. Please ensure you have enough ${nativeCurrencySymbol} in your wallet to cover the service fee and try again.`
       );
-    } else if (tokenContract.toLowerCase() === mtgyAddy.toLowerCase()) {
-      // need to make sure the send amount is less than the
-      // user's balance and mtgyServiceCost
-      if (
-        new BigNumber(userMtgyBal).lt(
-          new BigNumber(instanceServiceCost).plus(amount)
-        )
-      ) {
-        // throw new Error(
-        //   `You need to make sure the amount you swap leaves you with at least ${servCostHumanReadable} MTGY to cover the service cost.`
-        // );
-        amount = new BigNumber(amount).minus(instanceServiceCost).toFixed();
-      }
     }
 
-    if (new BigNumber(instanceServiceCost).gt(0)) {
-      await dispatch("genericErc20Approval", {
-        spendAmount: instanceServiceCost,
-        tokenAddress: mtgyAddy,
-        delegateAddress: sourceContract,
-      });
-    }
     await dispatch("genericErc20Approval", {
       spendAmount: amount,
       tokenAddress: tokenContract,
@@ -193,34 +183,49 @@ export default {
     });
     return await contract.methods.receiveTokensFromSource(amount).send({
       from: userAddy,
-      value: state.asaas.instanceGasCost[sourceContract],
+      value: totalNativeNeeded.toFixed(),
     });
   },
 
   async asaasCreateSwap(
     { dispatch, getters, state },
-    { tokenAddress, tokenSupply, maxSwapAmount, targetNetwork, targetContract }
+    {
+      tokenAddress,
+      tokenSupply,
+      maxSwapAmount,
+      targetNetwork,
+      targetContract,
+      targetDecimals,
+    }
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const asaasAddy = getters.activeNetwork.contracts.atomicSwap;
-    const mtgyAddy = getters.activeNetwork.contracts.mtgy;
-    const contract = MTGYAtomicSwap(web3, asaasAddy);
-    const [mtgyServiceCost, valueToCreate] = await Promise.all([
-      contract.methods.mtgyServiceCost().call(),
+    const productContract = getters.activeNetwork.contracts.atomicSwap;
+    const productID = state.productIds.atomicSwap;
+    const nativeCurrencySymbol = getters.nativeCurrencySymbol;
+    const contract = OKLGAtomicSwap(web3, productContract);
+
+    const [nativeBalance, serviceCost, valueToCreate] = await Promise.all([
+      state.web3.instance.eth.getBalance(userAddy),
+      dispatch("getProductCostWei", {
+        productID,
+        productContract,
+      }),
       contract.methods.swapCreationGasLoadAmount().call(),
     ]);
-    if (new BigNumber(mtgyServiceCost).gt(0)) {
-      await dispatch("genericErc20Approval", {
-        spendAmount: mtgyServiceCost,
-        tokenAddress: mtgyAddy,
-        delegateAddress: asaasAddy,
-      });
+    const totalNativeNeeded = new BigNumber(valueToCreate || 0).plus(
+      serviceCost || 0
+    );
+    if (new BigNumber(nativeBalance).lt(totalNativeNeeded)) {
+      throw new Error(
+        `You do not have enough ${nativeCurrencySymbol} to cover the service cost. Please ensure you have enough ${nativeCurrencySymbol} in your wallet to cover the service fee and try again.`
+      );
     }
+
     await dispatch("genericErc20Approval", {
       spendAmount: tokenSupply,
       tokenAddress: tokenAddress,
-      delegateAddress: asaasAddy,
+      delegateAddress: productContract,
     });
     await contract.methods
       .createNewAtomicSwapContract(
@@ -228,9 +233,10 @@ export default {
         tokenSupply,
         maxSwapAmount,
         targetNetwork,
-        targetContract
+        targetContract,
+        targetDecimals
       )
-      .send({ from: userAddy, value: valueToCreate });
+      .send({ from: userAddy, value: totalNativeNeeded.toFixed() });
     return await contract.methods.getLastCreatedContract(userAddy).call();
   },
 
@@ -241,7 +247,7 @@ export default {
     const web3 = state.web3.instance;
     const activeNetwork = getters.activeNetwork;
     const userAddy = state.web3.address;
-    const contract = MTGYAtomicSwapInstance(web3, instContract);
+    const contract = OKLGAtomicSwapInstance(web3, instContract);
     const [valueToSend, currentSwap] = await Promise.all([
       contract.methods.minimumGasForOperation().call(),
       contract.methods.swaps(id).call(),
@@ -293,7 +299,7 @@ export default {
     const web3 = state.web3.instance;
     const activeNetwork = getters.activeNetwork;
     const userAddy = state.web3.address;
-    const contract = MTGYAtomicSwapInstance(web3, instContract);
+    const contract = OKLGAtomicSwapInstance(web3, instContract);
     const [valueToSend, currentSwap] = await Promise.all([
       contract.methods.minimumGasForOperation().call(),
       contract.methods.swaps(id).call(),

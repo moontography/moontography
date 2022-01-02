@@ -73,13 +73,6 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
           path: '/1000ether',
         }`
       )
-      sidebar-item(
-        :link=`{
-          name: 'Swap MTGY for OKLG',
-          icon: 'now-ui-icons ui-1_send',
-          path: '/mtgy-oklg-swap',
-        }`
-      )
 
   div.main-panel
     top-navbar
