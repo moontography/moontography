@@ -303,6 +303,34 @@ export default {
         // },
       },
       // {
+      //   name: "Binance Smart Chain Testnet",
+      //   short_name: "bsctest",
+      //   chain: "BSCT",
+      //   network: "bsctest",
+      //   chain_id: 97,
+      //   network_id: 97,
+      //   explorer_url: "https://testnet.bscscan.com",
+      //   rpc_url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      //   blocks_per_day: 28800,
+      //   native_currency: {
+      //     symbol: "BNB",
+      //     name: "BNB",
+      //     decimals: "18",
+      //     contractAddress: "",
+      //     balance: "",
+      //   },
+      //   contracts: {
+      //     oklg: "0x000000000000000000000000000000000000dEaD",
+      //     spend: "",
+      //     airdropper: "",
+      //     atomicSwap: "",
+      //     passwordManager: "",
+      //     raffler: "",
+      //     trustedTimestamping: "",
+      //     faas: "",
+      //   },
+      // },
+      // {
       //   name: "Ethereum Ropsten",
       //   short_name: "rop",
       //   chain: "ETH",
@@ -317,6 +345,33 @@ export default {
       //     contractAddress: "",
       //     balance: ""
       //   }
+      // },
+      // {
+      //   name: "Ethereum Kovan",
+      //   short_name: "kov",
+      //   chain: "ETH",
+      //   network: "kovan",
+      //   chain_id: 42,
+      //   network_id: 42,
+      //   explorer_url: "https://kovan.etherscan.io",
+      //   rpc_url: "https://kovan.infura.io/v3/%API_KEY%",
+      //   native_currency: {
+      //     symbol: "ETH",
+      //     name: "Ethereum",
+      //     decimals: "18",
+      //     contractAddress: "",
+      //     balance: "",
+      //   },
+      //   contracts: {
+      //     oklg: "0x000000000000000000000000000000000000dEaD",
+      //     spend: "0x16bf1B872E5ff4Bc157e98cf067F9F07e905ae3d",
+      //     airdropper: "",
+      //     atomicSwap: "0x2Cca7Af3dee4efa4db51d1258731Ede01CFfA322",
+      //     passwordManager: "",
+      //     raffler: "",
+      //     trustedTimestamping: "",
+      //     faas: "",
+      //   },
       // },
       // {
       //   name: "Ethereum Rinkeby",
@@ -376,22 +431,6 @@ export default {
       //   native_currency: {
       //     symbol: "RSK",
       //     name: "RSK",
-      //     decimals: "18",
-      //     contractAddress: "",
-      //     balance: ""
-      //   }
-      // },
-      // {
-      //   name: "Ethereum Kovan",
-      //   short_name: "kov",
-      //   chain: "ETH",
-      //   network: "kovan",
-      //   chain_id: 42,
-      //   network_id: 42,
-      //   rpc_url: "https://kovan.infura.io/v3/%API_KEY%",
-      //   native_currency: {
-      //     symbol: "ETH",
-      //     name: "Ethereum",
       //     decimals: "18",
       //     contractAddress: "",
       //     balance: ""
