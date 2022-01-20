@@ -334,7 +334,7 @@ const atomicSwapInstAbi: AbiItem[] = [
     name: "oracleAddress",
     outputs: [
       {
-        internalType: "address",
+        internalType: "address payable",
         name: "",
         type: "address",
       },

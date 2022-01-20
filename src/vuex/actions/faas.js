@@ -204,7 +204,9 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasToken = OKLGFaaSToken(web3, farmingContractAddress);
-    await faasToken.methods.harvestForUser(userAddy).send({ from: userAddy });
+    await faasToken.methods
+      .harvestForUser(userAddy, false)
+      .send({ from: userAddy });
   },
 
   async faasCreateNewPool(

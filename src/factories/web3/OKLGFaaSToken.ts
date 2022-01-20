@@ -326,6 +326,11 @@ const faasTokenAbi: AbiItem[] = [
         name: "_userAddy",
         type: "address",
       },
+      {
+        internalType: "bool",
+        name: "_autoCompound",
+        type: "bool",
+      },
     ],
     name: "harvestForUser",
     outputs: [
@@ -629,7 +634,7 @@ const faasTokenAbi: AbiItem[] = [
       },
       {
         internalType: "bool",
-        name: "shouldHarvest",
+        name: "_shouldHarvest",
         type: "bool",
       },
     ],
