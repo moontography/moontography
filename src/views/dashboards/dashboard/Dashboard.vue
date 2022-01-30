@@ -208,7 +208,11 @@ export default {
     },
 
     totalVolume() {
-      return this.tokenInfo.market_data.total_volume.usd;
+      return (
+        this.tokenInfo &&
+        this.tokenInfo.market_data &&
+        this.tokenInfo.market_data.total_volume.usd
+      );
     },
 
     communityTotal() {
