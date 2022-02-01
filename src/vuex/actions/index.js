@@ -228,7 +228,9 @@ export default {
     );
     const checkOwns = await Promise.all(
       Object.values(allUserTokens).map(async (token) => {
-        const owns = await nftContract.methods.ownerOf(token.token_id).call();
+        const owns = await ExponentialBackoff(
+          async () => await nftContract.methods.ownerOf(token.token_id).call()
+        );
         return owns.toLowerCase() === ownerAddress.toLowerCase() ? token : null;
       })
     );
@@ -243,22 +245,26 @@ export default {
     return await Promise.all(
       ownedNfts.map(async (nft) => {
         let metadata = JSON.parse(nft.metadata || null);
-        if (!metadata && nft.token_uri) {
-          const { data } = await axios.get(
-            nftUtils.fixTokenUriURL(nft.token_uri)
-          );
-          if (data.image) {
-            metadata = {
-              name: data.name,
-              image: nftUtils.fixImageURL(data.image),
-            };
+        try {
+          if (!metadata && nft.token_uri) {
+            const { data } = await axios.get(
+              nftUtils.fixTokenUriURL(nft.token_uri)
+            );
+            if (data.image) {
+              metadata = {
+                name: data.name,
+                image: nftUtils.fixImageURL(data.image),
+              };
+            }
           }
+          return {
+            ...nft,
+            nft_name: metadata ? metadata.name : "No name",
+            image: metadata ? nftUtils.fixImageURL(metadata.image) : null,
+          };
+        } catch (err) {
+          return { ...nft };
         }
-        return {
-          ...nft,
-          nft_name: metadata ? metadata.name : "No name",
-          image: metadata ? nftUtils.fixImageURL(metadata.image) : null,
-        };
       })
     );
   },
