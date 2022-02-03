@@ -14,7 +14,7 @@
           //-   span(aria-hidden='true') &times;
         .modal-body
           div.ml-4
-            | Moontography is a decentralized suite of applications that anyone can leverage.
+            | The OKLG platform contains a decentralized suite of applications that anyone can leverage or use.
             br
             | Anyone can create their own token.
             br
@@ -27,7 +27,9 @@
             | due diligence or research conducted.
           div.d-flex.align-items-center.justify-content-center.mt-4
             checkbox(v-model="disclaimerAccepted") 
-              b.text-danger I understand that I am responsible for doing my own research!
+              b.text-danger
+                | I understand that I am responsible for doing my own research and
+                | OKLG is not responsible for loss of funds due to usage of this platform!
           
         .modal-footer.m-4
           //- button.btn.btn-close(

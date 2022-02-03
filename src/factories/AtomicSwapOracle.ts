@@ -81,7 +81,7 @@ export default {
     try {
       const { data } = await this.client[verb](url, { params, body });
       return data;
-    } catch (err) {
+    } catch (err: any) {
       if (err.response) {
         throw new Error(err.response.data.error);
       }
