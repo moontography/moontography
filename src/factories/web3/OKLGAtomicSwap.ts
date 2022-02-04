@@ -305,6 +305,16 @@ const atomicSwapAbi: AbiItem[] = [
         name: "_changeAll",
         type: "bool",
       },
+      {
+        internalType: "uint256",
+        name: "_start",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_max",
+        type: "uint256",
+      },
     ],
     name: "setOracleAddress",
     outputs: [],

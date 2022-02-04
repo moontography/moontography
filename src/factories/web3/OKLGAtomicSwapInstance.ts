@@ -286,6 +286,11 @@ const atomicSwapInstAbi: AbiItem[] = [
       },
       {
         internalType: "bool",
+        name: "isRefundable",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
         name: "isSendGasFunded",
         type: "bool",
       },
@@ -591,6 +596,11 @@ const atomicSwapInstAbi: AbiItem[] = [
       {
         internalType: "bool",
         name: "isRefunded",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "isRefundable",
         type: "bool",
       },
       {
