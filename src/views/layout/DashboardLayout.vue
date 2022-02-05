@@ -33,6 +33,13 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
+          name: 'Buybot',
+          icon: 'now-ui-icons gestures_tap-01',
+          path: '/buybot',
+        }`
+      )
+      sidebar-item(
+        :link=`{
           name: 'Raffler/Lottery',
           icon: 'now-ui-icons business_money-coins',
           path: '/raffler',

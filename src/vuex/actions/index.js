@@ -1,4 +1,5 @@
 import airdropper from "./airdropper";
+import buybot from "./buybot";
 import asaas from "./asaas";
 import faas from "./faas";
 import kether from "./kether";
@@ -21,6 +22,7 @@ const toast = useToast();
 
 export default {
   ...airdropper,
+  ...buybot,
   ...asaas,
   ...faas,
   ...kether,
