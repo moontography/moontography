@@ -511,11 +511,6 @@ const faasTokenAbi: AbiItem[] = [
     outputs: [
       {
         internalType: "uint256",
-        name: "amountStaked",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
         name: "blockOriginallyStaked",
         type: "uint256",
       },
