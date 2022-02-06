@@ -70,7 +70,6 @@ export default {
             farmingCont.methods.contractIsRemoved().call(),
             dispatch("getErc20TokenInfo", farmingTokenAddy),
           ]);
-          console.log("HERE1", tokenAddy, stakerInfo, farmingInfo);
           const [
             { name, symbol, decimals, userBalance },
             {
@@ -123,13 +122,22 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasToken = OKLGFaaSToken(web3, farmingAddy);
+    const faasToken_V1 = OKLGFaaSToken_V1(web3, farmingAddy);
+
+    // TODO: get rid of this when V1 is no longer applicable
+    let stakerInfo;
+    try {
+      stakerInfo = await faasToken.methods.stakers(userAddy).call();
+    } catch (err) {
+      stakerInfo = await faasToken_V1.methods.stakers(userAddy).call();
+    }
+
     const [
       userStakingAmount,
       stakingContract,
       rewardsContract,
       poolInfo,
       contractIsRemoved,
-      stakerInfo,
       lastBlock,
       currentBlock,
     ] = await Promise.all([
@@ -138,7 +146,6 @@ export default {
       faasToken.methods.rewardsTokenAddress().call(),
       faasToken.methods.pool().call(),
       faasToken.methods.contractIsRemoved().call(),
-      faasToken.methods.stakers(userAddy).call(),
       faasToken.methods.getLastStakableBlock().call(),
       web3.eth.getBlockNumber(),
     ]);
