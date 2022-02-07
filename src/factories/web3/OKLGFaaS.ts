@@ -10,12 +10,12 @@ const mtgyFaasAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "_mtgyAddress",
+        name: "_tokenAddress",
         type: "address",
       },
       {
         internalType: "address",
-        name: "_mtgySpendAddress",
+        name: "_spendAddress",
         type: "address",
       },
     ],
@@ -63,19 +63,6 @@ const mtgyFaasAbi: AbiItem[] = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "newCost",
-        type: "uint256",
-      },
-    ],
-    name: "changeServiceCost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "_rewardsTokenAddy",
         type: "address",
@@ -113,7 +100,7 @@ const mtgyFaasAbi: AbiItem[] = [
     ],
     name: "createNewTokenContract",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -124,6 +111,32 @@ const mtgyFaasAbi: AbiItem[] = [
         internalType: "address[]",
         name: "",
         type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getSpendAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getTokenAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -150,12 +163,12 @@ const mtgyFaasAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "mtgyServiceCost",
+    name: "owner",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "address",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -163,12 +176,12 @@ const mtgyFaasAbi: AbiItem[] = [
   },
   {
     inputs: [],
-    name: "owner",
+    name: "productID",
     outputs: [
       {
-        internalType: "address",
+        internalType: "uint8",
         name: "",
-        type: "address",
+        type: "uint8",
       },
     ],
     stateMutability: "view",
@@ -190,6 +203,45 @@ const mtgyFaasAbi: AbiItem[] = [
   {
     inputs: [],
     name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "_newId",
+        type: "uint8",
+      },
+    ],
+    name: "setProductID",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_spendAddy",
+        type: "address",
+      },
+    ],
+    name: "setSpendAddy",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenAddy",
+        type: "address",
+      },
+    ],
+    name: "setTokenAddy",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -240,6 +292,31 @@ const mtgyFaasAbi: AbiItem[] = [
       },
     ],
     name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdrawETH",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenAddy",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawTokens",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

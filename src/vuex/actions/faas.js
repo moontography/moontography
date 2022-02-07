@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
 import OKLGFaaS from "../../factories/web3/OKLGFaaS";
 import OKLGFaaSToken from "../../factories/web3/OKLGFaaSToken";
+import OKLGFaaSToken_V1 from "../../factories/web3/OKLGFaaSToken_V1";
 
 export default {
   async getFaasPoolCreationCost({ commit, dispatch, getters, state }) {
@@ -20,29 +21,46 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasAddy = getters.activeNetwork.contracts.faas;
+    const faasAddyV1 = getters.activeNetwork.contracts.faas_V1;
     const selectedTokenAddress = state.selectedAddressInfo.address;
 
     let tokenAddresses;
     const contract = OKLGFaaS(web3, faasAddy);
+    let contractV1 = faasAddyV1 && OKLGFaaS(web3, faasAddyV1);
     if (selectedTokenAddress && web3.utils.isAddress(selectedTokenAddress)) {
       tokenAddresses = await contract.methods
         .getTokensForStaking(selectedTokenAddress)
         .call();
     } else {
       tokenAddresses = await contract.methods.getAllFarmingContracts().call();
+
+      // TODO: get rid of this when V1 is no longer applicable
+      if (contractV1) {
+        tokenAddresses = tokenAddresses.concat(
+          await contractV1.methods.getAllFarmingContracts().call()
+        );
+      }
     }
 
     const stakingContracts = await Promise.all(
       tokenAddresses.map(async (farmingTokenAddy) => {
         try {
           const farmingCont = OKLGFaaSToken(web3, farmingTokenAddy);
+          const farmingCont_V1 = OKLGFaaSToken_V1(web3, farmingTokenAddy);
+
+          // TODO: get rid of this when V1 is no longer applicable
+          let stakerInfo;
+          try {
+            stakerInfo = await farmingCont.methods.stakers(userAddy).call();
+          } catch (err) {
+            stakerInfo = await farmingCont_V1.methods.stakers(userAddy).call();
+          }
           const [
             tokenAddy,
             rewardAddy,
             lastStakableBlock,
             poolInfo,
             contractIsRemoved,
-            stakerInfo,
             farmingInfo,
           ] = await Promise.all([
             farmingCont.methods.stakedTokenAddress().call(),
@@ -50,7 +68,6 @@ export default {
             farmingCont.methods.getLastStakableBlock().call(),
             farmingCont.methods.pool().call(),
             farmingCont.methods.contractIsRemoved().call(),
-            farmingCont.methods.stakers(userAddy).call(),
             dispatch("getErc20TokenInfo", farmingTokenAddy),
           ]);
           const [
@@ -105,13 +122,22 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasToken = OKLGFaaSToken(web3, farmingAddy);
+    const faasToken_V1 = OKLGFaaSToken_V1(web3, farmingAddy);
+
+    // TODO: get rid of this when V1 is no longer applicable
+    let stakerInfo;
+    try {
+      stakerInfo = await faasToken.methods.stakers(userAddy).call();
+    } catch (err) {
+      stakerInfo = await faasToken_V1.methods.stakers(userAddy).call();
+    }
+
     const [
       userStakingAmount,
       stakingContract,
       rewardsContract,
       poolInfo,
       contractIsRemoved,
-      stakerInfo,
       lastBlock,
       currentBlock,
     ] = await Promise.all([
@@ -120,7 +146,6 @@ export default {
       faasToken.methods.rewardsTokenAddress().call(),
       faasToken.methods.pool().call(),
       faasToken.methods.contractIsRemoved().call(),
-      faasToken.methods.stakers(userAddy).call(),
       faasToken.methods.getLastStakableBlock().call(),
       web3.eth.getBlockNumber(),
     ]);

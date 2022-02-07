@@ -98,7 +98,7 @@ export default {
           passwordManager: "0xcC3c31a1FE9801A53604CD17c2b27fD68CABa528",
           raffler: "0xc8238E9f4c81e9B3fCCd2c5D7D93AeE9e147Fdf4",
           trustedTimestamping: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
-          faas: "0x657bBa69DB9bf06D5BB2D0403867b41c08181630",
+          faas: "0x096A223d3B20bD3D1611803D06D18513c1B30EfB",
         },
       },
       {
@@ -127,7 +127,7 @@ export default {
           passwordManager: "0xcC3c31a1FE9801A53604CD17c2b27fD68CABa528",
           raffler: "0xc8238E9f4c81e9B3fCCd2c5D7D93AeE9e147Fdf4",
           trustedTimestamping: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
-          faas: "0x657bBa69DB9bf06D5BB2D0403867b41c08181630",
+          faas: "0x47BCC8De66D2607D70f70A5d313caa98dF06B16c",
         },
       },
       {
@@ -157,7 +157,8 @@ export default {
           passwordManager: "0x31FE24955A0de9c5a9818DAA8d7A614eFEdb5F34",
           raffler: "0x0525a5A67820af53066713BfC5c368BD2C8A570e",
           trustedTimestamping: "0xBa63F51f7Be4022dd7BfF997BC3245c5F651B381",
-          faas: "0x701666359E71b38d61C7faD2A121D7e6A6F1fFff",
+          faas: "0x717EDe6051acf094Ff043E2B3BcC4F86262742DD",
+          faas_V1: "0x701666359E71b38d61C7faD2A121D7e6A6F1fFff",
         },
         buy: {
           link:
@@ -192,7 +193,8 @@ export default {
           passwordManager: "0x026132e2104ED39d9767334648052A731D0d483E",
           raffler: "0xBcA35f4b6343194c03C04c9340bAFD3de3E0284c",
           trustedTimestamping: "0xf02bc60b34A0656D35d7D57Bf9B535E945c4F1a9",
-          faas: "0x521C1A07dB23cEEF2126EBf1924E31D55284918D",
+          faas: "0x7c2de66461Ba16839A5FeB5acC22a995036c3971",
+          faas_V1: "0x521C1A07dB23cEEF2126EBf1924E31D55284918D",
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
@@ -230,7 +232,7 @@ export default {
           passwordManager: "0xc8238E9f4c81e9B3fCCd2c5D7D93AeE9e147Fdf4",
           raffler: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
           trustedTimestamping: "0x657bBa69DB9bf06D5BB2D0403867b41c08181630",
-          faas: "0xA4d1EE16A0B80372735C9d80C8b1C7217B61F0D1",
+          faas: "0x3519a0EA62C2D75FF7b2fe39cDe791944DB3a0A5",
         },
       },
       // {
@@ -294,7 +296,7 @@ export default {
           passwordManager: "0xc8238E9f4c81e9B3fCCd2c5D7D93AeE9e147Fdf4",
           raffler: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
           trustedTimestamping: "0x657bBa69DB9bf06D5BB2D0403867b41c08181630",
-          faas: "0x55E8b37a3c43B049deDf56C77f462Db095108651",
+          faas: "0x23fe04798a2b84a40ba316060e174498af143607",
         },
         // buy: {
         //   link: "https://koffeeswap.exchange/#/pro",
@@ -398,7 +400,7 @@ export default {
       //     passwordManager: "0x9a3399389a16547a2F5D407dE8428b81bFcd5E92",
       //     raffler: "0x4b0ABa75B46401018508b04a555aFCae15ea153E",
       //     trustedTimestamping: "0xC56cE130d777Ab65af4D037853508b461AAc357f",
-      //     faas: "0x5dad5Dd02a386F26257F9A6b6319c6A1AfdDD251",
+      //     faas: "0x45C4eD32D095cDAf76734Ee41c34d5e2FA4A6b84",
       //     kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
       //     ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
       //     ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",
