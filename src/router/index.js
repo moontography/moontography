@@ -23,6 +23,7 @@ import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeade
 import ComingSoon from "../views/components/ComingSoon.vue";
 import Dashboard from "../views/dashboards/dashboard/Dashboard.vue";
 import Airdropper from "../views/dashboards/Airdropper/Airdropper.vue";
+import BuybotLayout from "../views/layout/BuybotLayout.vue";
 import Buybot from "../views/dashboards/Buybot/Buybot.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
@@ -111,7 +112,14 @@ const routes = [
       {
         path: "buybot",
         name: "Buybot",
-        components: { default: Buybot, header: BuybotHeader },
+        components: { default: BuybotLayout, header: BuybotHeader },
+        children: [
+          {
+            path: "",
+            name: "Buybot",
+            component: Buybot,
+          },
+        ],
       },
       {
         path: "passwords",

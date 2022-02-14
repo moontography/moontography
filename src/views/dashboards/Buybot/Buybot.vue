@@ -29,24 +29,26 @@
 
           .row
             .col-lg-12
-              div.pt-3(v-if="!buybots || buybots.length === 0")
+              div.pt-3(v-if="!allBuybots || allBuybots.length === 0")
                 i
                   | No buybots configured yet.
               div.table-full-width.table-responsive.pb-0(v-else)
-                //- n-table.mb-0(
-                //-   :columns="columns"
-                //-   :data='buybots')
-                //-     template(v-slot:columns)
-                //-     template(v-slot:default='row')
-                //-       staking-tokens-list-row(
-                //-         :row="row"
-                //-         @harvested="lookUpTokenStakingContracts")
+                n-table.mb-0(
+                  :columns="columns"
+                  :data='allBuybots')
+                    template(v-slot:columns)
+                    template(v-slot:default='row')
+                      td {{ row.item.token }}
+                      td {{ row.item.client }}
+                      td ${{ row.item.minThresholdUsd }} USD buys
+                      td {{ expirationFormatted(row.item.expiration) }}
 
-create-buybot-modal#create-buybot-modal
+create-buybot-modal#create-buybot-modal(@setup="$store.dispatch('buybotInit')")
 </template>
 
 <script>
 // import BigNumber from "bignumber.js";
+import dayjs from "dayjs";
 import { mapState } from "vuex";
 import CreateBuybotModal from "./CreateBuybotModal";
 
@@ -59,7 +61,17 @@ export default {
     return {
       localError: null,
       tokenInfo: null,
-      buybots: [],
+
+      columns: [
+        { value: "token", text: "Token", classes: "" },
+        { value: "client", text: "Message Client", classes: "" },
+        {
+          value: "minThresholdUsd",
+          text: "Buy Threshold ($)",
+          classes: "",
+        },
+        { value: "expiration", text: "Expiration", classes: "" },
+      ],
     };
   },
 
@@ -68,22 +80,16 @@ export default {
       activeNetwork: (_, getters) => getters.activeNetwork || {},
       globalLoading: (state) => state.globalLoading,
       nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
-      // web3: (state) => state.web3.instance,
+      allBuybots: (state) => state.buybot.bots,
     }),
-
-    // totalAmountToSend() {
-    //   const total = this.addresses.reduce(
-    //     (total, info) => new BigNumber(total).plus(info.tokens || 0),
-    //     new BigNumber(0)
-    //   );
-    //   return total.toFormat(6);
-    // },
   },
 
-  methods: {},
-
-  async created() {
-    // await this.$store.dispatch("getAirdropperCost");
+  methods: {
+    expirationFormatted(expiration) {
+      return (
+        expiration && dayjs.unix(expiration).format("MMM Do, YYYY hh:mm a")
+      );
+    },
   },
 };
 </script>

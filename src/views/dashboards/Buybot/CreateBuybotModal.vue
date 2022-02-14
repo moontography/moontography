@@ -20,74 +20,64 @@
               token-input-standalone.mb-4(
                 v-model="tokenInfo"
                 :btn-text="`Token Contract Address on ${activeNetwork.name}`")
-              //- div.text-left
-              //-   label Number of tokens for your swap contract to hold:
-              //- fg-input(
-              //-   type="number"
-              //-   placeholder="Number of tokens for your bridge to hold"
-              //-   v-model="numberTokens")
-              
-              //- card
-              //-   checkbox.mb-3(
-              //-     v-model="createdFirstAlready"
-              //-     @update:modelValue="getTargetTokenInfo")
-              //-       | Have you already created the first swap contract?
-              //-   div(v-if="createdFirstAlready")
-              //-     fg-input.mb-2(
-              //-       type="text"
-              //-       placeholder="First swap contract"
-              //-       v-model="contractAddress"
-              //-       @update:modelValue="getTargetTokenInfo")
-              //-     fg-input.mb-2(
-              //-       type="number"
-              //-       placeholder="First swap unique identifier"
-              //-       v-model="timestamp")
-              //-     div.text-left(v-if="targetTokenInfo")
-              //-       div #[strong Token Contract:] {{ targetTokenInfo.targetTokenAddress }}
-              //-       div #[strong Token:] {{ targetTokenInfo.targetTokenName }} ({{ targetTokenInfo.targetTokenSymbol }})
-              //-       div #[strong Decimals:] {{ targetTokenInfo.targetTokenDecimals }}
 
-              //- div
-              //-   div.text-danger
-              //-     | You will spend #[strong {{ createSwapCost }} {{ nativeCurrencySymbol }}] on both sides to create your atomic swap bridge.
-              //-   n-button(
-              //-     type="success"
-              //-     size="lg"
-              //-     v-loading="globalLoading"
-              //-     :disabled="loadingOrNotValidated"
-              //-     @click="createSwap") Create {{ tokenInfo && tokenInfo.symbol || 'Token' }} Swap
+              template(v-if="tokenInfo && tokenInfo.address")
+                div.text-left
+                  label.mb-0 Message Client
+                  div.mb-3
+                    strong Telegram
+                div.text-left
+                  label Telegram Channel
+                  fg-input.mb-2(
+                    type="text"
+                    placeholder="Telegram Channel"
+                    v-model="telegramChannelLink"
+                    @update:modelValue="getTelegramChannelId")
+                  div.mb-4(v-if="telegramChannelId")
+                    | Channel ID: #[strong {{ telegramChannelId }}]
+                div.text-left
+                  label Minimum Buy to Show (USD)
+                  fg-input.mb-2(
+                    type="text"
+                    placeholder="Minimum Amount Spent on Buy to Show (USD)"
+                    v-model="minThresholdUsd")
+                div.text-left
+                  label When should this configuration expire?
+                  el-date-picker(
+                    type='datetime'
+                    placeholder='Expiration'
+                    v-model='expiration')
 
-              //- div.mt-3(v-if="contractAddress")
-              //-   div.alert.alert-danger.text-center
-              //-     h4.m-0 Attention: Write Down the Following Info
-              //-     div.mb-4
-              //-       | Your atomic swap contract was created successfully! You will need to copy the following in order
-              //-       | to link your atomic swap contracts together.
-              //-     div.mb-4
-              //-       | After you write these down, switch networks to the target network where you will
-              //-       | create the final swap contract.
-              //-     div Contract address: #[strong {{ contractAddress }}]
-              //-     div Unique identifier: #[strong {{ timestamp }}]
+                div
+                  //- div.text-danger
+                  //-   | You will spend #[strong {{ createSwapCost }} {{ nativeCurrencySymbol }}] on both sides to create your atomic swap bridge.
+                  n-button(
+                    type="success"
+                    size="lg"
+                    v-loading="globalLoading"
+                    :disabled="globalLoading"
+                    @click="setupBuybot") Configure Buybot!
 </template>
 
 <script>
 import $ from "jquery";
-// import dayjs from "dayjs";
+import dayjs from "dayjs";
 // import BigNumber from "bignumber.js";
 import { mapState } from "vuex";
+import Buybot from "../../../factories/Buybot";
 export default {
   name: "CreateBuybotModal",
 
-  props: {
-    // farmAddress: { type: String, default: null },
-  },
-
-  // emits: ["staked"],
+  emits: ["setup"],
 
   data() {
     return {
       isLoadingLocal: false,
       tokenInfo: null,
+      minThresholdUsd: 25,
+      telegramChannelLink: "",
+      telegramChannelId: "",
+      expiration: dayjs().add(3, "months").toDate(),
     };
   },
 
@@ -106,9 +96,33 @@ export default {
   },
 
   methods: {
-    async createSwap() {
+    async getTelegramChannelId() {
+      if (this.telegramChannelLink) {
+        const channelId = await Buybot.getTelegramChannelId(
+          this.telegramChannelLink
+        );
+        this.telegramChannelId = channelId.toString();
+      }
+    },
+
+    async setupBuybot() {
       try {
-        // $(`#${this.$el.id}`).modal("hide");
+        if (!(this.tokenInfo.address && this.telegramChannelId)) {
+          return this.$toast.error(
+            `Please ensure all fields are filled out to configure your buybot.`
+          );
+        }
+        await this.$store.dispatch("setupBuybot", {
+          token: this.tokenInfo.address,
+          client: "telegram",
+          channel: this.telegramChannelId,
+          isPaid: true,
+          minThresholdUsd: this.minThresholdUsd,
+          referrer: null,
+          expiration: this.expiration,
+        });
+        this.$emit("setup");
+        $(`#${this.$el.id}`).modal("hide");
       } catch (err) {
         console.error("Error creating swap", err);
         this.$toast.error(err.message);
@@ -132,3 +146,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.el-picker__popper {
+  z-index: 10001 !important;
+}
+</style>

@@ -41,7 +41,7 @@
     "vue-chartjs": "3.5.1",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "4.0.1",
-    "vue-toastification": "^2.0.0-rc.1",
+    "vue-toastification": "2.0.0-rc.1",
     "vuex": "^4.0.1",
     "web3": "^1.5.3",
     "web3modal": "^1.9.3",
