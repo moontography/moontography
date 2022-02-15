@@ -9,6 +9,7 @@ import GlobalLoader from "../views/layout/GlobalLoader";
 // import DefaultHeader from "../views/headers/DefaultHeader";
 import AsaasHeader from "../views/headers/AsaasHeader";
 import AirdropperHeader from "../views/headers/AirdropperHeader";
+import BuybotHeader from "../views/headers/BuybotHeader.vue";
 import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import DtaxHeader from "../views/headers/DtaxHeader";
 import FaasHeader from "../views/headers/FaasHeader";
@@ -22,6 +23,8 @@ import TrustedTimestampingHeader from "../views/headers/TrustedTimestampingHeade
 import ComingSoon from "../views/components/ComingSoon.vue";
 import Dashboard from "../views/dashboards/dashboard/Dashboard.vue";
 import Airdropper from "../views/dashboards/Airdropper/Airdropper.vue";
+import BuybotLayout from "../views/layout/BuybotLayout.vue";
+import Buybot from "../views/dashboards/Buybot/Buybot.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
 import FaasOwner from "../views/dashboards/Faas/FaasOwner.vue";
 import FaasStaker from "../views/dashboards/Faas/FaasStaker.vue";
@@ -105,6 +108,18 @@ const routes = [
         path: "airdropper",
         name: "Airdropper",
         components: { default: Airdropper, header: AirdropperHeader },
+      },
+      {
+        path: "buybot",
+        name: "Buybot",
+        components: { default: BuybotLayout, header: BuybotHeader },
+        children: [
+          {
+            path: "",
+            name: "Buybot",
+            component: Buybot,
+          },
+        ],
       },
       {
         path: "passwords",

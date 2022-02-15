@@ -1,5 +1,6 @@
 import airdropper from "./airdropper";
 import asaas from "./asaas";
+import buybot from "./buybot";
 import faas from "./faas";
 import kether from "./kether";
 import passwordManager from "./passwordManager";
@@ -9,6 +10,7 @@ import trustedTimestamping from "./trustedTimestamping";
 export default {
   ...airdropper,
   ...asaas,
+  ...buybot,
   ...faas,
   ...kether,
   ...passwordManager,
@@ -99,6 +101,7 @@ export default {
           raffler: "0xc8238E9f4c81e9B3fCCd2c5D7D93AeE9e147Fdf4",
           trustedTimestamping: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
           faas: "0x096A223d3B20bD3D1611803D06D18513c1B30EfB",
+          buybot: "",
         },
       },
       {
@@ -128,6 +131,7 @@ export default {
           raffler: "0xc8238E9f4c81e9B3fCCd2c5D7D93AeE9e147Fdf4",
           trustedTimestamping: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
           faas: "0x47BCC8De66D2607D70f70A5d313caa98dF06B16c",
+          buybot: "",
         },
       },
       {
@@ -159,6 +163,7 @@ export default {
           trustedTimestamping: "0xBa63F51f7Be4022dd7BfF997BC3245c5F651B381",
           faas: "0x717EDe6051acf094Ff043E2B3BcC4F86262742DD",
           faas_V1: "0x701666359E71b38d61C7faD2A121D7e6A6F1fFff",
+          buybot: "0x47ee809b198860A745b15d51d4bfF9275FFBE26f",
         },
         buy: {
           link:
@@ -195,6 +200,7 @@ export default {
           trustedTimestamping: "0xf02bc60b34A0656D35d7D57Bf9B535E945c4F1a9",
           faas: "0x7c2de66461Ba16839A5FeB5acC22a995036c3971",
           faas_V1: "0x521C1A07dB23cEEF2126EBf1924E31D55284918D",
+          buybot: "0x0B13eFAC80eF909c6797D80caFBA63cfC6251d54",
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
@@ -233,6 +239,7 @@ export default {
           raffler: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
           trustedTimestamping: "0x657bBa69DB9bf06D5BB2D0403867b41c08181630",
           faas: "0x3519a0EA62C2D75FF7b2fe39cDe791944DB3a0A5",
+          buybot: "",
         },
       },
       // {
@@ -297,6 +304,7 @@ export default {
           raffler: "0xCb9c8e2F24Fe6C738342eFd30d0d3c4fF31a0613",
           trustedTimestamping: "0x657bBa69DB9bf06D5BB2D0403867b41c08181630",
           faas: "0x23fe04798a2b84a40ba316060e174498af143607",
+          buybot: "",
         },
         // buy: {
         //   link: "https://koffeeswap.exchange/#/pro",

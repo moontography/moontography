@@ -28,7 +28,12 @@ export default {
       walletconnect: {
         package: WalletConnectProvider,
         options: {
-          infuraId: "ecfafabdcff44308ac6a993e5225b790",
+          custom: {
+            "1":
+              "https://eth.getblock.io/mainnet/?api_key=ff48b009-d727-453f-b36c-e53c2a015053",
+            "56":
+              "https://bsc.getblock.io/mainnet/?api_key=ff48b009-d727-453f-b36c-e53c2a015053",
+          },
         },
       },
     };
