@@ -51,13 +51,12 @@
                           rel="noopener noreferrer")
                             | {{ row.item.channelInfo.title }}
                       td ${{ row.item.minThresholdUsd }} minimum buys
-                      td {{ expirationFormatted(row.item.expiration) }}
+                      td(:class="expirationClass(row.item.expiration)") {{ expirationFormatted(row.item.expiration) }}
 
 create-buybot-modal#create-buybot-modal(@setup="$store.dispatch('buybotInit')")
 </template>
 
 <script>
-// import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import { mapState } from "vuex";
 import CreateBuybotModal from "./CreateBuybotModal";
@@ -95,6 +94,12 @@ export default {
   },
 
   methods: {
+    expirationClass(expiration) {
+      if (!expiration) return "";
+      const daysFromNow = dayjs.unix(expiration).diff(dayjs(), "days");
+      return daysFromNow < 14 ? "text-danger" : "text-success";
+    },
+
     expirationFormatted(expiration) {
       return (
         expiration && dayjs.unix(expiration).format("MMM Do, YYYY hh:mm a")

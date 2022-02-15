@@ -23,12 +23,15 @@
                 :btn-text="`Token Contract Address on ${activeNetwork.name}`")
 
               template(v-if="tokenInfo && tokenInfo.address")
+                h5.mb-4.text-center.text-warning
+                  | You'll need to add bot #[code https://t.me/oklg_buybot] as a member of your
+                  | telegram channel with post privledges for the bot to post buys.
                 div.text-left
                   label.mb-0 Message Client
                   div.mb-3
                     strong Telegram
                 div.text-left
-                  label Telegram Channel to post buys to!
+                  label Telegram channel to post buys to (ex. #[code https://t.me/ok_lg])
                   fg-input.mb-2(
                     type="text"
                     placeholder="Telegram Channel"
