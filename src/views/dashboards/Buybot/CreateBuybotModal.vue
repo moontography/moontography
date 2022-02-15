@@ -10,13 +10,14 @@
         .modal-header.border-bottom.pb-3
           h3.modal-title.d-flex.align-items-center
             | #[i.now-ui-icons.users_circle-08.mr-2]
-            | Create Buybot
+            | Create Buybot on {{ activeNetwork.short_name.toUpperCase() }}
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             span(aria-hidden='true') &times;
         .modal-body
           loading-panel(v-if="isLoadingLocal")
           div.text-center(v-else)
-            div
+            div.text-left
+              label.mb-0 {{ activeNetwork.short_name.toUpperCase() }} token contract to create buybot for:
               token-input-standalone.mb-4(
                 v-model="tokenInfo"
                 :btn-text="`Token Contract Address on ${activeNetwork.name}`")
@@ -27,7 +28,7 @@
                   div.mb-3
                     strong Telegram
                 div.text-left
-                  label Telegram Channel
+                  label Telegram Channel to post buys to!
                   fg-input.mb-2(
                     type="text"
                     placeholder="Telegram Channel"
@@ -36,21 +37,27 @@
                   div.mb-4(v-if="telegramChannelId")
                     | Channel ID: #[strong {{ telegramChannelId }}]
                 div.text-left
-                  label Minimum Buy to Show (USD)
+                  label Minimum buy amount to show in channel (USD $)
                   fg-input.mb-2(
                     type="text"
                     placeholder="Minimum Amount Spent on Buy to Show (USD)"
                     v-model="minThresholdUsd")
                 div.text-left
-                  label When should this configuration expire?
+                  label When should your buybot expire?
                   el-date-picker(
                     type='datetime'
                     placeholder='Expiration'
                     v-model='expiration')
+                div.text-left.mt-3
+                  label Referrer (optional, if an affiliate recommended this service, enter their address here)
+                  fg-input.mb-2(
+                    type="text"
+                    placeholder="Referrer"
+                    v-model="referrer")
 
-                div
-                  //- div.text-danger
-                  //-   | You will spend #[strong {{ createSwapCost }} {{ nativeCurrencySymbol }}] on both sides to create your atomic swap bridge.
+                div.text-center
+                  div.text-danger.my-3
+                    | You will spend #[strong ${{ dailyBuybotCost }} USD per day] for your buybot to run in your telegram group of choice.
                   n-button(
                     type="success"
                     size="lg"
@@ -77,31 +84,28 @@ export default {
       minThresholdUsd: 25,
       telegramChannelLink: "",
       telegramChannelId: "",
-      expiration: dayjs().add(3, "months").toDate(),
+      expiration: dayjs().add(6, "months").toDate(),
+      referrer: null,
     };
   },
 
   computed: {
     ...mapState({
       activeNetwork: (_, getters) => getters.activeNetwork || {},
-      createSwapCost: (state) => state.asaas.createSwapCost,
       globalLoading: (state) => state.globalLoading,
-      mtgyServiceCost: (state) => state.asaas.cost,
-      nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
-      gasRequirement: (state) => state.asaas.gas,
-      web3: (state) => state.web3.instance,
-      userAddress: (state) => state.web3.address,
-      zeroAddy: (state) => state.zeroAddy,
+      // nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
+      // userAddress: (state) => state.web3.address,
+      dailyBuybotCost: (state) => state.buybot.dailyCost,
     }),
   },
 
   methods: {
     async getTelegramChannelId() {
       if (this.telegramChannelLink) {
-        const channelId = await Buybot.getTelegramChannelId(
+        const channel = await Buybot.getTelegramChannelId(
           this.telegramChannelLink
         );
-        this.telegramChannelId = channelId.toString();
+        this.telegramChannelId = channel.id.toString();
       }
     },
 
@@ -118,7 +122,7 @@ export default {
           channel: this.telegramChannelId,
           isPaid: true,
           minThresholdUsd: this.minThresholdUsd,
-          referrer: null,
+          referrer: this.referrer,
           expiration: this.expiration,
         });
         this.$emit("setup");

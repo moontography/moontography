@@ -1,9 +1,10 @@
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import OKLGBuybot from "@/factories/web3/OKLGBuybot";
+import BuybotFactory from "@/factories/Buybot";
 
 export default {
-  async buybotInit({ commit, getters, state }) {
+  async buybotInit({ commit, dispatch, getters, state }) {
     const web3 = state.web3.instance;
     const productContract = getters.activeNetwork.contracts.buybot;
     const contract = OKLGBuybot(web3, productContract);
@@ -14,7 +15,20 @@ export default {
     ]);
     const allBotConfigs = await Promise.all(
       allBuybotIds.map(async (botId) => {
-        return await contract.methods.buybotConfigs(botId).call();
+        try {
+          const botConf = await contract.methods.buybotConfigs(botId).call();
+          const [tokenInfo, channelInfo] = await Promise.all([
+            dispatch("getErc20TokenInfo", botConf.token),
+            BuybotFactory.getTelegramChannelId(botConf.channel),
+          ]);
+          return {
+            ...botConf,
+            tokenInfo,
+            channelInfo,
+          };
+        } catch (err) {
+          return false;
+        }
       })
     );
     commit("SET_BUYBOT_DAILY_COST", dailyCostUSD);

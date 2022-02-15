@@ -200,7 +200,7 @@ export default {
           trustedTimestamping: "0xf02bc60b34A0656D35d7D57Bf9B535E945c4F1a9",
           faas: "0x7c2de66461Ba16839A5FeB5acC22a995036c3971",
           faas_V1: "0x521C1A07dB23cEEF2126EBf1924E31D55284918D",
-          buybot: "",
+          buybot: "0x0B13eFAC80eF909c6797D80caFBA63cfC6251d54",
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",

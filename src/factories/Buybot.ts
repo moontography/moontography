@@ -3,7 +3,7 @@ import axios from "axios";
 export default {
   client: axios.create({
     // baseURL: process.env.BUYBOT_ENDPOINT || `https://buybot.oklg.io`,
-    baseURL: `http://localhost:8000`,
+    baseURL: `https://buybot.oklg.io`,
   }),
 
   async getTelegramChannelId(channel: string) {

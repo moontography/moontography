@@ -19,7 +19,7 @@
             div
               div.d-flex.align-items-center
                 h4.card-title.mb-0
-                  | Buybot
+                  | Buybot 🟢 🟢 🟢 🟢
               div.text-secondary
                 small The token you are interested in for a buy bot!
           token-input-standalone(
@@ -38,9 +38,19 @@
                   :data='allBuybots')
                     template(v-slot:columns)
                     template(v-slot:default='row')
-                      td {{ row.item.token }}
-                      td {{ row.item.client }}
-                      td ${{ row.item.minThresholdUsd }} USD buys
+                      td
+                        a(
+                          :href="`${activeNetwork.explorer_url}/address/${row.item.token}`"
+                          target="_blank"
+                          rel="noopener noreferrer")
+                            | {{ row.item.tokenInfo.symbol }} ({{ row.item.tokenInfo.name }})
+                      td
+                        a(
+                          :href="`https://t.me/${row.item.channelInfo.username}`"
+                          target="_blank"
+                          rel="noopener noreferrer")
+                            | {{ row.item.channelInfo.title }}
+                      td ${{ row.item.minThresholdUsd }} minimum buys
                       td {{ expirationFormatted(row.item.expiration) }}
 
 create-buybot-modal#create-buybot-modal(@setup="$store.dispatch('buybotInit')")
@@ -64,7 +74,7 @@ export default {
 
       columns: [
         { value: "token", text: "Token", classes: "" },
-        { value: "client", text: "Message Client", classes: "" },
+        { value: "channel", text: "Telegram Channel", classes: "" },
         {
           value: "minThresholdUsd",
           text: "Buy Threshold ($)",
