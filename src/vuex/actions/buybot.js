@@ -45,7 +45,7 @@ export default {
     const contract = OKLGBuybot(web3, productContract);
 
     // calculate value to send based on desired expiration
-    let txnValue = "0";
+    let txnValue = "1";
     if (isPaid) {
       const perDayBaseUSD = state.buybot.dailyCost;
       const [
