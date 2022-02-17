@@ -79,7 +79,7 @@ export default {
       const isCostRemoved = await contract.methods.removeCost(userAddy).call();
 
       if (!isCostRemoved) {
-        txnValue = dispatch("getCostWeiForBuybotFromExpiration", {
+        txnValue = await dispatch("getCostWeiForBuybotFromExpiration", {
           expiration,
         });
       }
