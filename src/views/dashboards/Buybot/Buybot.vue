@@ -5,14 +5,6 @@
       | {{ localError.message }}
   .col-md-8.mx-auto(v-else)
     .row.mb-2
-      .col-lg-12.d-flex.justify-content-center
-        n-button(
-          :disabled="globalLoading"
-          v-loading="globalLoading"
-          type='primary'
-          round=''
-          data-toggle="modal"
-          data-target="#create-buybot-modal") Add Buybot for your Token
       .col-lg-12
         card
           template(v-slot:header='')
@@ -20,12 +12,20 @@
               div.d-flex.align-items-center
                 h4.card-title.mb-0
                   | Buybot 🟢 🟢 🟢 🟢
-              div.text-secondary
-                small The token you are interested in for a buy bot!
-          token-input-standalone(
-            v-model="tokenInfo"
-            btn-size="sm"
-            btn-text="Find buybots for token contract")
+                div.ml-auto
+                  n-button(
+                    :disabled="globalLoading"
+                    v-loading="globalLoading"
+                    type='success'
+                    round=''
+                    data-toggle="modal"
+                    data-target="#create-buybot-modal") Create Buybot Now!
+          //-     div.text-secondary
+          //-       small The token you are interested in for a buy bot!
+          //- token-input-standalone(
+          //-   v-model="tokenInfo"
+          //-   btn-size="sm"
+          //-   btn-text="Find buybots for token contract")
 
           .row
             .col-lg-12

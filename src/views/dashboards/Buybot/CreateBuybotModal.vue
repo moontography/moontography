@@ -23,8 +23,8 @@
                 :btn-text="`Token Contract Address on ${activeNetwork.name}`")
 
               card.border
-                h5.text-center
-                  | Be sure to add bot #[code https://t.me/oklg_buybot] to your
+                h5.text-center.mb-0
+                  | You'll need to add bot #[code https://t.me/oklg_buybot] to your
                   | telegram channel with messaging privledges for new buys to show up.
               div.text-left
                 label.mb-0 Message Client
