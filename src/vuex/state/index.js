@@ -163,7 +163,7 @@ export default {
           trustedTimestamping: "0xBa63F51f7Be4022dd7BfF997BC3245c5F651B381",
           faas: "0x717EDe6051acf094Ff043E2B3BcC4F86262742DD",
           faas_V1: "0x701666359E71b38d61C7faD2A121D7e6A6F1fFff",
-          buybot: "0x47ee809b198860A745b15d51d4bfF9275FFBE26f",
+          buybot: "0x22f373179F7182FD8B90E4F0B35D91966deabAFC",
         },
         buy: {
           link:
@@ -200,7 +200,7 @@ export default {
           trustedTimestamping: "0xf02bc60b34A0656D35d7D57Bf9B535E945c4F1a9",
           faas: "0x7c2de66461Ba16839A5FeB5acC22a995036c3971",
           faas_V1: "0x521C1A07dB23cEEF2126EBf1924E31D55284918D",
-          buybot: "0x0B13eFAC80eF909c6797D80caFBA63cfC6251d54",
+          buybot: "0xF25B1e14F81BAcAc811A0e8F49cD8994AFC81012",
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",

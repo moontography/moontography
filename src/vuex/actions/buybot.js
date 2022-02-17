@@ -35,6 +35,35 @@ export default {
     commit("SET_BUYBOT_BOTS", allBotConfigs);
   },
 
+  async getCostWeiForBuybotFromExpiration({ getters, state }, { expiration }) {
+    const web3 = state.web3.instance;
+    const productContract = getters.activeNetwork.contracts.buybot;
+    const userAddy = state.web3.address;
+    const contract = OKLGBuybot(web3, productContract);
+    const perDayBaseUSD = state.buybot.dailyCost;
+
+    const [overridePricePerDay, ethPriceUSD18] = await Promise.all([
+      contract.methods.overridePricePerDayUSD(userAddy).call(),
+      contract.methods.getLatestETHPrice().call(),
+    ]);
+
+    const finalCostPerDayUSD = new BigNumber(overridePricePerDay).gt(0)
+      ? overridePricePerDay
+      : perDayBaseUSD;
+    const secondsOfService = new BigNumber(
+      dayjs(expiration).diff(dayjs(), "seconds")
+    );
+    return new BigNumber(finalCostPerDayUSD)
+      .times(new BigNumber(10).pow(18))
+      .div(ethPriceUSD18)
+      .times(secondsOfService)
+      .div(60)
+      .div(60)
+      .div(24)
+      .times(new BigNumber(10).pow(18))
+      .toFixed(0);
+  },
+
   async setupBuybot(
     { dispatch, getters, state },
     { token, client, channel, isPaid, minThresholdUsd, referrer, expiration }
@@ -45,40 +74,22 @@ export default {
     const contract = OKLGBuybot(web3, productContract);
 
     // calculate value to send based on desired expiration
-    let txnValue = "1";
+    let txnValue = "0";
     if (isPaid) {
-      const perDayBaseUSD = state.buybot.dailyCost;
-      const [
-        overridePricePerDay,
-        isCostRemoved,
-        ethPriceUSD18,
-      ] = await Promise.all([
-        contract.methods.overridePricePerDayUSD(userAddy).call(),
-        contract.methods.removeCost(userAddy).call(),
-        contract.methods.getLatestETHPrice().call(),
-      ]);
+      const isCostRemoved = await contract.methods.removeCost(userAddy).call();
 
       if (!isCostRemoved) {
-        const finalCostPerDayUSD = new BigNumber(overridePricePerDay).gt(0)
-          ? overridePricePerDay
-          : perDayBaseUSD;
-        const secondsOfService = new BigNumber(
-          dayjs(expiration).diff(dayjs(), "seconds")
-        );
-        txnValue = new BigNumber(finalCostPerDayUSD)
-          .times(new BigNumber(10).pow(18))
-          .div(ethPriceUSD18)
-          .times(secondsOfService)
-          .div(60)
-          .div(60)
-          .div(24)
-          .times(new BigNumber(10).pow(18))
-          .toFixed(0);
+        txnValue = dispatch("getCostWeiForBuybotFromExpiration", {
+          expiration,
+        });
       }
     }
 
     client = client || "telegram";
-    referrer = referrer || "0x0000000000000000000000000000000000000000";
+    referrer =
+      referrer && web3.utils.isAddress(referrer)
+        ? referrer
+        : "0x0000000000000000000000000000000000000000";
     await contract.methods
       .setupBot(token, client, channel, isPaid, minThresholdUsd, referrer)
       .send({ from: userAddy, value: txnValue });
