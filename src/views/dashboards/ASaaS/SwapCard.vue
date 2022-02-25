@@ -352,6 +352,22 @@ export default {
       "asaasInstanceGasCost",
       this.swap.sourceContract
     );
+
+    if (
+      this.hasUnclaimedSentFromTarget &&
+      this.swap.unclaimedSentFromTargetSource &&
+      this.swap.unclaimedSentFromTargetSource.isSendGasFunded
+    ) {
+      this.$toast.info(
+        `You have undelivered tokens! We're attempting to send them to you now!`
+      );
+      await this.$store.dispatch("asaasFundAndClaimTokens", {
+        instContract: this.swap.sourceContract,
+        id: this.swap.unclaimedSentFromTarget.id,
+        timestamp: this.swap.unclaimedSentFromTarget.origTimestamp,
+        amount: this.swap.unclaimedSentFromTarget.amount,
+      });
+    }
   },
 
   beforeUnmount() {

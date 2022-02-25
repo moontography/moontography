@@ -118,11 +118,24 @@ export default {
               }
             })(),
           ]);
-          const token = await dispatch("getErc20TokenInfo", swapTokenAddy);
+          const [token, unclaimedSentFromTargetSource] = await Promise.all([
+            dispatch("getErc20TokenInfo", swapTokenAddy),
+            (async () => {
+              if (
+                unclaimedSentFromTarget &&
+                new BigNumber(unclaimedSentFromTarget.id).gt(0)
+              ) {
+                return await sourceSwapInst.methods
+                  .swaps(unclaimedSentFromTarget.id)
+                  .call();
+              }
+            })(),
+          ]);
           const tokenCont = ERC20(web3, token.address);
           return {
             unclaimedSentFromSource,
             unclaimedSentFromTarget,
+            unclaimedSentFromTargetSource,
             targetToken,
             token: {
               ...token,
