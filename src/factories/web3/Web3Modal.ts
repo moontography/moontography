@@ -28,7 +28,7 @@ export default {
       walletconnect: {
         package: WalletConnectProvider,
         options: {
-          custom: {
+          rpc: {
             "1":
               "https://eth.getblock.io/mainnet/?api_key=ff48b009-d727-453f-b36c-e53c2a015053",
             "56":
