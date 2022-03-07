@@ -344,21 +344,43 @@ export default {
       ];
 
       // 2. check if BSC and use DexUtils to get price in USD, otherwise use api.moontography.com
-      if (this.activeNetwork.short_name === "bsc") {
-        const [sp, rp] = await Promise.all([
-          DexUtils.getTokenPrice(stakingTokenAddress),
-          DexUtils.getTokenPrice(rewardsTokenAddress),
-        ]);
-        this.stakingTokenPriceUSD = sp;
-        this.rewardsTokenPriceUSD = rp;
-      } else {
-        const [sp, rp] = await Promise.all([
-          TokenDataUtils.getTokenPriceUSD(stakingTokenSymbol),
-          TokenDataUtils.getTokenPriceUSD(rewardsTokenSymbol),
-        ]);
-        this.stakingTokenPriceUSD = sp;
-        this.rewardsTokenPriceUSD = rp;
-      }
+      // if (this.activeNetwork.short_name === "bsc") {
+      //   const [sp, rp] = await Promise.all([
+      //     DexUtils.getTokenPrice(stakingTokenAddress),
+      //     DexUtils.getTokenPrice(rewardsTokenAddress),
+      //   ]);
+      //   this.stakingTokenPriceUSD = sp;
+      //   this.rewardsTokenPriceUSD = rp;
+      // } else {
+      //   const [sp, rp] = await Promise.all([
+      //     TokenDataUtils.getTokenPriceUSD(
+      //       this.activeNetwork.short_name,
+      //       stakingTokenSymbol,
+      //       stakingTokenAddress
+      //     ),
+      //     TokenDataUtils.getTokenPriceUSD(
+      //       this.activeNetwork.short_name,
+      //       rewardsTokenSymbol,
+      //       rewardsTokenAddress
+      //     ),
+      //   ]);
+      //   this.stakingTokenPriceUSD = sp;
+      //   this.rewardsTokenPriceUSD = rp;
+      // }
+      const [sp, rp] = await Promise.all([
+        TokenDataUtils.getTokenPriceUSD(
+          this.activeNetwork.short_name,
+          stakingTokenSymbol,
+          stakingTokenAddress
+        ),
+        TokenDataUtils.getTokenPriceUSD(
+          this.activeNetwork.short_name,
+          rewardsTokenSymbol,
+          rewardsTokenAddress
+        ),
+      ]);
+      this.stakingTokenPriceUSD = sp;
+      this.rewardsTokenPriceUSD = rp;
     },
 
     async init() {

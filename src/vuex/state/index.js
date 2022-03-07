@@ -164,6 +164,7 @@ export default {
           faas: "0x717EDe6051acf094Ff043E2B3BcC4F86262742DD",
           faas_V1: "0x701666359E71b38d61C7faD2A121D7e6A6F1fFff",
           buybot: "0x22f373179F7182FD8B90E4F0B35D91966deabAFC",
+          dexUtils: "0x738f7a7D2F7aF556321fae259b37d49034827E09",
         },
         buy: {
           link:
@@ -204,6 +205,7 @@ export default {
           kether: "0xb5fe93ccfec708145d6278b0c71ce60aa75ef925",
           ketherNFT: "0x7bb952AB78b28a62b1525acA54A71E7Aa6177645",
           ketherNFTLoaner: "0x6d02744ef4418CB0D72f54c1eE53140430b9dBEd",
+          dexUtils: "0x738f7a7D2F7aF556321fae259b37d49034827E09",
         },
         buy: {
           link:
