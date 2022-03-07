@@ -11,7 +11,7 @@ export default {
   async getTokenPriceUSD(network: string, symbol: string, token: string) {
     const {
       data: { price },
-    } = await axios.get(`https://api.moontography.com/token/price`, {
+    } = await axios.get(`https://api.oklg.com/token/price`, {
       params: {
         network,
         symbol,
