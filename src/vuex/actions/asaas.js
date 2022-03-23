@@ -91,7 +91,7 @@ export default {
                   sourceContract: swap.sourceContract,
                 });
               } catch (err) {
-                console.error(`Error getting swap info`, err);
+                console.info(`Error getting swap info`, err);
                 return null;
               }
             })(),
@@ -146,7 +146,7 @@ export default {
             ...swap,
           };
         } catch (err) {
-          console.error(`Error get swap`, err);
+          console.info(`Error getting swap`, err);
           return null;
         }
       })

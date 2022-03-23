@@ -18,7 +18,12 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
           strong Swap Contract Balance
         div {{ contractBalance(swap.token) }}
     li
-      div.mb-4.text-secondary(style="font-size: 0.7142em") {{ swap.targetContract }}
+      div.mb-2.text-secondary(style="font-size: 0.7142em") {{ swap.targetContract }}
+      div.mb-2
+          small
+            strong Swap Contract Balance
+          div
+            small {{ targetNetworkSwapTokenBalanceFormatted }}
       img.mb-4.img-fluid(
         style="max-width: 30px; height: auto"
         :src="targetNetworkImg(swap.targetNetwork)")
@@ -113,9 +118,12 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
             n-button(
               v-if="sendTokenAmount && sendTokenAmount > 0"
               type="primary"
-              :disabled="globalLoading"
+              :disabled="globalLoading || !hasEnoughTargetLiquidity"
               v-loading="globalLoading"
               @click="sendTokensToSwap") Send {{ sendTokenAmountFormatted }} Tokens Now
+            div.text-danger.text-center.mt-3(v-if="!hasEnoughTargetLiquidity")
+              | There is not enough target bridge liquidity to serve this bridge request. Please contact the project
+              | owners and let them know to add bridge liquidity if you need to execute this request.
           div.alert.alert-danger.mt-4(v-else)
             h4.text-center.m-0 Attention!
             div
@@ -197,6 +205,30 @@ export default {
         new BigNumber(targetSwap.amount).gt(0) &&
         !targetSwap.isComplete &&
         !targetSwap.isRefunded
+      );
+    },
+
+    hasEnoughTargetLiquidity() {
+      return (
+        this.targetNetworkSwapTokenBalance &&
+        this.targetNetworkSwapTokenBalance.gte(this.sendTokenAmount)
+      );
+    },
+
+    targetNetworkSwapTokenBalance() {
+      return (
+        this.swap.targetToken &&
+        this.swap.targetToken.targetTokenSwapBalance &&
+        new BigNumber(this.swap.targetToken.targetTokenSwapBalance).div(
+          new BigNumber(10).pow(this.swap.targetToken.targetTokenDecimals)
+        )
+      );
+    },
+
+    targetNetworkSwapTokenBalanceFormatted() {
+      return (
+        this.targetNetworkSwapTokenBalance &&
+        this.targetNetworkSwapTokenBalance.toFormat(2)
       );
     },
 
