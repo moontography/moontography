@@ -121,9 +121,9 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
               :disabled="globalLoading || !hasEnoughTargetLiquidity"
               v-loading="globalLoading"
               @click="sendTokensToSwap") Send {{ sendTokenAmountFormatted }} Tokens Now
-            div.text-danger.text-center.mt-3(v-if="!hasEnoughTargetLiquidity")
-              | There is not enough target bridge liquidity to serve this bridge request. Please contact the project
-              | owners and let them know to add bridge liquidity if you need to execute this request.
+            //- div.text-danger.text-center.mt-3(v-if="!hasEnoughTargetLiquidity")
+            //-   | There is not enough target bridge liquidity to serve this bridge request. Please contact the project
+            //-   | owners and let them know to add bridge liquidity if you need to execute this request.
           div.alert.alert-danger.mt-4(v-else)
             h4.text-center.m-0 Attention!
             div

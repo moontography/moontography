@@ -3,7 +3,9 @@ div.panel-header
   div.header.text-center
     h2.title Atomic Swap as a Service
     p.category
-      div Provides a way to seamlessly swap pegged tokens across blockchains.
+      div
+        | Provides a way to seamlessly bridge ERC-20 tokens for projects who
+        | have setup a bridge across blockchains.
     n-button(
       type='primary'
       round=''

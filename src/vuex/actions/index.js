@@ -9,6 +9,7 @@ import trustedTimestamping from "./trustedTimestamping";
 
 import axios from "axios";
 import BigNumber from "bignumber.js";
+import AlphaUtils from "../../factories/AlphaUtils";
 import DexUtils from "../../factories/DexUtils";
 import ExponentialBackoff from "../../factories/ExponentialBackoff";
 import NftUtils from "../../factories/NftUtils";
@@ -16,6 +17,7 @@ import Web3Modal from "../../factories/web3/Web3Modal";
 import ERC20 from "../../factories/web3/ERC20";
 import ERC721 from "../../factories/web3/ERC721";
 import OKLGSpend from "../../factories/web3/OKLGSpend";
+import OKLGSpendNative from "../../factories/web3/OKLGSpendNative";
 import { useToast } from "vue-toastification";
 import TokenDataUtils from "@/factories/TokenDataUtils";
 const toast = useToast();
@@ -345,9 +347,19 @@ export default {
     };
   },
 
-  async getProductCostWei({ getters, state }, { productID, productContract }) {
+  async getProductCostWei(
+    { dispatch, getters, state },
+    { productID, productContract }
+  ) {
     const web3 = state.web3.instance;
     const spendCont = getters.activeNetwork.contracts.spend;
+    const activeNetwork = getters.activeNetwork;
+    if (activeNetwork.short_name === "metis") {
+      return await dispatch("getProductCostWeiNative", {
+        productID,
+        productContract,
+      });
+    }
     const spend = OKLGSpend(web3, spendCont);
     const [defaultCostUSD, overrideCostUSD] = await Promise.all([
       spend.methods.defaultProductPriceUSD(productID).call(),
@@ -363,5 +375,35 @@ export default {
       : new BigNumber(overrideCostWei).gt(0)
       ? overrideCostWei
       : defaultCostWei;
+  },
+
+  async getProductCostWeiNative(
+    { getters, state },
+    { productID, productContract }
+  ) {
+    const web3 = state.web3.instance;
+    const spendCont = getters.activeNetwork.contracts.spend;
+    const spend = OKLGSpendNative(web3, spendCont);
+    const [defaultCostWei, overrideCostWei] = await Promise.all([
+      spend.methods.defaultProductPriceWei(productID).call(),
+      spend.methods.overrideProductPriceWei(productContract).call(),
+    ]);
+    const isRemoved = await spend.methods.removeCost(productContract).call();
+    return isRemoved
+      ? "0"
+      : new BigNumber(overrideCostWei).gt(0)
+      ? overrideCostWei
+      : defaultCostWei;
+  },
+
+  async signAndValidateMsg({ state }, msg) {
+    const userAddy = state.web3.address;
+    const web3 = state.web3.instance;
+    const signature = await web3.eth.personal.sign(msg, userAddy);
+    return await AlphaUtils.validateSignature({
+      address: userAddy,
+      message: msg,
+      signature,
+    });
   },
 };

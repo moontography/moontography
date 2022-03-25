@@ -9,6 +9,7 @@ import GlobalLoader from "../views/layout/GlobalLoader";
 // import DefaultHeader from "../views/headers/DefaultHeader";
 import AsaasHeader from "../views/headers/AsaasHeader";
 import AirdropperHeader from "../views/headers/AirdropperHeader";
+import AlphaHeader from "../views/headers/AlphaHeader.vue";
 import BuybotHeader from "../views/headers/BuybotHeader.vue";
 import DashboardHeader from "../views/headers/DashboardHeader.vue";
 import DtaxHeader from "../views/headers/DtaxHeader";
@@ -24,6 +25,7 @@ import ComingSoon from "../views/components/ComingSoon.vue";
 import Dashboard from "../views/dashboards/dashboard/Dashboard.vue";
 import Airdropper from "../views/dashboards/Airdropper/Airdropper.vue";
 import AffiliateLeaderboard from "../views/dashboards/Buybot/AffiliateLeaderboard.vue";
+import AlphaLayout from "../views/layout/AlphaLayout.vue";
 import BuybotLayout from "../views/layout/BuybotLayout.vue";
 import Buybot from "../views/dashboards/Buybot/Buybot.vue";
 import FaasLayout from "../views/layout/FaasLayout.vue";
@@ -58,7 +60,7 @@ const routes = [
       },
       {
         path: "asaas",
-        name: "Atomic Swapping",
+        name: "Bridging",
         components: { default: SwapsListView, header: AsaasHeader },
       },
       {
@@ -109,6 +111,11 @@ const routes = [
         path: "airdropper",
         name: "Airdropper",
         components: { default: Airdropper, header: AirdropperHeader },
+      },
+      {
+        path: "alpha",
+        name: "Alpha as a Service",
+        components: { default: AlphaLayout, header: AlphaHeader },
       },
       {
         path: "buybot",
