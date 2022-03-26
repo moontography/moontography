@@ -60,7 +60,7 @@ const routes = [
       },
       {
         path: "asaas",
-        name: "Bridging",
+        name: "Atomic Swap/Bridging",
         components: { default: SwapsListView, header: AsaasHeader },
       },
       {

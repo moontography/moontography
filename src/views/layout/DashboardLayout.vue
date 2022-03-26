@@ -26,7 +26,7 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       //- )
       sidebar-item(
         :link=`{
-          name: 'Bridging',
+          name: 'Atomic Swap/Bridging',
           icon: 'now-ui-icons arrows-1_refresh-69',
           path: '/asaas',
         }`

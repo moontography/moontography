@@ -98,7 +98,7 @@ div
                 .icon.icon-success
                   i.now-ui-icons.arrows-1_refresh-69
                 h3.info-title
-                  | Atomic Swap/Bridging 
+                  | Atomic Swap/Bridging
                 h6.stats-title.text-success Live Now!
     .col-lg-4
       card

@@ -14,7 +14,7 @@
 
     div.row(v-else)
       template(v-for="swap in swaps")
-        .col-lg-4(v-if="!isTargetZero(swap.targetContract) || swap.creator == userAddy")
+        .col-lg-4(v-if="shouldShowCard(swap)")
           swap-card(:swap="swap")
 </template>
 <script>
@@ -66,6 +66,19 @@ export default {
   methods: {
     isTargetZero(addy) {
       return new BigNumber(addy).eq(0);
+    },
+
+    shouldShowCard(swap) {
+      const disabled = [
+        "0x1a57121A855b5043176Fcf4EeC78e35282eF090C",
+        "0x3298ad5853968e40751dEa61707635773D340D6b",
+      ];
+      return (
+        (!this.isTargetZero(swap.targetContract) ||
+          swap.creator == this.userAddy) &&
+        !disabled.includes(swap.sourceContract) &&
+        !disabled.includes(swap.targetContract)
+      );
     },
   },
 
