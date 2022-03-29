@@ -17,13 +17,13 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
           path: '/faas',
         }`
       )
-      //- sidebar-item(
-      //-   :link=`{
-      //-     name: 'Alpha as a Service',
-      //-     icon: 'now-ui-icons arrows-1_refresh-69',
-      //-     path: '/alpha',
-      //-   }`
-      //- )
+      sidebar-item(
+        :link=`{
+          name: 'Alpha as a Service',
+          icon: 'now-ui-icons arrows-1_refresh-69',
+          path: '/alpha',
+        }`
+      )
       sidebar-item(
         :link=`{
           name: 'Atomic Swap/Bridging',

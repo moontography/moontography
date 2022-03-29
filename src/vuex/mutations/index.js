@@ -1,4 +1,5 @@
 import airdropper from "./airdropper";
+import alpha from "./alpha";
 import asaas from "./asaas";
 import buybot from "./buybot";
 import faas from "./faas";
@@ -9,6 +10,7 @@ import trustedTimestamping from "./trustedTimestamping";
 
 export default {
   ...airdropper,
+  ...alpha,
   ...asaas,
   ...buybot,
   ...faas,

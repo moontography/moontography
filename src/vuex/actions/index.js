@@ -396,6 +396,12 @@ export default {
       : defaultCostWei;
   },
 
+  async checkAsyncValidated({ commit, state }) {
+    const userAddy = state.web3.address;
+    const isValidated = await AlphaUtils.isUserAlphaValidated(userAddy);
+    commit("SET_ALPHA_IS_VALIDATED", isValidated);
+  },
+
   async signAndValidateMsg({ state }, msg) {
     const userAddy = state.web3.address;
     const web3 = state.web3.instance;
