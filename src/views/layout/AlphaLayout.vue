@@ -5,12 +5,12 @@ div
     div.mx-auto(v-if="!isConnected") Please make sure you are connected to your wallet to proceed.
   card(v-else)
     template(v-if="!isAlphaValidated")
-      div.mb-2
-        div.alert.alert-info.m-0
+      div.mb-4
+        div.alert.alert-warning.m-0
           | You will need at least 30,000,000 OKLG in your wallet or staked through
           | the official OKLG website in order to gain access to this functionality.
-      div.mb-2
-        div.alert.alert-danger.m-0(v-if='triedValidatingAndCouldNot')
+      div
+        div.alert.alert-danger.mb-2(v-if='triedValidatingAndCouldNot')
           | We could not validate that you have access to alpha as a service.
         div(v-else)
           | Please sign the message below which we use to validate your access to use alpha as a service!
