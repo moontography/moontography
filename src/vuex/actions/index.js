@@ -370,11 +370,15 @@ export default {
       spend.methods.getProductCostWei(overrideCostUSD).call(),
       spend.methods.removeCost(productContract).call(),
     ]);
-    return isRemoved
+    const finalCost = isRemoved
       ? "0"
       : new BigNumber(overrideCostWei).gt(0)
       ? overrideCostWei
       : defaultCostWei;
+
+    // round up by 2% to prevent Chainlink price feed issues if there's a
+    // small discrepency or timing issue from client to network
+    return new BigNumber(finalCost).times("1.02").toFixed();
   },
 
   async getProductCostWeiNative(
