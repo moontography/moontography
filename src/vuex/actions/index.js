@@ -378,7 +378,7 @@ export default {
 
     // round up by 2% to prevent Chainlink price feed issues if there's a
     // small discrepency or timing issue from client to network
-    return new BigNumber(finalCost).times("1.02").toFixed();
+    return new BigNumber(finalCost).times("1.02").toFixed(0);
   },
 
   async getProductCostWeiNative(
