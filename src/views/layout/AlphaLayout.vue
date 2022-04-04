@@ -19,17 +19,46 @@ div
           type="primary"
           @click="signMsg") Sign and Validate AaaS Access
     template(v-else)
+      div.mb-2
+        i Data refreshes every 10 seconds.
       div.table-full-width.table-responsive.pb-0
         n-table.mb-0(
           :columns="tableColumns"
           :data='alphaData')
             template(v-slot:columns)
             template(v-slot:default='row')
-              td {{ row.item.type }}
-              td {{ row.item.info }}
+              td {{ row.item.index + 1 }}.
+              td {{ row.item.network }}
+              td
+                a(
+                  :href="unescapeLink(row.item.transactionUrl)"
+                  target="_blank"
+                  rel="noopener noreferrer") {{ row.item.type }}
+              td
+                div(v-if="row.item.type === 'New LP Added'")
+                  div
+                    a(:href="row.item.token0Info.link" target="_blank" rel="noopener noreferrer") {{ row.item.token0Info.symbol }}
+                    span &nbsp;/&nbsp; 
+                    a(:href="row.item.token1Info.link" target="_blank" rel="noopener noreferrer") {{ row.item.token1Info.symbol }}
+                  div.mt-1 LP added (USD): #[b ${{ parseMoney(row.item.lpAddedUSD) }}]
+                div(v-else)
+                  a(
+                    :href="unescapeLink(row.item.tokenLink)"
+                    target="_blank"
+                    rel="noopener noreferrer")
+                      | {{ unescapeText(row.item.tokenName) }}
+                      | ({{ unescapeText(row.item.tokenSymbol) }})
+              td
+                a(
+                  :href="unescapeLink(row.item.deployerLink)"
+                  target="_blank"
+                  rel="noopener noreferrer") {{ row.item.deployer }}
+              td {{ parseTimestamp(row.item.timestamp) }}
 </template>
 
 <script>
+import BigNumber from "bignumber.js";
+import dayjs from "dayjs";
 import { mapState } from "vuex";
 
 export default {
@@ -37,20 +66,27 @@ export default {
     return {
       isLoadingLocal: false,
       isAndHasTriedValidating: null,
+      refreshInterval: null,
+      refreshIntervalTime: 10000,
 
       tableColumns: [
-        { value: "type", text: "Type", classes: "" },
+        { value: "index", text: "#", classes: "" },
+        { value: "network", text: "Network", classes: "" },
+        { value: "type", text: "Description", classes: "" },
         {
-          value: "info",
-          text: "Info",
+          value: "tokenAddress",
+          text: "Contract/Token",
           classes: "",
         },
+        {
+          value: "deployer",
+          text: "Deployer/Owner",
+          classes: "",
+        },
+        { value: "timestamp", text: "Date", classes: "" },
       ],
 
-      alphaData: [
-        { type: "New Token Contract", info: "some stuff" },
-        { type: "New Liquidity!", info: "some other stuff" },
-      ],
+      alphaData: [],
     };
   },
 
@@ -71,6 +107,39 @@ export default {
   },
 
   methods: {
+    parseMoney(text) {
+      return new BigNumber(text).toFormat(2);
+    },
+
+    parseTimestamp(time) {
+      return dayjs(time * 1000).format("MMM Do, YYYY hh:mm a");
+    },
+
+    unescapeLink(link) {
+      return link.replace(/\\/g, "");
+    },
+
+    unescapeText(text) {
+      return text.replace(/[\\]/g, "");
+    },
+
+    async getAlpha() {
+      this.alphaData = await this.$store.dispatch("getLatestAlpha");
+    },
+
+    removeRefreshInterval() {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    },
+
+    async startRefreshInterval() {
+      await this.getAlpha();
+      this.refreshInterval = setInterval(
+        () => this.getAlpha(),
+        this.refreshIntervalTime
+      );
+    },
+
     async signMsg() {
       try {
         this.isLoadingLocal = true;
@@ -80,7 +149,10 @@ export default {
         );
         this.isAndHasTriedValidating = info.validated;
         if (info.validated) {
-          await this.$store.dispatch("checkAsyncValidated");
+          await this.$store.dispatch("checkAlphaValidated");
+        }
+        if (this.isAlphaValidated) {
+          await this.startRefreshInterval();
         }
       } catch (err) {
         console.error("Error validating signed message", err);
@@ -91,7 +163,10 @@ export default {
   },
 
   async mounted() {
-    await this.$store.dispatch("checkAsyncValidated");
+    await this.$store.dispatch("checkAlphaValidated");
+    if (this.isAlphaValidated) {
+      await this.startRefreshInterval();
+    }
   },
 };
 </script>

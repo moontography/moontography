@@ -1,6 +1,18 @@
 import axios from "axios";
 
 export default {
+  async getLatestAlpha(address: string, perPage = 99) {
+    const {
+      data: { alpha },
+    } = await axios.get(`https://api.oklg.io/alpha/latest`, {
+      params: {
+        address,
+        amount: perPage,
+      },
+    });
+    return alpha;
+  },
+
   async isUserAlphaValidated(address: string) {
     const {
       data: { validated },

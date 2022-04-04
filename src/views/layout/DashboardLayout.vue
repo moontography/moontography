@@ -12,13 +12,6 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
       )
       sidebar-item(
         :link=`{
-          name: 'Farming',
-          icon: 'now-ui-icons sport_trophy',
-          path: '/faas',
-        }`
-      )
-      sidebar-item(
-        :link=`{
           name: 'Alpha as a Service',
           icon: 'now-ui-icons arrows-1_refresh-69',
           path: '/alpha',
@@ -29,6 +22,13 @@ div.wrapper(:class="{ 'nav-open': $sidebar.showSidebar }")
           name: 'Atomic Swap/Bridging',
           icon: 'now-ui-icons arrows-1_refresh-69',
           path: '/asaas',
+        }`
+      )
+      sidebar-item(
+        :link=`{
+          name: 'Farming/Staking',
+          icon: 'now-ui-icons sport_trophy',
+          path: '/faas',
         }`
       )
       sidebar-item(

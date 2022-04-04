@@ -7,7 +7,7 @@ table.table
           small  {{ column.text }} 
   tbody
     tr(v-for='(item, index) in data' :key='index')
-      slot(:item='item')
+      slot(:item='{ ...item, index }')
         td(v-for='column in columns' :key='column.value' :class="column.classes")
           template(v-if='hasValue(item, column.value)')
             | {{ itemValue(item, column.value) }}

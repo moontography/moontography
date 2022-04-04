@@ -86,7 +86,7 @@ div
                 .icon.icon-success
                   i.now-ui-icons.sport_trophy
                 h3.info-title
-                  | Farming as a Service
+                  | Staking as a Service
                 h6.stats-title.text-success Live Now!
     
     .col-lg-4
