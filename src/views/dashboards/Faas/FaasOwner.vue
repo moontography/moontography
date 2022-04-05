@@ -229,7 +229,7 @@ export default {
           return 0;
         return new BigNumber(this.rawPerBlockNum)
           .div(new BigNumber(10).pow(this.rewardsTokenInfo.decimals))
-          .toFormat(2);
+          .toFormat(10);
       },
 
       set(newPerBlock) {
