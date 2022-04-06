@@ -102,7 +102,12 @@ export default {
             !(
               c.contractIsRemoved && new BigNumber(c.farmingTokenBalance).lte(0)
             )
-        );
+        )
+        .sort((f1, f2) => {
+          const sym1 = f1.currentTokenSymbol || "";
+          const sym2 = f2.currentTokenSymbol || "";
+          return sym1.toLowerCase() < sym2.toLowerCase() ? -1 : 1;
+        });
     },
   },
 

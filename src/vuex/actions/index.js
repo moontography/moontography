@@ -18,6 +18,7 @@ import ERC20 from "../../factories/web3/ERC20";
 import ERC721 from "../../factories/web3/ERC721";
 import OKLGSpend from "../../factories/web3/OKLGSpend";
 import OKLGSpendNative from "../../factories/web3/OKLGSpendNative";
+import UniswapV2Pair from "../../factories/web3/UniswapV2Pair";
 import { useToast } from "vue-toastification";
 import TokenDataUtils from "@/factories/TokenDataUtils";
 const toast = useToast();
@@ -345,6 +346,43 @@ export default {
       symbol,
       userBalance,
     };
+  },
+
+  async getLpTokenInfo({ dispatch, getters, state }, tokenAddy) {
+    try {
+      const activeNetwork = getters.activeNetwork;
+      const contract = UniswapV2Pair(state.web3.instance, tokenAddy);
+      const [token0, token1, { _reserve0 }] = await Promise.all([
+        contract.methods.token0().call(),
+        contract.methods.token1().call(),
+        contract.methods.getReserves().call(),
+      ]);
+      const [
+        pairTotalSupply,
+        token0Info,
+        token0Price,
+        token1Info,
+      ] = await Promise.all([
+        contract.methods.totalSupply().call(),
+        dispatch("getErc20TokenInfo", token0),
+        TokenDataUtils.getTokenPriceUSD(activeNetwork.short_name, null, token0),
+        dispatch("getErc20TokenInfo", token1),
+      ]);
+      return {
+        token0Info,
+        token0Price,
+        token1Info,
+        pairValuePerTokenUSD: new BigNumber(_reserve0)
+          .div(new BigNumber(10).pow(token0Info.decimals))
+          .times(token0Price)
+          .times(2)
+          .div(new BigNumber(pairTotalSupply).div(new BigNumber(10).pow(18)))
+          .toFixed(),
+      };
+    } catch (err) {
+      // console.info(`error getting LP info`, err);
+      return {};
+    }
   },
 
   async getProductCostWei(
