@@ -1,16 +1,27 @@
 <template lang="pug">
 td
-  div
+  template(v-if="lp.token0Info")
     h6.m-0
-      strong
-        a(
-          :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${tokenAddress}`"
-          target="_blank"
-          rel="noopener noreferrer")
-            | {{ row.item.poolInfo.isStakedNft ? 'NFT -' : '' }}
-            | {{ stakedTokenSymbol }}
-  div.text-secondary
-    small {{ tokenName }}
+        strong
+          a(
+            :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${tokenAddress}`"
+            target="_blank"
+            rel="noopener noreferrer")
+              | LP - {{ lp.token0Info.symbol }} / {{ lp.token1Info.symbol }}
+    div.text-secondary
+      small {{ lp.token0Info.symbol }} LP Farming
+  template(v-else)
+    div
+      h6.m-0
+        strong
+          a(
+            :href="`${activeNetworkExplorerUrl}/${tokenRoute}/${tokenAddress}`"
+            target="_blank"
+            rel="noopener noreferrer")
+              | {{ row.item.poolInfo.isStakedNft ? 'NFT -' : '' }}
+              | {{ stakedTokenSymbol }}
+    div.text-secondary
+      small {{ tokenName }}
   div.text-danger(v-if="timelockDays && timelockDays > 0")
     b {{ timelockDays }} day timelock
 //- td
@@ -92,7 +103,7 @@ add-remove-stake-modal(
   :id="`stake-modal-${farmingTokenAddress}`"
   :is-expired="isFarmExpired"
   :farm-address="farmingTokenAddress"
-  @staked="init")
+  @staked="init(true)")
 </template>
 
 <script>
@@ -104,7 +115,6 @@ import { mapState } from "vuex";
 import AddRemoveStakeModal from "./AddRemoveStakeModal";
 import TokenDataUtils from "../../../factories/TokenDataUtils";
 import OKLGFaaSToken from "../../../factories/web3/OKLGFaaSToken";
-import DexUtils from "@/factories/DexUtils";
 
 export default {
   props: {
@@ -123,6 +133,13 @@ export default {
       tokensRewardedPerBlock: [],
       amountUnharvested: [],
       totalTokensStaked: [],
+
+      lp: {
+        token0Info: null,
+        token0Price: null,
+        token1Info: null,
+        pairValuePerTokenUSD: null,
+      },
 
       rewardsTokenPriceUSD: 0,
       stakingTokenPriceUSD: 0,
@@ -305,7 +322,11 @@ export default {
       const totalStakedBalanceUSD = new BigNumber(
         this.totalTokensStaked[0] || 0
       )
-        .times(this.stakingTokenPriceUSD)
+        .times(
+          this.lp.pairValuePerTokenUSD
+            ? this.lp.pairValuePerTokenUSD
+            : this.stakingTokenPriceUSD
+        )
         .div(new BigNumber(10).pow(this.stakedTokenDecimals));
       const perBlockRewardedAmountUSD = new BigNumber(
         this.tokensRewardedPerBlock[0] || 0
@@ -343,50 +364,41 @@ export default {
         this.rewardTokenSymbol,
       ];
 
-      // 2. check if BSC and use DexUtils to get price in USD, otherwise use api.moontography.com
-      // if (this.activeNetwork.short_name === "bsc") {
-      //   const [sp, rp] = await Promise.all([
-      //     DexUtils.getTokenPrice(stakingTokenAddress),
-      //     DexUtils.getTokenPrice(rewardsTokenAddress),
-      //   ]);
-      //   this.stakingTokenPriceUSD = sp;
-      //   this.rewardsTokenPriceUSD = rp;
-      // } else {
-      //   const [sp, rp] = await Promise.all([
-      //     TokenDataUtils.getTokenPriceUSD(
-      //       this.activeNetwork.short_name,
-      //       stakingTokenSymbol,
-      //       stakingTokenAddress
-      //     ),
-      //     TokenDataUtils.getTokenPriceUSD(
-      //       this.activeNetwork.short_name,
-      //       rewardsTokenSymbol,
-      //       rewardsTokenAddress
-      //     ),
-      //   ]);
-      //   this.stakingTokenPriceUSD = sp;
-      //   this.rewardsTokenPriceUSD = rp;
-      // }
+      const getTokenPriceFailSilently = async (symbol, addy) => {
+        try {
+          return await TokenDataUtils.getTokenPriceUSD(
+            this.activeNetwork.short_name,
+            symbol,
+            addy
+          );
+        } catch (err) {
+          return 0;
+        }
+      };
+
       const [sp, rp] = await Promise.all([
-        TokenDataUtils.getTokenPriceUSD(
-          this.activeNetwork.short_name,
-          stakingTokenSymbol,
-          stakingTokenAddress
-        ),
-        TokenDataUtils.getTokenPriceUSD(
-          this.activeNetwork.short_name,
-          rewardsTokenSymbol,
-          rewardsTokenAddress
-        ),
+        getTokenPriceFailSilently(stakingTokenSymbol, stakingTokenAddress),
+        getTokenPriceFailSilently(rewardsTokenSymbol, rewardsTokenAddress),
       ]);
       this.stakingTokenPriceUSD = sp;
       this.rewardsTokenPriceUSD = rp;
     },
 
-    async init() {
-      await this.$store.dispatch("getAllStakingContracts");
+    async init(resetAll = false) {
+      if (resetAll) {
+        await this.$store.dispatch("getAllStakingContracts");
+      }
       await this.getUnharvestedTokens();
       await this.getBothTokenPricesUSD();
+    },
+
+    async checkAndUpdateIfLpFarm() {
+      const lpTokenInfo = await this.$store.dispatch(
+        "getLpTokenInfo",
+        this.row.item.tokenAddy
+      );
+      if (!lpTokenInfo.token0Info) return;
+      this.lp = lpTokenInfo;
     },
 
     async harvestTokens() {
@@ -413,7 +425,7 @@ export default {
         await this.$store.dispatch("faasHarvestTokens", {
           farmingContractAddress: this.farmingTokenAddress,
         });
-        await this.init();
+        await this.init(true);
       } catch (err) {
         console.error(`Error harvesting tokens`, err);
         this.$toast.error(err.message);
@@ -463,10 +475,15 @@ export default {
   },
 
   async mounted() {
-    await this.init();
-
-    // Modal appearing in table and below backgound on mobile
-    $(`#stake-modal-${this.farmingTokenAddress}`).appendTo("body");
+    try {
+      await this.init();
+    } catch (err) {
+      console.error(`error with list row init`, err);
+    } finally {
+      // Modal appearing in table and below backgound on mobile
+      $(`#stake-modal-${this.farmingTokenAddress}`).appendTo("body");
+    }
+    await this.checkAndUpdateIfLpFarm();
   },
 
   beforeUnmount() {
