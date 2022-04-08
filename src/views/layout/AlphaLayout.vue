@@ -53,6 +53,13 @@ div
                   :href="unescapeLink(row.item.deployerLink)"
                   target="_blank"
                   rel="noopener noreferrer") {{ row.item.deployer }}
+              td {{ row.item.isVerified ? 'Yes' : '' }}
+              td
+                n-button(
+                  type="primary"
+                  size="sm"
+                  @click="honeypotCheck(row.item.type === 'New LP Added' ? row.item.token0Info.address : row.item.tokenAddress)")
+                    | Check Now
               td {{ parseTimestamp(row.item.timestamp) }}
 </template>
 
@@ -60,6 +67,7 @@ div
 import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import { mapState } from "vuex";
+import AlphaUtils from "@/factories/AlphaUtils";
 
 export default {
   data() {
@@ -83,6 +91,8 @@ export default {
           text: "Deployer/Owner",
           classes: "",
         },
+        { value: "verification", text: "Verified?" },
+        { value: "honeypot", text: "Honeypot Check" },
         { value: "timestamp", text: "Date", classes: "" },
       ],
 
@@ -130,6 +140,20 @@ export default {
     removeRefreshInterval() {
       clearInterval(this.refreshInterval);
       this.refreshInterval = null;
+    },
+
+    async honeypotCheck(contract) {
+      const canBuyAndSell = await AlphaUtils.honeypotCheck(
+        this.activeNetwork.short_name,
+        contract
+      );
+      if (canBuyAndSell) {
+        this.$toast.success(`You can buy and sell this token!`);
+      } else {
+        this.$toast.error(
+          `It appears you currently cannot buy and subsequently sell this token. Check it has adequate liquidity and trading is turned on, and try again.`
+        );
+      }
     },
 
     async startRefreshInterval() {

@@ -13,6 +13,15 @@ export default {
     return alpha;
   },
 
+  async honeypotCheck(network: string, contract: string) {
+    const {
+      data: { canBuyAndSell },
+    } = await axios.get(
+      `https://api.oklg.io/alpha/honeypot/check/${network}/${contract}`
+    );
+    return canBuyAndSell;
+  },
+
   async isUserAlphaValidated(address: string) {
     const {
       data: { validated },
