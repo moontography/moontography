@@ -20,7 +20,7 @@ div
           @click="signMsg") Sign and Validate AaaS Access
     template(v-else)
       div.alert.alert-warning
-        | Disclaimer: The data presented with this tool to help you make better informed decisions. We do not
+        | Disclaimer: The data presented with this tool is to help you make better informed decisions. We do not
         | however assume any responsibility for loss due to information provided with this tool.
         | The information provided is for general informational purposes only. Always DYOR.
       div.mb-2
