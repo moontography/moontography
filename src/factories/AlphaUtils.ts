@@ -13,7 +13,7 @@ export default {
     return alpha;
   },
 
-  async honeypotCheck(network: string, contract: string) {
+  async honeypotCheck(network: string, contract: string, slippage = 25) {
     const {
       data: { canBuyAndSell },
     } = await axios.get(

@@ -62,11 +62,11 @@ div
                 n-button(
                   type="primary"
                   size="sm"
-                  @click="honeypotCheck(row.item.id, row.item.type === 'New LP Added' ? row.item.token0Info.address : row.item.tokenAddress)")
+                  @click="honeypotCheck(row.item.id, row.item.network, row.item.type === 'New LP Added' ? row.item.token0Info.address : row.item.tokenAddress)")
                     | Check Now
                 //- a(
                 //-   href="#"
-                //-   @click="honeypotCheck(row.item.id, row.item.type === 'New LP Added' ? row.item.token0Info.address : row.item.tokenAddress)")
+                //-   @click="honeypotCheck(row.item.id, row.item.network, row.item.type === 'New LP Added' ? row.item.token0Info.address : row.item.tokenAddress)")
                 //-   | Check Now
                 div.text-danger.mt-2(v-if="isHoneypot[row.item.id]")
                   | You currently cannot buy then sell this token. Check it has adequate
@@ -163,7 +163,7 @@ export default {
       this.refreshInterval = null;
     },
 
-    async honeypotCheck(id, contract) {
+    async honeypotCheck(id, network, contract) {
       this.isHoneypot = {
         ...this.isHoneypot,
         [id]: false,
@@ -174,7 +174,7 @@ export default {
       };
 
       const canBuyAndSell = await AlphaUtils.honeypotCheck(
-        this.activeNetwork.short_name,
+        (network || "").toLowerCase(),
         contract
       );
       if (canBuyAndSell) {
