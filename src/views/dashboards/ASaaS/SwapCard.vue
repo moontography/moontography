@@ -114,16 +114,16 @@ card.card-pricing(no-footer-line='' :category="swap.sourceContract")
               | to fund the relay that executes the swap.
             div(v-if="bridgeCostFormatted > 0")
               | You will also send #[strong {{ bridgeCostFormatted }} {{ nativeCurrencySymbol }}] to use this atomic swap service.
-          div.mt-3.d-flex.align-items-center.justify-content-center(v-if="!latestSwap")
+          div.mt-3.d-flex.flex-column.align-items-center.justify-content-center(v-if="!latestSwap")
             n-button(
               v-if="sendTokenAmount && sendTokenAmount > 0"
               type="primary"
               :disabled="globalLoading || !hasEnoughTargetLiquidity"
               v-loading="globalLoading"
               @click="sendTokensToSwap") Send {{ sendTokenAmountFormatted }} Tokens Now
-            //- div.text-danger.text-center.mt-3(v-if="!hasEnoughTargetLiquidity")
-            //-   | There is not enough target bridge liquidity to serve this bridge request. Please contact the project
-            //-   | owners and let them know to add bridge liquidity if you need to execute this request.
+            div.text-danger.text-center.mt-3(v-if="!hasEnoughTargetLiquidity")
+              | There is not enough target bridge liquidity to serve this bridge request. Please contact the project
+              | owners and let them know to add bridge liquidity if you need to execute this request.
           div.alert.alert-danger.mt-4(v-else)
             h4.text-center.m-0 Attention!
             div
