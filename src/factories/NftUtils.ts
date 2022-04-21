@@ -21,7 +21,7 @@ export default function NftUtils(apiKey: string) {
           chain,
           format: "decimal",
           offset: 0,
-          limit: 1e4,
+          limit: 500,
           // order: "name.DESC",
         },
       });
