@@ -17,7 +17,7 @@ export default {
     const {
       data: { canBuyAndSell },
     } = await axios.get(
-      `https://api.oklg.io/alpha/honeypot/check/${network}/${contract}`
+      `https://api.oklg.io/alpha/honeypot/check/${network}/${contract}/${slippage}`
     );
     return canBuyAndSell;
   },

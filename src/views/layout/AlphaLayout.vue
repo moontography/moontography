@@ -41,9 +41,15 @@ div
               td
                 div(v-if="row.item.type === 'New LP Added'")
                   div
-                    a(:href="row.item.token0Info.link" target="_blank" rel="noopener noreferrer") {{ row.item.token0Info.symbol }}
+                    a(
+                      :href="row.item.token0Info.link"
+                      target="_blank"
+                      rel="noopener noreferrer") {{ row.item.token0Info.symbol }}
                     span &nbsp;/&nbsp; 
-                    a(:href="row.item.token1Info.link" target="_blank" rel="noopener noreferrer") {{ row.item.token1Info.symbol }}
+                    a(
+                      :href="row.item.token1Info.link"
+                      target="_blank"
+                      rel="noopener noreferrer") {{ row.item.token1Info.symbol }}
                   div.mt-1 LP added (USD): #[b ${{ parseMoney(row.item.lpAddedUSD) }}]
                 div(v-else)
                   a(
@@ -59,20 +65,26 @@ div
                   rel="noopener noreferrer") {{ row.item.deployer }}
               td.text-success {{ row.item.isVerified ? 'Yes' : '' }}
               td
+                input.form-control.mb-1(
+                  v-model="slippage[row.item.id]"
+                  type="number"
+                  min="1"
+                  max="100"
+                  placeholder='Slippage (default: 25%)')
                 n-button(
                   type="primary"
                   size="sm"
-                  @click="honeypotCheck(row.item.id, row.item.network, row.item.type === 'New LP Added' ? row.item.token0Info.address : row.item.tokenAddress)")
+                  @click="honeypotCheck(row.item)")
                     | Check Now
                 //- a(
                 //-   href="#"
-                //-   @click="honeypotCheck(row.item.id, row.item.network, row.item.type === 'New LP Added' ? row.item.token0Info.address : row.item.tokenAddress)")
+                //-   @click="honeypotCheck(row.item)")
                 //-   | Check Now
                 div.text-danger.mt-2(v-if="isHoneypot[row.item.id]")
-                  | You currently cannot buy then sell this token. Check it has adequate
-                  | liquidity and trading is enabled, then try again.
+                  | You currently cannot buy then sell this token at {{ slippage[row.item.id] || '25' }}% slippage. 
+                  | Check it has adequate liquidity and trading is enabled, then try again.
                 div.text-success.mt-2(v-else-if="isNotHoneypot[row.item.id]")
-                  | You can buy and sell this token at as little as 25% slippage!
+                  | You can buy and sell this token at as little as {{ slippage[row.item.id] || '25' }}% slippage!
               td {{ parseTimestamp(row.item.timestamp) }}
 </template>
 
@@ -96,6 +108,10 @@ export default {
 
       isNotHoneypot: {
         // [id]: true
+      },
+
+      slippage: {
+        // [id]: 25
       },
 
       tableColumns: [
@@ -156,6 +172,7 @@ export default {
 
     async getAlpha() {
       this.alphaData = await this.$store.dispatch("getLatestAlpha");
+      this.slippage;
     },
 
     removeRefreshInterval() {
@@ -163,7 +180,14 @@ export default {
       this.refreshInterval = null;
     },
 
-    async honeypotCheck(id, network, contract) {
+    async honeypotCheck(item) {
+      const id = item.id;
+      const network = item.network;
+      const contract =
+        item.type === "New LP Added"
+          ? item.token0Info.address
+          : item.tokenAddress;
+      const slippage = this.slippage[id];
       this.isHoneypot = {
         ...this.isHoneypot,
         [id]: false,
@@ -175,7 +199,8 @@ export default {
 
       const canBuyAndSell = await AlphaUtils.honeypotCheck(
         (network || "").toLowerCase(),
-        contract
+        contract,
+        slippage
       );
       if (canBuyAndSell) {
         // this.$toast.success(`You can buy and sell this token!`);
