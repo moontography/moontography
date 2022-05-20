@@ -23,8 +23,16 @@ div
         | Disclaimer: The data presented with this tool is to help you make better informed decisions. We do not
         | however assume any responsibility for loss due to information provided with this tool.
         | The information provided is for general informational purposes only. Always DYOR.
-      div.mb-2
+      div.mb-2.d-flex.align-items-center
         i Data refreshes every 10 seconds.
+        div.ml-auto
+          input.form-control(
+            style="min-width: 250px"
+            v-model="overallSlippage"
+            type="number"
+            min="1"
+            max="100"
+            placeholder='Slippage (default: 25%)')
       div.table-full-width.table-responsive.pb-0
         n-table.mb-0(
           :columns="tableColumns"
@@ -65,12 +73,6 @@ div
                   rel="noopener noreferrer") {{ row.item.deployer }}
               td.text-success {{ row.item.isVerified ? 'Yes' : '' }}
               td
-                input.form-control.mb-1(
-                  v-model="slippage[row.item.id]"
-                  type="number"
-                  min="1"
-                  max="100"
-                  placeholder='Slippage (default: 25%)')
                 n-button(
                   type="primary"
                   size="sm"
@@ -81,10 +83,10 @@ div
                 //-   @click="honeypotCheck(row.item)")
                 //-   | Check Now
                 div.text-danger.mt-2(v-if="isHoneypot[row.item.id]")
-                  | You currently cannot buy then sell this token at {{ slippage[row.item.id] || '25' }}% slippage. 
+                  | You currently cannot buy then sell this token at {{ overallSlippage || '25' }}% slippage. 
                   | Check it has adequate liquidity and trading is enabled, then try again.
                 div.text-success.mt-2(v-else-if="isNotHoneypot[row.item.id]")
-                  | You can buy and sell this token at as little as {{ slippage[row.item.id] || '25' }}% slippage!
+                  | You can buy and sell this token at as little as {{ overallSlippage || '25' }}% slippage!
               td {{ parseTimestamp(row.item.timestamp) }}
 </template>
 
@@ -110,9 +112,7 @@ export default {
         // [id]: true
       },
 
-      slippage: {
-        // [id]: 25
-      },
+      overallSlippage: null,
 
       tableColumns: [
         { value: "index", text: "#", classes: "" },
@@ -172,7 +172,6 @@ export default {
 
     async getAlpha() {
       this.alphaData = await this.$store.dispatch("getLatestAlpha");
-      this.slippage;
     },
 
     removeRefreshInterval() {
@@ -187,7 +186,6 @@ export default {
         item.type === "New LP Added"
           ? item.token0Info.address
           : item.tokenAddress;
-      const slippage = this.slippage[id];
       this.isHoneypot = {
         ...this.isHoneypot,
         [id]: false,
@@ -200,7 +198,7 @@ export default {
       const canBuyAndSell = await AlphaUtils.honeypotCheck(
         (network || "").toLowerCase(),
         contract,
-        slippage
+        this.overallSlippage || 25
       );
       if (canBuyAndSell) {
         // this.$toast.success(`You can buy and sell this token!`);
