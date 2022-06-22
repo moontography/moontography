@@ -32,7 +32,10 @@ export default {
       })
     );
     commit("SET_BUYBOT_DAILY_COST", dailyCostUSD);
-    commit("SET_BUYBOT_BOTS", allBotConfigs);
+    commit(
+      "SET_BUYBOT_BOTS",
+      allBotConfigs.filter((b) => !!b)
+    );
   },
 
   async getCostWeiForBuybotFromExpiration({ getters, state }, { expiration }) {
