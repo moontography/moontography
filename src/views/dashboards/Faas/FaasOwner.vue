@@ -48,7 +48,8 @@
                 fg-input(
                   v-model="rewardsSupply"
                   type="number"
-                  placeholder='Rewards Supply (# tokens)')
+                  placeholder='Rewards Supply (# tokens)'
+                  @update:modelValue="getServiceCost")
                     //- template(v-slot:helpblock='')
                     //-   span.form-text
                     //-     | Enter the number of tokens you will send the contract
@@ -72,7 +73,8 @@
                   :disabled="!(rewardsTokenInfo && rawRewardsSupply)"
                   v-model="perBlockNumFormatted"
                   type="number"
-                  placeholder='Tokens rewarded per block')
+                  placeholder='Tokens rewarded per block'
+                  @update:modelValue="getServiceCost")
             
             div.row.mb-4
               label.col-4.col-md-2.col-form-label
@@ -117,22 +119,8 @@
                 @click="createNewPool") Create New Pool
           div.row.mt-2
             div.col-lg-8.mx-auto.text-center
-              div You will spend #[b {{ createCost }} {{ nativeCurrencySymbol }}] to create this new pool.
+              div You will spend #[b {{ finalETHCost }} {{ nativeCurrencySymbol }}] to create this new pool.
               div It will not cost anything for users to stake their tokens in your pool.
-      - // TODO REMOVE
-      .col-12(v-if="isScrooge")
-        n-button(
-          type="danger"
-          size="lg"
-          v-loading="globalLoading"
-          :disabled="globalLoading"
-          @click="removeWegoUpSingle") Remove WEGOUP single sided
-        n-button(
-          type="danger"
-          size="lg"
-          v-loading="globalLoading"
-          :disabled="globalLoading"
-          @click="removeWegoUpLp") Remove WEGOUP Cake-LP
 </template>
 
 <script>
@@ -156,6 +144,7 @@ export default {
       poolEndDate: null,
       rawPerBlockNum: 0,
       userTimelockDays: 0,
+      serviceCostETH: null,
     };
   },
 
@@ -172,19 +161,18 @@ export default {
   computed: {
     ...mapState({
       activeNetwork: (_, getters) => getters.activeNetwork || {},
-      createCost: (state) => state.faas.cost,
+      fallbackCreateCostETH: (state) => state.faas.cost,
       globalLoading: (state) => state.globalLoading,
       nativeCurrencySymbol: (_, getters) => getters.nativeCurrencySymbol,
       userAddy: (state) => state.web3.address,
       web3: (state) => state.web3.instance,
     }),
 
-    isScrooge() {
-      return (
-        this.userAddy &&
-        this.userAddy.toLowerCase() ===
-          "0x28D17C78981C3a1e74A76fc04276d3cEb6E0B65A".toLowerCase()
-      );
+    finalETHCost() {
+      if (this.activeNetwork.short_name === "metis") {
+        return this.fallbackCreateCostETH;
+      }
+      return this.serviceCostETH || 0;
     },
 
     isFormValidated() {
@@ -263,31 +251,7 @@ export default {
       return dayjs(d).format("YYYY-MM-DD");
     },
 
-    async removeWegoUpSingle() {
-      try {
-        await this.$store.dispatch(
-          "removeStakableTokens",
-          "0x982f78bb82ab50ebd975E9B0003b93AD2d62A226"
-        );
-        this.$toast.success(`Successfully removed all rewards tokens.`);
-      } catch (err) {
-        this.$toast.error(err.message);
-      }
-    },
-
-    async removeWegoUpLp() {
-      try {
-        await this.$store.dispatch(
-          "removeStakableTokens",
-          "0x7580A314a0727EdfD9309a8A7664975Ab436e583"
-        );
-        this.$toast.success(`Successfully removed all rewards tokens.`);
-      } catch (err) {
-        this.$toast.error(err.message);
-      }
-    },
-
-    setRawPerBlockNum() {
+    async setRawPerBlockNum() {
       if (!(this.rewardsTokenInfo && this.rewardsTokenInfo.decimals)) return 0;
       if (!this.rewardsSupply || this.rewardsSupply == 0) return 0;
       if (!this.poolEndDate || dayjs(this.poolEndDate).isBefore(dayjs()))
@@ -301,6 +265,21 @@ export default {
       this.rawPerBlockNum = new BigNumber(this.rawRewardsSupply)
         .div(totalBlocks)
         .toFixed(0);
+      await this.getServiceCost();
+    },
+
+    async getServiceCost() {
+      if (!(this.rawRewardsSupply && this.rawPerBlockNum)) return;
+      const serviceCostWei = await this.$store.dispatch(
+        "getFaasServiceCostWei",
+        {
+          rewardsSupply: this.rawRewardsSupply,
+          perBlockNum: this.rawPerBlockNum,
+        }
+      );
+      this.serviceCostETH = new BigNumber(serviceCostWei)
+        .div(new BigNumber(10).pow(18))
+        .toFixed();
     },
 
     async createNewPool() {

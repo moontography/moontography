@@ -18,6 +18,16 @@ const mtgyFaasAbi: AbiItem[] = [
         name: "_spendAddress",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "_linkPriceFeedContract",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_blocksPerDay",
+        type: "uint256",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -55,6 +65,19 @@ const mtgyFaasAbi: AbiItem[] = [
         internalType: "address",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "blocksPerDay",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -111,6 +134,25 @@ const mtgyFaasAbi: AbiItem[] = [
         internalType: "address[]",
         name: "",
         type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_productCostUSD18",
+        type: "uint256",
+      },
+    ],
+    name: "getProductCostWei",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -176,6 +218,19 @@ const mtgyFaasAbi: AbiItem[] = [
   },
   {
     inputs: [],
+    name: "priceUSDPerTimePeriod18",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "productID",
     outputs: [
       {
@@ -210,6 +265,32 @@ const mtgyFaasAbi: AbiItem[] = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_blocks",
+        type: "uint256",
+      },
+    ],
+    name: "setBlocksPerDay",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_priceUSD18",
+        type: "uint256",
+      },
+    ],
+    name: "setPriceUSDPerTimePeriod18",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint8",
         name: "_newId",
         type: "uint8",
@@ -236,6 +317,19 @@ const mtgyFaasAbi: AbiItem[] = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_days",
+        type: "uint256",
+      },
+    ],
+    name: "setTimePeriodDays",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "_tokenAddy",
         type: "address",
@@ -244,6 +338,19 @@ const mtgyFaasAbi: AbiItem[] = [
     name: "setTokenAddy",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "timePeriodDays",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
