@@ -1,3 +1,4 @@
+import ERC20 from "@/factories/web3/ERC20";
 import BigNumber from "bignumber.js";
 import OKLGFaaS from "../../factories/web3/OKLGFaaS";
 import OKLGFaaSToken from "../../factories/web3/OKLGFaaSToken";
@@ -247,20 +248,37 @@ export default {
   ) {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
-    const productContract = getters.activeNetwork.contracts.faas;
+    const activeNetwork = getters.activeNetwork;
+    const productContract = activeNetwork.contracts.faas;
     const productID = state.productIds.faas;
     const nativeCurrencySymbol = getters.nativeCurrencySymbol;
-    const faasToken = OKLGFaaS(web3, productContract);
-    const [nativeBalance, serviceCost] = await Promise.all([
+    const faasCont = OKLGFaaS(web3, productContract);
+    const rewardsCont = ERC20(web3, rewardsToken);
+    const [nativeBalance, rewardsBalance, serviceCost] = await Promise.all([
       state.web3.instance.eth.getBalance(userAddy),
-      dispatch("getProductCostWei", {
-        productID,
-        productContract,
-      }),
+      rewardsCont.methods.balanceOf(userAddy).call(),
+      (async function getServiceCostWei() {
+        if (activeNetwork.short_name === "metis") {
+          return await dispatch("getProductCostWei", {
+            productID,
+            productContract,
+          });
+        }
+        return await dispatch("getFaasServiceCostWei", {
+          rewardsSupply,
+          perBlockNum,
+        });
+      })(),
     ]);
+
     if (new BigNumber(nativeBalance).lt(serviceCost)) {
       throw new Error(
         `You do not have enough ${nativeCurrencySymbol} to cover the service cost. Please ensure you have enough ${nativeCurrencySymbol} in your wallet to cover the service fee and try again.`
+      );
+    }
+    if (new BigNumber(rewardsBalance).lt(rewardsSupply)) {
+      throw new Error(
+        `You do not have enough rewards token in your wallet to create a pool with this many rewards.`
       );
     }
     await dispatch("genericErc20Approval", {
@@ -268,7 +286,7 @@ export default {
       tokenAddress: rewardsToken,
       delegateAddress: productContract,
     });
-    await faasToken.methods
+    await faasCont.methods
       .createNewTokenContract(
         rewardsToken,
         stakableToken,
@@ -279,6 +297,35 @@ export default {
         isStakedTokenNft || false
       )
       .send({ from: userAddy, value: serviceCost });
+  },
+
+  async getFaasServiceCostWei(
+    { getters, state },
+    { rewardsSupply, perBlockNum }
+  ) {
+    const web3 = state.web3.instance;
+    const faas = getters.activeNetwork.contracts.faas;
+    const faasCont = OKLGFaaS(web3, faas);
+    const [
+      timePeriodDays,
+      priceUSDPerTimePeriod18,
+      blocksPerDay,
+    ] = await Promise.all([
+      faasCont.methods.timePeriodDays().call(),
+      faasCont.methods.priceUSDPerTimePeriod18().call(),
+      faasCont.methods.blocksPerDay().call(),
+    ]);
+
+    const poolBlockLifespan = new BigNumber(rewardsSupply).div(perBlockNum);
+    const serviceCostUSD18 = new BigNumber(priceUSDPerTimePeriod18)
+      .times(poolBlockLifespan)
+      .div(timePeriodDays)
+      .div(blocksPerDay)
+      .toFixed(0);
+    const serviceCostExact = await faasCont.methods
+      .getProductCostWei(serviceCostUSD18)
+      .call();
+    return new BigNumber(serviceCostExact).times("1.02").toFixed(0);
   },
 
   async removeStakableTokens({ state }, farmContractAddress) {
