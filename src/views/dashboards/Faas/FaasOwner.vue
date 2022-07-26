@@ -251,30 +251,6 @@ export default {
       return dayjs(d).format("YYYY-MM-DD");
     },
 
-    async removeWegoUpSingle() {
-      try {
-        await this.$store.dispatch(
-          "removeStakableTokens",
-          "0x982f78bb82ab50ebd975E9B0003b93AD2d62A226"
-        );
-        this.$toast.success(`Successfully removed all rewards tokens.`);
-      } catch (err) {
-        this.$toast.error(err.message);
-      }
-    },
-
-    async removeWegoUpLp() {
-      try {
-        await this.$store.dispatch(
-          "removeStakableTokens",
-          "0x7580A314a0727EdfD9309a8A7664975Ab436e583"
-        );
-        this.$toast.success(`Successfully removed all rewards tokens.`);
-      } catch (err) {
-        this.$toast.error(err.message);
-      }
-    },
-
     async setRawPerBlockNum() {
       if (!(this.rewardsTokenInfo && this.rewardsTokenInfo.decimals)) return 0;
       if (!this.rewardsSupply || this.rewardsSupply == 0) return 0;
