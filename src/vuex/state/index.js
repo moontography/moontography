@@ -447,7 +447,7 @@ export default {
           passwordManager: "0x9a3399389a16547a2F5D407dE8428b81bFcd5E92",
           raffler: "0x4b0ABa75B46401018508b04a555aFCae15ea153E",
           trustedTimestamping: "0xC56cE130d777Ab65af4D037853508b461AAc357f",
-          faas: "0x0d196CbC98Ff18E4178f260B995a7d5d9e1740cd",
+          faas: "0x3026D72abecD8eB2eFd2c3908fF40c715d62D2fb",
           kether: "0xb88404dd8fe4969ef67841250baef7f04f6b1a5e",
           ketherNFT: "0xB7fCb57a5ce2F50C3203ccda27c05AEAdAF2C221",
           ketherNFTLoaner: "0xFe06A1E83Dc24a1EF7bdCa74D708522AADA152c5",

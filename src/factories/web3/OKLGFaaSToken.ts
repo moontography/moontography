@@ -58,6 +58,11 @@ const faasTokenAbi: AbiItem[] = [
         name: "_isStakedNft",
         type: "bool",
       },
+      {
+        internalType: "address",
+        name: "_pricingContract",
+        type: "address",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -149,6 +154,19 @@ const faasTokenAbi: AbiItem[] = [
     ],
     name: "Withdraw",
     type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_additionalSupply",
+        type: "uint256",
+      },
+    ],
+    name: "addToSupply",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
   },
   {
     inputs: [
@@ -396,12 +414,12 @@ const faasTokenAbi: AbiItem[] = [
       },
       {
         internalType: "uint256",
-        name: "origTotSupply",
+        name: "poolTotalSupply",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "curRewardsSupply",
+        name: "poolRemainingSupply",
         type: "uint256",
       },
       {
@@ -453,6 +471,25 @@ const faasTokenAbi: AbiItem[] = [
     name: "removeStakeableTokens",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "rewardVault",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -581,7 +618,7 @@ const faasTokenAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "recipient",
+        name: "to",
         type: "address",
       },
       {
@@ -605,12 +642,12 @@ const faasTokenAbi: AbiItem[] = [
     inputs: [
       {
         internalType: "address",
-        name: "sender",
+        name: "from",
         type: "address",
       },
       {
         internalType: "address",
-        name: "recipient",
+        name: "to",
         type: "address",
       },
       {

@@ -1,6 +1,7 @@
 import ERC20 from "@/factories/web3/ERC20";
 import BigNumber from "bignumber.js";
 import OKLGFaaS from "../../factories/web3/OKLGFaaS";
+import OKLGFaaSTimePricing from "../../factories/web3/OKLGFaaSTimePricing";
 import OKLGFaaSToken from "../../factories/web3/OKLGFaaSToken";
 import OKLGFaaSToken_V1 from "../../factories/web3/OKLGFaaSToken_V1";
 
@@ -140,7 +141,6 @@ export default {
     } catch (err) {
       stakerInfo = await faasToken_V1.methods.stakers(userAddy).call();
     }
-
     const [
       userStakingAmount,
       stakingContract,
@@ -314,14 +314,16 @@ export default {
     const web3 = state.web3.instance;
     const faas = getters.activeNetwork.contracts.faas;
     const faasCont = OKLGFaaS(web3, faas);
+    const faasPricing = await faasCont.methods.getFaasPricing().call();
+    const pricingCont = OKLGFaaSTimePricing(web3, faasPricing);
     const [
       timePeriodDays,
       priceUSDPerTimePeriod18,
       blocksPerDay,
     ] = await Promise.all([
-      faasCont.methods.timePeriodDays().call(),
-      faasCont.methods.priceUSDPerTimePeriod18().call(),
-      faasCont.methods.blocksPerDay().call(),
+      pricingCont.methods.timePeriodDays().call(),
+      pricingCont.methods.priceUSDPerTimePeriod18().call(),
+      pricingCont.methods.blocksPerDay().call(),
     ]);
 
     const poolBlockLifespan = new BigNumber(rewardsSupply).div(perBlockNum);
@@ -330,7 +332,7 @@ export default {
       .div(timePeriodDays)
       .div(blocksPerDay)
       .toFixed(0);
-    const serviceCostExact = await faasCont.methods
+    const serviceCostExact = await pricingCont.methods
       .getProductCostWei(serviceCostUSD18)
       .call();
     return new BigNumber(serviceCostExact).times("1.02").toFixed(0);
