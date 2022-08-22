@@ -165,6 +165,7 @@ export default {
           trustedTimestamping: "0xBa63F51f7Be4022dd7BfF997BC3245c5F651B381",
           faas: "0x3852C6394bd4259fD3204E5e91D96AA64A214B03",
           faas_V1: "0x717EDe6051acf094Ff043E2B3BcC4F86262742DD",
+          faas_V0: "0x701666359E71b38d61C7faD2A121D7e6A6F1fFff",
           buybot: "0x22f373179F7182FD8B90E4F0B35D91966deabAFC",
           dexUtils: "0x738f7a7D2F7aF556321fae259b37d49034827E09",
         },

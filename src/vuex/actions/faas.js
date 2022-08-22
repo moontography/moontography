@@ -23,14 +23,14 @@ export default {
     const web3 = state.web3.instance;
     const userAddy = state.web3.address;
     const faasAddy = getters.activeNetwork.contracts.faas;
+    const faasAddyV0 = getters.activeNetwork.contracts.faas_V0;
     const faasAddyV1 = getters.activeNetwork.contracts.faas_V1;
-    const faasAddyV2 = getters.activeNetwork.contracts.faas_V2;
     const selectedTokenAddress = state.selectedAddressInfo.address;
 
     let tokenAddresses;
     const contract = OKLGFaaS(web3, faasAddy);
+    const contractV0 = faasAddyV1 && OKLGFaaS(web3, faasAddyV0);
     const contractV1 = faasAddyV1 && OKLGFaaS(web3, faasAddyV1);
-    const contractV2 = faasAddyV2 && OKLGFaaS(web3, faasAddyV2);
     if (selectedTokenAddress && web3.utils.isAddress(selectedTokenAddress)) {
       tokenAddresses = await contract.methods
         .getTokensForStaking(selectedTokenAddress)
@@ -38,16 +38,16 @@ export default {
     } else {
       tokenAddresses = await contract.methods.getAllFarmingContracts().call();
 
+      // TODO: get rid of this when V0 is no longer applicable
+      if (contractV0) {
+        tokenAddresses = tokenAddresses.concat(
+          await contractV0.methods.getAllFarmingContracts().call()
+        );
+      }
       // TODO: get rid of this when V1 is no longer applicable
       if (contractV1) {
         tokenAddresses = tokenAddresses.concat(
           await contractV1.methods.getAllFarmingContracts().call()
-        );
-      }
-      // TODO: get rid of this when V2 is no longer applicable
-      if (contractV2) {
-        tokenAddresses = tokenAddresses.concat(
-          await contractV2.methods.getAllFarmingContracts().call()
         );
       }
     }
