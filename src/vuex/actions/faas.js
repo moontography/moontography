@@ -29,7 +29,7 @@ export default {
 
     let tokenAddresses;
     const contract = OKLGFaaS(web3, faasAddy);
-    const contractV0 = faasAddyV1 && OKLGFaaS(web3, faasAddyV0);
+    const contractV0 = faasAddyV0 && OKLGFaaS(web3, faasAddyV0);
     const contractV1 = faasAddyV1 && OKLGFaaS(web3, faasAddyV1);
     if (selectedTokenAddress && web3.utils.isAddress(selectedTokenAddress)) {
       tokenAddresses = await contract.methods
