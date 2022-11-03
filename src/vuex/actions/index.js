@@ -191,19 +191,27 @@ export default {
   },
 
   async getOklgTokenInfo({ commit }) {
-    const info = await TokenDataUtils.getTokenInfo("ok-lets-go");
-    commit("SET_TOKEN_INFO", info);
+    try {
+      const info = await TokenDataUtils.getTokenInfo("ok-lets-go");
+      commit("SET_TOKEN_INFO", info);
+    } catch (err) {
+      console.error(`error getting token info CG`, err);
+    }
   },
 
   async getOklgTokenChart({ commit, state }, reset = false) {
-    if (
-      state.platformTokenChart &&
-      state.platformTokenChart.length > 0 &&
-      !reset
-    )
-      return;
-    const prices = await TokenDataUtils.getTokenChart("ok-lets-go");
-    commit("SET_TOKEN_CHART", prices);
+    try {
+      if (
+        state.platformTokenChart &&
+        state.platformTokenChart.length > 0 &&
+        !reset
+      )
+        return;
+      const prices = await TokenDataUtils.getTokenChart("ok-lets-go");
+      commit("SET_TOKEN_CHART", prices);
+    } catch (err) {
+      console.error(`error getting token info CG`, err);
+    }
   },
 
   async setUserInfoForToken({ commit, dispatch }, tokenAddy) {
