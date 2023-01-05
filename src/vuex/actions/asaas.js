@@ -156,7 +156,7 @@ export default {
       mappedSwaps
         .filter((s) => !!s)
         .sort((s1, s2) =>
-          s1.token.name.toLowerCase() < s2.token.name.toLowerCase() ? -1 : 1
+          s1.token.symbol.toLowerCase() < s2.token.symbol.toLowerCase() ? -1 : 1
         )
     );
   },
