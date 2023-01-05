@@ -153,7 +153,11 @@ export default {
     );
     commit(
       "SET_ASAAS_SWAPS",
-      mappedSwaps.filter((s) => !!s)
+      mappedSwaps
+        .filter((s) => !!s)
+        .sort((s1, s2) =>
+          s1.token.name.toLowerCase() < s2.token.name.toLowerCase() ? -1 : 1
+        )
     );
   },
 
